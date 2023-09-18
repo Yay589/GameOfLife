@@ -28,25 +28,29 @@ class BOB(pygame.sprite.Sprite):
         self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
-        self.energy=200
+        self.energy = 200
 
     def update(self):
 
         self.current_sprite += 1
-        self.energy-=5
-        
+        self.energy -= 5
+
         if self.current_sprite >= len(self.sprites):
             self.current_sprite = 0
 
         # assigning the next image of the animation
         self.image = self.sprites[self.current_sprite]
 
-    def bouger(self):
+    def bouger(self, grid_width, grid_height, grid_cell_size):
+        # Déplacement aléatoire en multiples de la taille de la cellule
+        dx = random.randint(-1, 1) * grid_cell_size
+        # Déplacement aléatoire en multiples de la taille de la cellule
+        dy = random.randint(-1, 1) * grid_cell_size
 
-        dx = random.randint(-20, 20)
-        dy = random.randint(-20, 20)
-        # To stay within the limits of the map:
-        if self.rect.left + dx >= 0 and self.rect.right + dx <= 1280:
-            self.rect.x += dx
-        if self.rect.top + dy >= 0 and self.rect.bottom + dy <= 720:
-            self.rect.y += dy
+        new_x = self.rect.x + dx
+        new_y = self.rect.y + dy
+
+        # Vérifier que la nouvelle position reste dans les limites de la grille
+        if 0 <= new_x < grid_width * grid_cell_size and 0 <= new_y < grid_height * grid_cell_size:
+            self.rect.x = new_x
+            self.rect.y = new_y
