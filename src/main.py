@@ -2,7 +2,7 @@ import pygame
 import sys
 import random
 from objet import BOB
-from objet import Nurriture
+from objet import Nourriture
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
@@ -16,7 +16,9 @@ class Game:
         self.clock = pygame.time.Clock()
 
     def run(self):
-        nurriture_group = pygame.sprite.Group()
+        global gameTick
+        gameTick = 0
+        Nourriture_group = pygame.sprite.Group()
         bob_group = pygame.sprite.Group()
         # Create 5 instances of BOB and add them to the group
         for bob in range(5):
@@ -28,21 +30,22 @@ class Game:
         pygame.time.set_timer(SPAWN_EVENT, 2000)  # one spawn evry 2 seconds
 
         while True:
+
             for event in pygame.event.get():  # pygame.event.get() return all the envents, like SPAWN_EVENT
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == SPAWN_EVENT:
-                    new_nurriture = Nurriture(random.randrange(
+                    new_Nourriture = Nourriture(random.randrange(
                         0, SCREEN_WIDTH-5), random.randrange(0, SCREEN_HEIGHT-5))
-                    nurriture_group.add(new_nurriture)
+                    Nourriture_group.add(new_Nourriture)
 
             pygame.display.flip()
             # If a bob enters into collision with the food, the food will be removed as if the bob had eaten it.
             for bobs in bob_group:
-                for nurri in nurriture_group:
+                for nurri in Nourriture_group:
                     if pygame.sprite.collide_rect(bobs, nurri):
-                        nurriture_group.remove(nurri)
+                        Nourriture_group.remove(nurri)
 
             # all bobs have too contently move
             for bob in range(5):
@@ -53,8 +56,20 @@ class Game:
             bob_group.draw(self.screen)  # drow bobs and food  in the screen.
             # Update the screen to view the next frame of Bob's animation..
             bob_group.update()
-            nurriture_group.draw(self.screen)
+            Nourriture_group.draw(self.screen)
             self.clock.tick(20)
+
+            """
+            gameTick += 1
+            speed = 500
+            # The number chosen is arbitrary and should be variable for the user
+            day = gameTick//speed
+            hours = int(((gameTick/speed) % 1.0)*24)  # curent hour
+            minutes = int(((((gameTick/speed) % 1.0)*24) % 1.0)*60)
+            if (gameTick % (speed//10) == 0):
+                # Print the current time in the terminal for visualisation
+                print(f"Day number {day}, {hours}h:{minutes}min\n")
+            """
 
 
 if __name__ == '__main__':

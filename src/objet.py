@@ -2,7 +2,7 @@ import pygame
 import random
 
 
-class Nurriture(pygame.sprite.Sprite):
+class Nourriture(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__()
         self.sprites = []
@@ -28,11 +28,13 @@ class BOB(pygame.sprite.Sprite):
         self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
+        self.energy=200
 
     def update(self):
 
         self.current_sprite += 1
-
+        self.energy-=5
+        
         if self.current_sprite >= len(self.sprites):
             self.current_sprite = 0
 
