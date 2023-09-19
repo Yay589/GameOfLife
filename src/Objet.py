@@ -28,7 +28,7 @@ class BOB(pygame.sprite.Sprite):
         self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
-        self.energy = 200
+        self.energy = 100
 
     def update(self):
 
