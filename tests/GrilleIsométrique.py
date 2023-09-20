@@ -20,6 +20,10 @@ n, m = 10, 10
 largeur_tuile = 60
 hauteur_tuile = 30
 
+# Coordonnées de la caméra
+camera_x = 0
+camera_y = 0
+
 # Fonction pour dessiner une tuile isométrique
 
 
@@ -30,6 +34,14 @@ def dessiner_tuile(x, y, couleur):
     # Dessiner un contour autour de la tuile
     pygame.draw.lines(fenetre, NOIR, True, points, 1)
 
+# Fonction pour déplacer la caméra
+
+
+def deplacer_camera(dx, dy):
+    global camera_x, camera_y
+    camera_x += dx
+    camera_y += dy
+
 
 # Boucle principale
 running = True
@@ -37,14 +49,23 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                deplacer_camera(-10, 0)  # Déplacer la caméra vers la gauche
+            elif event.key == pygame.K_RIGHT:
+                deplacer_camera(10, 0)  # Déplacer la caméra vers la droite
+            elif event.key == pygame.K_UP:
+                deplacer_camera(0, -10)  # Déplacer la caméra vers le haut
+            elif event.key == pygame.K_DOWN:
+                deplacer_camera(0, 10)  # Déplacer la caméra vers le bas
 
     fenetre.fill(BLANC)
 
     # Dessiner la grille isométrique
     for i in range(n):
         for j in range(m):
-            x = i * 2 * largeur_tuile
-            y = j * 2 * hauteur_tuile
+            x = i * 2 * largeur_tuile - camera_x
+            y = j * 2 * hauteur_tuile - camera_y
             if (i + j) % 2 == 0:
                 couleur = NOIR
             else:
