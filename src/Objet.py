@@ -40,7 +40,7 @@ class BOB(pygame.sprite.Sprite):
         # assigning the next image of the animation
         self.image = self.sprites[self.current_sprite]
 
-    def bouger(self, grid_width, grid_height, grid_cell_size, listPoints, cx, cy):
+    def bouger(self, grid_cell_size, listPoints, cx, cy):
         # Déplacement aléatoire en multiples de la taille de la cellule
         dx = random.randint(-1, 1) * grid_cell_size
         # Déplacement aléatoire en multiples de la taille de la cellule
@@ -58,5 +58,5 @@ class BOB(pygame.sprite.Sprite):
         point = random.choice(posibilities)
         new_x, new_y = point
 
-        self.rect.x = new_x
-        self.rect.y = new_y
+        self.rect.x = new_x-cx
+        self.rect.y = new_y-cy

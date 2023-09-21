@@ -13,7 +13,7 @@ BLANC = (0, 100, 0)
 NOIR = (34, 139, 34)
 
 # Coordonnées de la caméra
-camera_x = -(SCREEN_WIDTH//2)+GRID_CELL_WIDTH
+camera_x = 0  # -(SCREEN_WIDTH//2)+GRID_CELL_WIDTH
 camera_y = 0
 
 GRID_CELL_SIZE = GRID_CELL_WIDTH*GRID_CELL_HEIGHT
@@ -61,16 +61,16 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         # Déplacer la caméra vers la gauche
-                        self.deplacer_camera(-10, 0)
+                        self.deplacer_camera(-40, 0)
                     elif event.key == pygame.K_RIGHT:
                         # Déplacer la caméra vers la droite
-                        self.deplacer_camera(10, 0)
+                        self.deplacer_camera(40, 0)
                     elif event.key == pygame.K_UP:
                         # Déplacer la caméra vers le haut
-                        self.deplacer_camera(0, -10)
+                        self.deplacer_camera(0, -40)
                     elif event.key == pygame.K_DOWN:
                         # Déplacer la caméra vers le bas
-                        self.deplacer_camera(0, 10)
+                        self.deplacer_camera(0, 40)
                 elif event.type == SPAWN_EVENT:
                     new_Nourriture = Nourriture(random.randrange(min(LISTX), max(
                         LISTX))-camera_x, random.randrange(min(LISTY), max(LISTY))-camera_y)
@@ -104,7 +104,7 @@ class Game:
                         Nourriture_group.remove(nurri)
 
             for bob in bob_group:
-                bob.bouger(GRID_WIDTH, GRID_HEIGHT, GRID_CELL_SIZE, LIST,camera_x,camera_y)
+                bob.bouger(GRID_CELL_SIZE, LIST, camera_x, camera_y)
 
             bob_group.draw(self.screen)
             bob_group.update()
