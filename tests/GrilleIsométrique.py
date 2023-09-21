@@ -7,24 +7,25 @@ pygame.init()
 # Définition de la taille de la fenêtre
 largeur, hauteur = 800, 600
 fenetre = pygame.display.set_mode((largeur, hauteur))
-pygame.display.set_caption("Grille Isométrique")
+pygame.display.set_caption("Grille Losange")
 
 # Couleurs
-BLANC = (255, 255, 255)
-NOIR = (0, 0, 0)
+BLANC = (0, 100, 0)
+NOIR = (34, 139, 34)
 
 # Taille de la grille
 n, m = 10, 10
 
-# Taille d'une tuile isométrique
+# Taille d'une tuile losange
 largeur_tuile = 60
 hauteur_tuile = 30
 
 # Coordonnées de la caméra
-camera_x = 0
+camera_x = -(largeur//2)+largeur_tuile
 camera_y = 0
 
-# Fonction pour dessiner une tuile isométrique
+
+# Fonction pour dessiner une tuile losange
 
 
 def dessiner_tuile(x, y, couleur):
@@ -59,13 +60,13 @@ while running:
             elif event.key == pygame.K_DOWN:
                 deplacer_camera(0, 10)  # Déplacer la caméra vers le bas
 
-    fenetre.fill(BLANC)
+    fenetre.fill((255, 255, 255))
 
-    # Dessiner la grille isométrique
+    # Dessiner la grille losange
     for i in range(n):
         for j in range(m):
-            x = i * 2 * largeur_tuile - camera_x
-            y = j * 2 * hauteur_tuile - camera_y
+            x = (i - j) * largeur_tuile - camera_x
+            y = (i + j) * hauteur_tuile - camera_y
             if (i + j) % 2 == 0:
                 couleur = NOIR
             else:
