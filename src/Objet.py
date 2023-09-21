@@ -22,7 +22,6 @@ class BOB(pygame.sprite.Sprite):
         self.sprites.append(pygame.image.load('data/images/1.png'))
         self.sprites.append(pygame.image.load('data/images/2.png'))
         self.sprites.append(pygame.image.load('data/images/3.png'))
-
         self.current_sprite = 0
 
         self.image = self.sprites[self.current_sprite]
@@ -41,16 +40,23 @@ class BOB(pygame.sprite.Sprite):
         # assigning the next image of the animation
         self.image = self.sprites[self.current_sprite]
 
-    def bouger(self, grid_width, grid_height, grid_cell_size):
+    def bouger(self, grid_width, grid_height, grid_cell_size, listPoints, cx, cy):
         # Déplacement aléatoire en multiples de la taille de la cellule
         dx = random.randint(-1, 1) * grid_cell_size
         # Déplacement aléatoire en multiples de la taille de la cellule
         dy = random.randint(-1, 1) * grid_cell_size
 
-        new_x = self.rect.x + dx
-        new_y = self.rect.y + dy
+        selection = [(self.rect.center[0]+cx + dx_, self.rect.center[1]+cy + dy_) for dx_ in [-dx, 0, dx]
+                     for dy_ in [-dy, 0, dy]]
+        posibilities = []
+        for i in selection:
+            if i in listPoints:
+                posibilities.append(i)
+        # print("selection = ", selection)
+        # print("posibilities = ", posibilities)
+        # print("listPoints = ", listPoints)
+        point = random.choice(posibilities)
+        new_x, new_y = point
 
-        # Vérifier que la nouvelle position reste dans les limites de la grille
-        if 0 <= new_x < grid_width * grid_cell_size and 0 <= new_y < grid_height * grid_cell_size:
-            self.rect.x = new_x
-            self.rect.y = new_y
+        self.rect.x = new_x
+        self.rect.y = new_y

@@ -18,7 +18,7 @@ camera_y = 0
 
 GRID_CELL_SIZE = GRID_CELL_WIDTH*GRID_CELL_HEIGHT
 global LISTX, LISTY
-LISTX, LISTY = [], []
+LISTX, LISTY, LIST = [], [], []
 
 
 class Game:
@@ -30,17 +30,18 @@ class Game:
         self.clock = pygame.time.Clock()
 
     def dessiner_tuile(self, x, y, couleur):
-        global LISTX, LISTY
+        global LISTX, LISTY, LIST
 
         points = [(x, y + GRID_CELL_HEIGHT), (x + GRID_CELL_WIDTH, y),
                   (x + 2 * GRID_CELL_WIDTH, y + GRID_CELL_HEIGHT), (x + GRID_CELL_WIDTH, y + 2 * GRID_CELL_HEIGHT)]
         for i in range(4):
             LISTX.append(points[i][0])
             LISTY.append(points[i][1])
+            LIST.append(points[i])
 
         pygame.draw.polygon(self.screen, couleur, points)
         # Dessiner un contour autour de la tuile
-        pygame.draw.lines(self.screen, NOIR, True, points, 1)
+        # pygame.draw.lines(self.screen, NOIR, True, points, 1)
 
     def deplacer_camera(self, dx, dy):
         global camera_x, camera_y
@@ -49,6 +50,7 @@ class Game:
 
     def run(self):
         while True:
+
             SPAWN_EVENT = pygame.USEREVENT + 1
             pygame.time.set_timer(SPAWN_EVENT, 2000)
 
@@ -74,8 +76,9 @@ class Game:
                         LISTX))-camera_x, random.randrange(min(LISTY), max(LISTY))-camera_y)
                     Nourriture_group.add(new_Nourriture)
 
-            self.screen.fill((255, 255, 255))
+            self.screen.fill((255, 255, 255))  # fond Blanc
 
+            # Dessiner la grille losange
             for i in range(GRID_WIDTH):
                 for j in range(GRID_HEIGHT):
                     x = (i - j) * GRID_CELL_WIDTH - camera_x
@@ -90,8 +93,9 @@ class Game:
             bob_group = pygame.sprite.Group()
 
             for bob in range(5):
-                new_bob = BOB(random.randrange(min(LISTX), max(
-                    LISTX))-camera_x, random.randrange(min(LISTY), max(LISTY))-camera_y)
+                position = random.choice(LIST)
+                # BOB(random.randrange(min(LISTX), max(LISTX))-camera_x, random.randrange(min(LISTY), max(LISTY))-camera_y)
+                new_bob = BOB(position[0]-camera_x, position[1]-camera_y)
                 bob_group.add(new_bob)
 
             for bobs in bob_group:
@@ -100,7 +104,7 @@ class Game:
                         Nourriture_group.remove(nurri)
 
             for bob in bob_group:
-                bob.bouger(GRID_WIDTH, GRID_HEIGHT, GRID_CELL_SIZE)
+                bob.bouger(GRID_WIDTH, GRID_HEIGHT, GRID_CELL_SIZE, LIST,camera_x,camera_y)
 
             bob_group.draw(self.screen)
             bob_group.update()
