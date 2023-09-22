@@ -1,8 +1,8 @@
 import pygame
 import sys
 import random
-from Objet import BOB
-from Objet import Nourriture
+from incomingNewObjet import BOB
+from incomingNewObjet import Nourriture
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 

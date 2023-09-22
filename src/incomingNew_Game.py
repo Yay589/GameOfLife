@@ -2,8 +2,8 @@ import pygame
 import time
 import sys
 import random
-from Objet import BOB
-from Objet import Nourriture
+from incomingNewObjet import BOB
+from incomingNewObjet import Nourriture
 
 GRID_WIDTH = 10
 GRID_HEIGHT = 10

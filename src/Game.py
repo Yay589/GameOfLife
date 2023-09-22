@@ -2,14 +2,14 @@ import pygame
 import time
 import sys
 import random
-from Objet import BOB
-from Objet import Nourriture
+from objet import BOB
+from objet import Nourriture
 
 GRID_WIDTH = 100
 GRID_HEIGHT = 100
 GRID_CELL_SIZE = 10
-SCREEN_WIDTH = 1280  # GRID_WIDTH * GRID_CELL_SIZE
-SCREEN_HEIGHT = 720  # GRID_HEIGHT * GRID_CELL_SIZE
+SCREEN_WIDTH = GRID_WIDTH * GRID_CELL_SIZE
+SCREEN_HEIGHT = GRID_HEIGHT * GRID_CELL_SIZE
 
 
 class Game:
