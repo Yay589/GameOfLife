@@ -97,42 +97,7 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface.blit(scaled_surf, scaled_rect)
 
 
-# class Tuile(pygame.sprite.Sprite):
-#     GRID_WIDTH = 10
-#     GRID_HEIGHT = 10
-#     GRID_CELL_WIDTH, GRID_CELL_HEIGHT = 60, 30
-#     SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
-#     BLANC = (0, 100, 0)
-#     NOIR = (34, 139, 34)
-
-#     def __init__(self):
-#         super().__init__()
-#         self.LIST = []
-#         self.x = 0
-#         self.y = 0
-#         self.couleur = (0, 0, 0)
-
-#         # self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-
-#     def setting_tuile(screen):
-#         Grille = pygame.sprite.Group()
-#         new_tuile = Tuile()
-#         for i in range(new_tuile.GRID_WIDTH):
-#             for j in range(new_tuile.GRID_HEIGHT):
-#                 new_tuile.x = (i - j) * new_tuile.GRID_CELL_WIDTH
-#                 new_tuile.y = (i + j) * new_tuile.GRID_CELL_HEIGHT
-#                 if (i + j) % 2 == 0:
-#                     new_tuile.couleur = new_tuile.NOIR
-#                 else:
-#                     new_tuile.couleur = new_tuile.BLANC
-
-#                 points = [(new_tuile.x, new_tuile.y + new_tuile.GRID_CELL_HEIGHT), (new_tuile.x + new_tuile.GRID_CELL_WIDTH, new_tuile.y),
-#                           (new_tuile.x + 2 * new_tuile.GRID_CELL_WIDTH, new_tuile.y + new_tuile.GRID_CELL_HEIGHT), (new_tuile.x + new_tuile.GRID_CELL_WIDTH, new_tuile.y + 2 * new_tuile.GRID_CELL_HEIGHT)]
-#                 for i in range(4):
-#                     new_tuile.LIST.append(points[i])
-#                 new_tuile.draw.polygon(screen, new_tuile.couleur, points)
-
-
+# 
 class Case(pygame.sprite.Sprite):
     def __init__(self, x, y, group):
         super().__init__(group)
