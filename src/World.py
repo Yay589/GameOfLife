@@ -65,10 +65,10 @@ class World:
         if str(position) in listKeys:
             print(f"{position} is in {self.world.keys()} so there is a collision")
         self.world[str(position)].append(_Object)
-        print("self.world.keys() = ",[i for i in self.world.keys()])
+        #print("self.world.keys() = ",[i for i in self.world.keys()])
         _Object.rect.center = list(position)
         #print("type (obj.rect.center) = ", type(_Object.rect.center))
-        print("addonmap => ", self.world)
+        #print("addonmap => ", self.world)
 
     def availableNearbyPosition(self, Position):
         l = [[(Position[0] - dup1), (Position[1] - dup2)]
@@ -95,7 +95,7 @@ class World:
         #retirer object de son ancienne positiion (=retirer de la key)
         for key, value in self.world.items():
             if key == str(list(_Object.rect.center)) and _Object in [i for i in value]:
-                print("TROUVÉÉÉÉÉÉÉÉÉÉÉÉ   object = ",_Object," and key = ",key)
+                #print("TROUVÉÉÉÉÉÉÉÉÉÉÉÉ   object = ",_Object," and key = ",key)
                 #on change cette valeur sur le tompons tempDict
                 tempDict[str(list(_Object.rect.center))]=[]
                 for i in value :
@@ -113,7 +113,7 @@ class World:
         self.world = tempDict.copy()
         #print("after changes :  self.world = ", self.world)
         
-        print("HEYYY world = ", self.world)
+        #print("HEYYY world = ", self.world)
 
     def draw(self):
         screen.fill((255, 255, 255))
