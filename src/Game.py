@@ -16,7 +16,7 @@ BLANC = (0, 100, 0)
 NOIR = (34, 139, 34)
 
 # Coordonnées de la caméra
-camera_x = 0  # -(SCREEN_WIDTH//2)+GRID_CELL_WIDTH
+camera_x = 0  
 camera_y = 0
 
 GRID_CELL_SIZE = GRID_CELL_WIDTH*GRID_CELL_HEIGHT
@@ -32,24 +32,6 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
 
-    # def dessiner_tuile(self, x, y, couleur):
-    #     global LISTX, LISTY, LIST
-
-    #     points = [(x, y + GRID_CELL_HEIGHT), (x + GRID_CELL_WIDTH, y),
-    #               (x + 2 * GRID_CELL_WIDTH, y + GRID_CELL_HEIGHT), (x + GRID_CELL_WIDTH, y + 2 * GRID_CELL_HEIGHT)]
-    #     for i in range(4):
-    #         LISTX.append(points[i][0])
-    #         LISTY.append(points[i][1])
-    #         LIST.append(points[i])
-
-    #     pygame.draw.polygon(self.screen, couleur, points)
-    #     #Dessiner un contour autour de la tuile
-    #     pygame.draw.lines(self.screen, NOIR, True, points, 1)
-
-    # def deplacer_camera(self, dx, dy):
-    #     global camera_x, camera_y
-    #     camera_x += dx
-    #     camera_y += dy
         bob_group = pygame.sprite.Group()
         self.Nourriture_group = pygame.sprite.Group()
         self.cameragroup = CameraGroup()
@@ -100,25 +82,6 @@ class Game:
                         0, SCREEN_WIDTH-5), random.randrange(0, SCREEN_HEIGHT-5), self.cameragroup)
                     self.Nourriture_group.add(new_Nourriture)
 
-            # self.screen.fill((255, 255, 255))  # fond Blanc
-
-            # Dessiner la grille losange
-            # for i in range(GRID_WIDTH):
-            #     for j in range(GRID_HEIGHT):
-            #         x = (i - j) * GRID_CELL_WIDTH #- self.cameragroup.offset.x + self.cameragroup.internal_offset.x
-            #         y = (i + j) * GRID_CELL_HEIGHT #- self.cameragroup.offset.y-self.cameragroup.internal_offset.y
-            #         if (i + j) % 2 == 0:
-            #             couleur = NOIR
-            #         else:
-            #             couleur = BLANC
-            #         self.dessiner_tuile(x, y, couleur)
-
-            # Nourriture_group = pygame.sprite.Group()
-
-            # for bob in bob_group:
-            #     bob.bouger(GRID_CELL_SIZE, LIST, camera_x, camera_y)
-
-            # bob_group.update()
             self.cameragroup.update()
             self.cameragroup.custom_draw()
 
