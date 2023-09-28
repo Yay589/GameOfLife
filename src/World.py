@@ -117,10 +117,9 @@ class World:
 
     def draw(self):
         screen.fill((255, 255, 255))
-        grass_image = pygame.image.load("data/images/grass.png").convert()
         for i in self.list_x_y:
-            screen.blit(grass_image, i)
-            grass_image.set_colorkey((0, 0, 0))
+            screen.blit(self.image, i)
+            #grass_image.set_colorkey((0, 0, 0))
 
         for k, v in self.world.items():
             for obj in v:
