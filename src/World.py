@@ -126,8 +126,8 @@ class World:
             for obj in v:
                 screen.blit(obj.image, list(eval(k)))
                 #print("\neval(k) = ", eval(k))
-                #print("obj.rect.center = ", obj.rect.center)
-                obj.image.set_colorkey((0, 0, 0))
+                #print("obj.rect.center = ", obj.rect.center)                
+                obj.current_sprite+=1
 
         pygame.display.flip()
 
@@ -135,11 +135,20 @@ class GameObject(pygame.sprite.Sprite):
     def __init__(self,id):
         super().__init__()
         self.id=id
-        self.image = pygame.image.load("data/images/1.png").convert()
+        self.sprites = []
+        self.sprites.append(pygame.image.load('data/images/0.png').convert())
+        self.sprites.append(pygame.image.load('data/images/1.png').convert())
+        self.sprites.append(pygame.image.load('data/images/2.png').convert())
+        self.sprites.append(pygame.image.load('data/images/3.png').convert())
+        self.current_sprite = 0
+        
+        if self.current_sprite > 3:
+            self.current_sprite=0
+        self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = list([0, 0])
 
-world = World(n=10, m=10)
+world = World(n=30, m=30)
 object1 = GameObject(1)
 object2 = GameObject(2)
 object3 = GameObject(3)
@@ -156,52 +165,17 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+    world.draw()
+    
     world.move(object1)
     world.move(object2)
     world.move(object3)
     
-    world.draw()
     clock.tick(30)
     
-
 pygame.quit()
 
 
 
 
 
-
-
-
-
-
-"""
-pygame.init()
-
-# Création d'une fenêtre
-screen = pygame.display.set_mode((800, 600))
-
-# Création d'une instance de la classe World
-world_instance = World(3, 4)
-
-# Boucle principale
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Efface l'écran
-    screen.fill((255, 255, 255))
-
-    # Dessine l'image à partir de world_instance
-    for i in world_instance.list_x_y:
-        screen.blit(world_instance.image, i)
-
-    # Actualise l'écran
-    pygame.display.flip()
-
-# Fermeture de Pygame
-pygame.quit()
-"""
