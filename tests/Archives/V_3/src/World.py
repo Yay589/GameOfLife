@@ -14,22 +14,59 @@ class World:
     def __init__(self, n, m):
         self.n = n
         self.m = m
+        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5]
+                         for x in range(self.n) for y in range(self.m)]
         self.world = defaultdict(list)
-        
+        self.image = pygame.image.load('data/images/grass.png').convert()
+        self.image.set_colorkey((0, 0, 0))
+        for i in self.list_x_y:
+            self.rect = self.image.get_rect()
+            self.rect.center = i
+            
+        # camera
+        self.display_surface = pygame.display.get_surface()
+        self.offset = pygame.math.Vector2()
+        self.half_w = self.display_surface.get_size()[0] // 2
+        self.half_h = self.display_surface.get_size()[1] // 2
+
+        self.camera_borders = {'left': 200,
+                               'right': 200, 'top': 100, 'bottom': 100}
+        l = self.camera_borders['left']
+        t = self.camera_borders['top']
+        w = self.display_surface.get_size(
+        )[0] - (self.camera_borders['left'] + self.camera_borders['right'])
+        h = self.display_surface.get_size(
+        )[1] - (self.camera_borders['top'] + self.camera_borders['bottom'])
+        self.camera_rect = pygame.Rect(l, t, w, h)
+
+        # parametre
+        self.keyboard_speed = 15
+        self.mouse_speed = 0.2
+
+        # zoom
+        self.zoom_scale = 1
+        self.internal_surf_size = (2500, 2500)
+        self.internal_surf = pygame.Surface(
+            self.internal_surf_size, pygame.SRCALPHA)
+        self.internal_rect = self.internal_surf.get_rect(
+            center=(self.half_w, self.half_h))
+        self.internal_surface_size_vector = pygame.math.Vector2(
+            self.internal_surf_size)
+        self.internal_offset = pygame.math.Vector2()
+        self.internal_offset.x = self.internal_surf_size[0] // 2 - self.half_w
+        self.internal_offset.y = self.internal_surf_size[1] // 2 - self.half_h
+
+    def convert_position(self, position):
+        return [150 + position[0] * 10 - position[1] * 10, 100 + position[0] * 5 + position[1] * 5]
 
     def addOnMap(self, _Object):
-        
-        listKeys=#[i for i in self.world.keys()]
+        listKeys=[i for i in self.world.keys()]
         position = random.choice(self.list_x_y)
-        
         if str(position) in listKeys:
             print(f"{position} is in {self.world.keys()} so there is a collision")
-            
         self.world[str(position)].append(_Object)
         #print("self.world.keys() = ",[i for i in self.world.keys()])
-        
         _Object.rect.center = list(position)
-        
         #print("type (obj.rect.center) = ", type(_Object.rect.center))
         #print("addonmap => ", self.world)
 
