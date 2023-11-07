@@ -14,7 +14,7 @@ BLANC = (0, 100, 0)
 NOIR = (34, 139, 34)
 
 # Taille de la grille
-n, m = 100, 100
+n, m = 10, 10
 
 # Taille d'une tuile losange
 largeur_tuile = 60
