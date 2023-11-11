@@ -2,10 +2,10 @@ import pygame
 import time
 import sys
 import random
-from Objet import BOB
-from Objet import Nourriture
-from Objet import CameraGroup
-from Objet import Case
+from Object import BOB
+from Object import Nourriture
+from Object import CameraGroup
+from Object import Case
 # from Objet import Tuile
 
 GRID_WIDTH = 10

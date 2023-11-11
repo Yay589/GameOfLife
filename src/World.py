@@ -44,6 +44,7 @@ class World:
         
         listValue = [i[j] for i in self.world.values() for j in range(len(i))]+[]
         if _Object.id not in [i.id for i in listValue]:
+
             self.addOnMap(_Object)
         
         tempDict = defaultdict(list)

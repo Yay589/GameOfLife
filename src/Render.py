@@ -1,11 +1,12 @@
 import pygame
 from World import World
+from Object import *
 
 
 # Define the screen dimensions
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Your Game Title')
+pygame.display.set_caption('Game Of life')
 
 class Render:
     def __init__(self, n, m) -> None:
@@ -62,8 +63,9 @@ class Render:
                 vect_list_obj = [x * self.zoom_scale for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
                 image_obj=pygame.transform.scale(obj.image, vect_list_obj)
                 screen.blit(image_obj, [(list(eval(k))[0]-self.offset.x)*self.zoom_scale,(list(eval(k))[1]-self.offset.y)*self.zoom_scale])
-                obj.current_sprite = 0 if  obj.current_sprite == 3 else obj.current_sprite+1
-                obj.image = obj.sprites[obj.current_sprite]
+                if (obj.type == "bob"):
+                    obj.current_sprite = 0 if  obj.current_sprite == 3 else obj.current_sprite+1
+                    obj.image = obj.sprites[obj.current_sprite]
                 
         pygame.display.flip()
     
@@ -90,45 +92,4 @@ class Render:
             self.zoom_scale += 0.1
         if keys[pygame.K_x]:
             self.zoom_scale -= 0.1
-        
-        
-class GameObject(pygame.sprite.Sprite):
-    def __init__(self,id):
-        super().__init__()
-        self.id=id
-        self.sprites = []
-        self.sprites.append(pygame.image.load('data/images/0.png').convert())
-        self.sprites.append(pygame.image.load('data/images/1.png').convert())
-        self.sprites.append(pygame.image.load('data/images/2.png').convert())
-        self.sprites.append(pygame.image.load('data/images/3.png').convert())
-        self.current_sprite = 0
-        self.image = self.sprites[0]
-        self.rect = self.image.get_rect()
-        self.rect.center = list([0, 0])
 
-r = Render(30,30)
-object1 = GameObject(1)
-object2 = GameObject(2)
-object3 = GameObject(3)
-
-listObjects = [object1, object2, object3]
-
-for i in listObjects:
-    r.world.addOnMap(i)
-
-running = True
-clock = pygame.time.Clock()
-
-while running:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    r.draw()
-    
-    for i in listObjects:
-        r.world.move(i)
-    
-    clock.tick(20)
-    
-pygame.quit()
