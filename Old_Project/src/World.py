@@ -10,6 +10,7 @@ pygame.init()
 class World:
     def __init__(self, n, m):
         self.world = defaultdict(list)
+        self.savedWorld = defaultdict(list)
         self.n = n
         self.m = m
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(self.n) for y in range(self.m)]
@@ -21,8 +22,9 @@ class World:
         listKeys=[i for i in self.world.keys()]
         position = random.choice(self.list_x_y)
         
-        if str(position) in listKeys:
-            print(f"{position} is in {self.world.keys()} so there is a collision")
+        #Pour éviter les collisions inutile lors de l'apparition sur la carte.
+        while str(position) in listKeys:
+            position = random.choice(self.list_x_y)
             
         self.world[str(position)].append(_Object)
         
@@ -41,7 +43,7 @@ class World:
         return random.choice(res)
 
     def move(self, _Object):
-        
+            
         listValue = [i[j] for i in self.world.values() for j in range(len(i))]+[]
         if _Object.id not in [i.id for i in listValue]:
 
