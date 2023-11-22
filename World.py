@@ -26,8 +26,8 @@ class World:
         #     print(f"{position} is in {self.world.keys()} so there is a collision")
 
         # Read positions from the 'save.txt' file
-        with open('src/save.txt', 'r') as file:
-            positions= file.read().splitlines()
+        #with open('src/save.txt', 'r') as file:
+        #    positions= file.read().splitlines()
 
         allocated_positions = set() 
 

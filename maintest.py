@@ -1,5 +1,5 @@
 import pygame
-from World import World
+import sys
 from random import *
 from parametre import *
 from math import trunc
@@ -47,7 +47,7 @@ class Game:
         self.keyboard_speed = 15
         self.mouse_speed = 0.2
 
-        self.zoom_scale = 1
+        self.zoom_scale = 2
         self.internal_surf_size = (2500, 2500)
         self.internal_surf = pygame.Surface(self.internal_surf_size, pygame.SRCALPHA)
         self.internal_rect = self.internal_surf.get_rect(center=(self.half_w, self.half_h))
@@ -60,11 +60,18 @@ class Game:
         self.listObjects.append(game_object)
 
 
-    def draw(self):
+    def draw(self,pause):
         self.keyboard_control()
         self.zoom_keyboard_control()
         
-        screen.fill((255, 255, 255))
+        screen.fill((0,0,0))
+        
+        
+        image_ground = pygame.image.load('data/images/ground.jpg')
+        image_ground = pygame.transform.scale(image_ground, (1500, 700))
+        screen.blit(image_ground, (0,0))
+        
+        
         for i in self.list_x_y:
             #screen.blit(self.image, i)
             vect_list = [x * self.zoom_scale for x in (self.rect.width ,self.rect.height)]
@@ -73,13 +80,29 @@ class Game:
 
         for obj in self.all_gameobject:
             print(obj.rect.center)
+            location=()
+            location=obj.rect.center
             #screen.blit(obj.image, list(eval(k)))           
-            vect_list_obj = [x * self.zoom_scale for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
+            vect_list_obj = [x * self.zoom_scale*obj.taille for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
             image_obj=pygame.transform.scale(obj.image, vect_list_obj)
-            screen.blit(image_obj, [(obj.rect.x*10+210-self.offset.x)*self.zoom_scale,(obj.rect.y*5+170-self.offset.y)*self.zoom_scale])
-            obj.current_sprite = 0 if  obj.current_sprite == 3 else obj.current_sprite+1
+            #screen.blit(image_obj, [(obj.rect.x*10+205-self.offset.x)*self.zoom_scale,(obj.rect.y*5+170-self.offset.y)*self.zoom_scale])
+
+            screen.blit(image_obj, [(157.5 + location[0] * 10 - location[1] * 10-self.offset.x)*self.zoom_scale
+                                    ,(100 + location[0] * 5 + location[1] * 5-self.offset.y)*self.zoom_scale])
+
             obj.image = obj.sprites[obj.current_sprite]
-                
+
+        font = pygame.font.Font(None, 36)
+        text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+        screen.blit(text_render, (350,50))
+        
+        if pause:
+            pause_image = pygame.image.load('data/images/pause.png')
+            pause_image = pygame.transform.scale(pause_image, (300, 200))
+            #pause_image.set_colorkey((255,255,255))
+            screen.blit(pause_image, (250, 200))
+            
+            
         pygame.display.flip()
     
 
@@ -114,6 +137,7 @@ class Game:
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
         super().__init__()
+        self.taille=Bob.energy/800+0.2
         self.gbob=Bob
         self.sprites = []
         self.sprites.append(pygame.image.load('data/images/0.png').convert())
@@ -148,9 +172,12 @@ bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
 allBobs.append(bob_ex)
 
 
+
+
 running = True
-font = pygame.font.Font(None, 36)
-text = font.render("Press S key to save and continue", True,'black')
+is_paused = False
+
+
 save_option_shown = False
 clock = pygame.time.Clock()
 
@@ -159,29 +186,39 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                is_paused = not is_paused
 
-
-
-    g.draw()
+    
+    g.draw(is_paused)    
     
 
-
-
-    for b in allBobs:
-        if(not b.reproduction()):
-            if(not b.manger()):
-                b.bouger()
-
-    g.all_gameobject.empty()
-
-    for bob in allBobs:
-        g.all_gameobject.add(BOB_GameObject(bob))
-
-
-        for j in g.all_gameobject:
-            j.update_position()
+    if not is_paused:
         
+
+
+        for b in allBobs:
+            if(not b.reproduction()):
+                if(not b.manger()):
+                    b.bouger()
+
+        g.all_gameobject.empty()
+
+        for bob in allBobs:
+            g.all_gameobject.add(BOB_GameObject(bob))
+
+
+            for j in g.all_gameobject:
+                j.update_position()
+
+        
+
+        
+
+
+
     
-    clock.tick(20)
+    clock.tick(15)
     
 pygame.quit()
