@@ -1,6 +1,7 @@
+import sys
 import pygame
-from World import World
-
+from bob import Bob
+from parametre import *
 
 pygame.init()
 
@@ -8,16 +9,14 @@ pygame.init()
 pygame.font.init()
 
 # Define the screen dimensions
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Your Game Title')
 
 class Render:
-    def __init__(self, n, m) -> None:
-        self.world = World(n,m)
-        self.n = n
-        self.m = m
-        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(self.n) for y in range(self.m)]
+    def __init__(self) :
+        self.all_gameobject=pygame.sprite.Group()
+        self.listObjects = []
+        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
         self.image = pygame.image.load('data/images/grass.png').convert()
         self.image.set_colorkey((0, 0, 0))
         for i in self.list_x_y:
@@ -43,7 +42,7 @@ class Render:
         self.keyboard_speed = 15
         self.mouse_speed = 0.2
 
-        self.zoom_scale = 1
+        self.zoom_scale = 2
         self.internal_surf_size = (2500, 2500)
         self.internal_surf = pygame.Surface(self.internal_surf_size, pygame.SRCALPHA)
         self.internal_rect = self.internal_surf.get_rect(center=(self.half_w, self.half_h))
@@ -51,30 +50,55 @@ class Render:
         self.internal_offset = pygame.math.Vector2()
         self.internal_offset.x = self.internal_surf_size[0] // 2 - self.half_w
         self.internal_offset.y = self.internal_surf_size[1] // 2 - self.half_h
-    
-    def draw(self):
+
+    def add_object(self, game_object):
+        self.listObjects.append(game_object)
+
+
+    def draw(self,pause):
         self.keyboard_control()
         self.zoom_keyboard_control()
         
-        screen.fill((255, 255, 255))
+        screen.fill((0,0,0))
+        
+        
+        image_ground = pygame.image.load('data/images/ground.jpg')
+        image_ground = pygame.transform.scale(image_ground, (1500, 700))
+        screen.blit(image_ground, (0,0))
+        
+        
         for i in self.list_x_y:
             #screen.blit(self.image, i)
             vect_list = [x * self.zoom_scale for x in (self.rect.width ,self.rect.height)]
             image=pygame.transform.scale(self.image, vect_list)
             screen.blit(image, [(i[0]-self.offset.x)*self.zoom_scale,(i[1]-self.offset.y)* self.zoom_scale])
 
-        for k, v in self.world.world.items():
-            for obj in v:
-                #screen.blit(obj.image, list(eval(k)))           
-                vect_list_obj = [x * self.zoom_scale for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
-                image_obj=pygame.transform.scale(obj.image, vect_list_obj)
-                screen.blit(image_obj, [(list(eval(k))[0]-self.offset.x)*self.zoom_scale,(list(eval(k))[1]-self.offset.y)*self.zoom_scale])
-                obj.current_sprite = 0 if  obj.current_sprite == 3 else obj.current_sprite+1
+        for obj in self.all_gameobject:
+            print(obj.rect.center)
+            location=()
+            location=obj.rect.center
+            #screen.blit(obj.image, list(eval(k)))           
+            vect_list_obj = [x * self.zoom_scale*obj.taille for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
+            image_obj=pygame.transform.scale(obj.image, vect_list_obj)
+            #screen.blit(image_obj, [(obj.rect.x*10+205-self.offset.x)*self.zoom_scale,(obj.rect.y*5+170-self.offset.y)*self.zoom_scale])
+
+            screen.blit(image_obj, [(157.5 + location[0] * 10 - location[1] * 10-self.offset.x)*self.zoom_scale
+                                    ,(100 + location[0] * 5 + location[1] * 5-self.offset.y)*self.zoom_scale])
+            if isinstance(obj, Bob):
                 obj.image = obj.sprites[obj.current_sprite]
-                
+
+        font = pygame.font.Font(None, 36)
+        text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+        screen.blit(text_render, (350,50))
+        
+        if pause:
+            pause_image = pygame.image.load('data/images/pause.png')
+            pause_image = pygame.transform.scale(pause_image, (300, 200))
+            #pause_image.set_colorkey((255,255,255))
+            screen.blit(pause_image, (250, 200))
+            
+            
         pygame.display.flip()
-    
-   
     
     
     def keyboard_control(self):
@@ -97,64 +121,3 @@ class Render:
             self.zoom_scale += 0.1
         if keys[pygame.K_x]:
             self.zoom_scale -= 0.1
-        
-        
-class GameObject(pygame.sprite.Sprite):
-    def __init__(self,id):
-        super().__init__()
-        self.id=id
-        self.sprites = []
-        self.sprites.append(pygame.image.load('data/images/0.png').convert())
-        self.sprites.append(pygame.image.load('data/images/1.png').convert())
-        self.sprites.append(pygame.image.load('data/images/2.png').convert())
-        self.sprites.append(pygame.image.load('data/images/3.png').convert())
-        self.current_sprite = 0
-        self.image = self.sprites[0]
-        self.rect = self.image.get_rect()
-        self.rect.center = list([0, 0])
-
-r = Render(30,30)
-object1 = GameObject(1)
-object2 = GameObject(2)
-object3 = GameObject(3)
-
-listObjects = [object1, object2, object3]
-
-r.world.addOnMap(listObjects)
-
-
-
-running = True
-font = pygame.font.Font(None, 36)
-text = font.render("Press S key to save and continue", True,'black')
-save_option_shown = False
-clock = pygame.time.Clock()
-
-while running:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:  # 按下 'S' 键保存游戏状态
-                r.world.save_game()
-                save_option_shown = False
-            elif event.key == pygame.K_ESCAPE:  # 按下 ESC 键显示保存选项
-                save_option_shown = True
-
-
-    if not save_option_shown:
-        # 正常游戏逻辑和渲染
-        r.draw()
-    
-        for i in listObjects:
-            r.world.move(i)
-    else:
-        screen.fill('white')
-        screen.blit(text, (200, 300))
-        pygame.display.flip()
-    
-    
-    clock.tick(20)
-    
-pygame.quit()

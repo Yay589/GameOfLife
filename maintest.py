@@ -211,13 +211,6 @@ while running:
 
             for j in g.all_gameobject:
                 j.update_position()
-
-        
-
-        
-
-
-
     
     clock.tick(15)
     
