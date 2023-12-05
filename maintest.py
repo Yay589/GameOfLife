@@ -1,12 +1,11 @@
 import pygame
-import random
+from random import *
 import math
 from parametre import *
 from nourriture import Nourriture
 from case import Case
 from bob import Bob
 from affichage import *
-from fonction_mix import *
 pygame.init()
 
 
@@ -161,7 +160,7 @@ class Game:
             screen.blit(text_show, (350,100))
 
         if self.is_paused:
-            image_pause = pygame.image.load('data/images/pause.jpg')
+            image_pause = pygame.image.load('data/images/pause.png')
             image_pause.set_colorkey((255, 255, 255))
             image_pause = pygame.transform.scale(image_pause, (50,50))
             screen.blit(image_pause, (375,275))
@@ -320,8 +319,7 @@ while running:
             else:
                 g.sombre -= 1
 
-            viderNourritureGrille()
-            allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
+            #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
             for b in allBobs:
                 if(not b.reproduction()):
                     if(not b.manger()):
