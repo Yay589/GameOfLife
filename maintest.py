@@ -267,7 +267,7 @@ class Game:
             self.plat -= 0.1
             self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
 
-        
+       
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
         super().__init__()
@@ -289,9 +289,7 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.rect.center = self.gbob.coordonnee
 
 g=Game()
-print(g.list_x_y)
-
-
+#print(g.list_x_y)
 
 
 for i in range(N-1):
@@ -306,10 +304,7 @@ bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
 allBobs.append(bob_ex)
 
 
-
-
 running = True
-
 
 
 save_option_shown = False
@@ -330,10 +325,6 @@ while running:
         
         g.draw()    
         
-
-
-            
-
         if  not g.is_paused:
             if g.sombre == 200:
                 g.day_night=1
@@ -365,12 +356,6 @@ while running:
     else:
         g.draw_start()
         
-
-        
-
-        
-
-
 
     
     clock.tick(15)

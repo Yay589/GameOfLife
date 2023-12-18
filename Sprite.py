@@ -7,15 +7,16 @@ from bob import Bob
 class BobSprite(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
         super().__init__()
-        self.taille=Bob.energy/800+0.3
+        self.energy=Bob.energy
+        self.taille=Bob.energy/800+0.2
         self.gbob=Bob
-        self.sprites = []
-        self.sprites.append(pygame.image.load('data/images/0.png').convert())
-        self.sprites.append(pygame.image.load('data/images/1.png').convert())
-        self.sprites.append(pygame.image.load('data/images/2.png').convert())
-        self.sprites.append(pygame.image.load('data/images/3.png').convert())
+        #self.sprites = []
+        #self.sprites.append(pygame.image.load('data/images/0.png').convert())
+        #self.sprites.append(pygame.image.load('data/images/1.png').convert())
+        #self.sprites.append(pygame.image.load('data/images/2.png').convert())
+        #self.sprites.append(pygame.image.load('data/images/3.png').convert())
         self.current_sprite = 0
-        self.image = self.sprites[0]
+        self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
         self.rect.center = Bob.coordonnee
 
