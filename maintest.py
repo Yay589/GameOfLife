@@ -1,9 +1,7 @@
 import pygame
 from random import *
-import random
 import math
 from parametre import *
-from nourriture import Nourriture
 from case import Case
 from bob import Bob
 from affichage import *
@@ -31,7 +29,7 @@ class Game:
         self.all_gameobject=pygame.sprite.Group()
         self.listObjects = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
-        self.random_values_for_tree = random.sample(self.list_x_y, 6)
+        #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
         # available_points = self.list_x_y.copy()
@@ -109,12 +107,12 @@ class Game:
 
 
         
-        for i in self.random_values_for_tree:
-            image_tree = pygame.image.load('data/images/05.png')
-            j=[(i[0]-self.offset.x)*self.zoom_scale,(i[1]-self.offset.y)* self.zoom_scale]
-            image=pygame.transform.scale(image_tree, (50, 50))
+        # for i in self.random_values_for_tree:
+        #     image_tree = pygame.image.load('data/images/05.png')
+        #     j=[(i[0]-self.offset.x)*self.zoom_scale,(i[1]-self.offset.y)* self.zoom_scale]
+        #     image=pygame.transform.scale(image_tree, (50, 50))
 
-            screen.blit(image,j)
+        #     screen.blit(image,j)
 
 
         # Afficher l’énergie de Bob
@@ -298,7 +296,6 @@ print(g.list_x_y)
 
 for i in range(N-1):
         allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
-allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(2*N)]
 
 
 for bob in allBobs:
