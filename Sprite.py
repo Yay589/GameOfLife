@@ -2,7 +2,7 @@ import sys
 import pygame
 from bob import Bob
 #from case import Case #En attente des modifications de celestine
-from nourriture import Nourriture
+#from nourriture import Nourriture
 
 class BobSprite(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
@@ -22,7 +22,7 @@ class BobSprite(pygame.sprite.Sprite,Bob):
 
     def update_position(self):
         self.rect.center = self.gbob.coordonnee
-        
+"""
 class FoodSprite(pygame.sprite.Sprite,Nourriture):
     def __init__(self,Nourriture):
         super().__init__()
@@ -37,3 +37,4 @@ class FoodSprite(pygame.sprite.Sprite,Nourriture):
     def update_position(self):
         self.rect.center = self.gfood.coordonnee
         self.image.set_colorkey((37, 43, 43))
+"""

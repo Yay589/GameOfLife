@@ -13,25 +13,25 @@ print(g.list_x_y)
 
 
 
-
+""""
 for i in range(N-1):
         allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
 allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(2*N)]
-
+"""
 
 for bob in allBobs:
     g.all_gameobject.add(BobSprite(bob))
-
+"""
 for food in allFoods:
     g.all_gameobject.add(FoodSprite(food))
-
+"""
 
 bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
 allBobs.append(bob_ex)
-
+"""
 food_ex = Nourriture()
 allFoods.append(food_ex)
-
+"""
 running = True
 is_paused = False
 
@@ -67,10 +67,10 @@ while running:
             g.all_gameobject.add(BobSprite(bob))
             for j in g.all_gameobject:
                 j.update_position()
-                
+        """       
         for food in allFoods:
             g.all_gameobject.add(FoodSprite(food))
-        
+        """
         
     
     clock.tick(15)
