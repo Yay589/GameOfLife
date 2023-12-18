@@ -334,13 +334,6 @@ while running:
         g.draw_start()
         
 
-        
-
-        
-
-
-
-    
     clock.tick(15)
     
 pygame.quit()
