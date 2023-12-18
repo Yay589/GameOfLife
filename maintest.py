@@ -2,7 +2,7 @@ import pygame
 from random import *
 import math
 from parametre import *
-from nourriture import Nourriture
+#from nourriture import Nourriture
 from case import Case
 from bob import Bob
 from affichage import *
@@ -264,11 +264,6 @@ g=Game()
 print(g.list_x_y)
 
 
-
-
-for i in range(N-1):
-        allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
-allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(2*N)]
 
 
 for bob in allBobs:

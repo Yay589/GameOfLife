@@ -8,7 +8,7 @@ deadBobs = []
 
 
 #Paramètres simulation :
-N = 3 #100 Length or width of the map (grid of N*N)
+N = 30 #100 Length or width of the map (grid of N*N)
 numberBob = 100 #100 Number of Bobs at the begining
 numberFood = 200 #200 Number of food points par day
 
@@ -26,5 +26,5 @@ bobS = 1 #1 Speed before mutation
 bobM = 1 #1 Mass before mutation
 
 #Paramètre affichage graphique :
-SCREEN_WIDTH=1280/2
-SCREEN_HEIGHT=720/2
+SCREEN_WIDTH= 800
+SCREEN_HEIGHT=600
