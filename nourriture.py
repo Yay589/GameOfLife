@@ -1,131 +1,37 @@
-"""
-Ce fichier contient les fonctions qui permettent de faire un affichage terminal pour notre jeu
-
-3 affichages differents disponible
-
-"""
-
-__date__ = "2023-10-12"
-
-
-from parametre import *
-from nourriture import *
 from case import Case
-from bob import Bob
+from random import *
+from parametre import *
 
+def ajouterNourritureGrille(nombreNourriture = numberFood, energieNourriture = foodE):
+    for i in range (nombreNourriture) :
+        ajouterNourritureCase(energieNourriture)
 
-# version d'affichage avec des contours, pour une petite grille
-def afficheGrille():
-    for a in range(int(N * 4.5)):
-        print(" _", end="")
-    print("")
-    for i in range(N):
-        print("|", end="")
-        for j in range(N):
-            if ((i, j) in grille):
-                if (grille[(i, j)].bobs != []):
-                    if (grille[(i, j)].qtite_nourriture != 0):
-                        print(" ^^ ", grille[(i, j)].qtite_nourriture, "", end="")
-                    elif (len(grille[(i, j)].bobs) == 1):
-                        print("  (^-^)  ", end="")
-                    elif (len(grille[(i, j)].bobs) == 2):
-                        print("(^^) (^^)", end="")
-                    elif (len(grille[(i, j)].bobs) == 2):
-                        print(" 3+ bobs ", end="")
-                else:
-                    print("  ", grille[(i, j)].qtite_nourriture, "  ", end="")
-            else:
-                print("         ", end="")
-        print("|", end="")
-        print("")
-    for a in range(int(N * 4.5)):
-        print(" _", end="")
-    print("")
+def ajouterNourritureCase(energieNourriture = foodE):
+    coord = (randint(0,N-1),randint(0,N-1));
+    
+    if(coord not in grille):
+        case = Case(coord)
+        case.ajouterNourriture(energieNourriture)
+    else :
+        case = grille[coord]
+        case.ajouterNourriture(energieNourriture)
 
+def ajouterNourritureCase(coordCase, qtite_nourriture = foodE):
+        if(coordCase not in grille):
+            Case(coord = coordCase, qtite_nourriture = qtite_nourriture)
+        else :
+            grille[coordCase].qtite_nourriture += qtite_nourriture
+#la fonction ajouterNourriture pour une case est dans case.py
 
-# version d'affichage "emoji" fonctionne pour des grilles un peu plus grande (environ 35*35)
-def afficheGrilleSimple():
-    for a in range(N // 2 * 5):
-        print(" _", end="")
-    print("")
-    for i in range(N):
-        print("|", end="")
-        for j in range(N):
-            if ((i, j) in grille):
-                if (grille[(i, j)].bobs != []):
-                    if (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) == 1):
-                        print(" ○♥  ", end="")
-                    elif (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) == 2):
-                        print(" ○♥○ ", end="")
-                    elif (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) > 2):
-                        print(" b&f ", end="")
-                    elif (len(grille[(i, j)].bobs) == 1):
-                        print("  ○  ", end="")
-                    elif (len(grille[(i, j)].bobs) == 2):
-                        print(" ○○  ", end="")
-                    elif (len(grille[(i, j)].bobs) == 3):
-                        print(" ○○○ ", end="")
-                    elif (len(grille[(i, j)].bobs) > 3):
-                        print(" bbb ", end="")
-                else:
-                    print("  ♥  ", end="")
-            else:
-                print("     ", end="")
-        print("|", end="")
-        print("")
-    for a in range(N // 2 * 5):
-        print(" _", end="")
-    print("\n")
+def viderNourritureGrille():
+    caseSuprCoord = []
+    for c in grille:
+        grille[c].viderNourriture()
+        if (grille[c].estVide()):
+            caseSuprCoord.append(c)
+        for cSupr in caseSuprCoord: #on est obligés de supprimer après vu qu'on peut pas modifier un dictionnaire en même temps qu'on le parcourt
+            grille[cSupr].supprimer()
 
-def afficheGrilleSimple():
-    for a in range(N // 2 * 3):
-        print(" _", end="")
-    print("")
-    for i in range(N):
-        print("|", end="")
-        for j in range(N):
-            if ((i, j) in grille):
-                if (grille[(i, j)].bobs != []):
-                    if (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) == 1):
-                        print("○♥ ", end="")
-                    elif (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) == 2):
-                        print("○♥○", end="")
-                    elif (grille[(i, j)].qtite_nourriture != 0 and len(grille[(i, j)].bobs) > 2):
-                        print("b&f", end="")
-                    elif (len(grille[(i, j)].bobs) == 1):
-                        print(" ○ ", end="")
-                    elif (len(grille[(i, j)].bobs) == 2):
-                        print("○○ ", end="")
-                    elif (len(grille[(i, j)].bobs) == 3):
-                        print("○○○", end="")
-                    elif (len(grille[(i, j)].bobs) > 3):
-                        print("bbb", end="")
-                else:
-                    print(" ♥ ", end="")
-            else:
-                print("   ", end="")
-        print("|", end="")
-        print("")
-    for a in range(N // 2 * 3):
-        print(" _", end="")
-    print("\n")
-
-# affichage avec des cases separées (petite grille)
-def afficheGrilleCrochet():
-    for i in range(N):
-        for j in range(N):
-            if ((i, j) in grille):
-                if (grille[(i, j)].bobs != []):
-                    if (grille[(i, j)].qtite_nourriture != 0):
-                        print("[ ^^ ", grille[(i, j)].qtite_nourriture, "]", end="")
-                    elif (len(grille[(i, j)].bobs) == 1):
-                        print("[  (^-^)  ]", end="")
-                    elif (len(grille[(i, j)].bobs) == 2):
-                        print("[(^^) (^^)]", end="")
-                    elif (len(grille[(i, j)].bobs) >= 3):
-                        print("[ 3+ bobs ]", end="")
-                else:
-                    print("[  ", grille[(i, j)].qtite_nourriture, "  ]", end="")
-            else:
-                print("[         ]", end="")
-        print("")
+def renouvellerNourriture(nombreNourriture = numberFood, energieNourriture = foodE) :
+    viderNourritureGrille()
+    ajouterNourritureGrille(nombreNourriture, energieNourriture)
