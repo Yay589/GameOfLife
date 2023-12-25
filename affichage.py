@@ -5,7 +5,8 @@ Ce fichier contient les fonctions qui permettent de faire un affichage terminal 
 
 """
 
-__date__ = "2030-12-10"
+__date__ = "2023-10-12"
+
 
 from parametre import *
 from nourriture import *
@@ -128,4 +129,3 @@ def afficheGrilleCrochet():
             else:
                 print("[         ]", end="")
         print("")
-
