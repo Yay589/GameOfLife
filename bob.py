@@ -34,13 +34,16 @@ class Bob():
                  bobMemory = bobMem,
                  coord = (randint(0,N-1),randint(0,N-1)) ) :
         self.coordonnee = coord #avec randint les deux bornes sont inclusives
+        self.coordonneePrecedentes = coord #pour l'instant on va dire ça s'il vient de pop
+        #ajout du bob dans la grille
         if(coord not in grille):
             self.case = Case(coord)
             self.case.ajouterBob(self)
         else :
             self.case = grille[coord]
             self.case.ajouterBob(self) #on ajoute un bob a la liste de bob de la case de clé coord
-        self.birthDay = birthDay
+        
+        self.birthDay = birthDay #indique si le bob vient de naître pour savoir s'il peut faire une action des ce tic
         self.dead = 0
         self.speedBuffer = 0
 
@@ -50,8 +53,14 @@ class Bob():
         self.perception = bobPerception
         self.memory = bobMemory
         
-        self.nourritureEnVue = []
+        #perecption
+        self.listeNourritureEnVue = []
         self.coordNourriturePref = None
+        
+        #memoire
+        self.memoireDisponible = bobMemory #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
+        self.nourritureMemorisee = []
+        self.casesMemorisee = []
 
     def mourir(self):
         self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie
@@ -72,15 +81,17 @@ class Bob():
         créé.
         """
         if(self.energy == bobMaxE):
+            self.coordonneePrecedentes = self.coordonnee #met a jour coordonnee precedente
+            #calcul des données héreditaire
             vitesseBebe = self.speed + random()%0.2 - 0.1
-            perceptionBebe = max((self.perception + randint(-1,1)),0) #a tester pour verifier si ça marche
+            perceptionBebe = max((self.perception + randint(-1,1)),0)
             memoireBebe = self.memory + randint(-1,1)
-            print(self.perception, perceptionBebe, memoireBebe)
+            #creation du bebe
             allBobs.append(Bob(birthDay = 1, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordonnee))
+            #perte d'energie
             self.energy -= bobLaborE
             return 1
         else:
-            #print("no baby")
             return 0
        
 #deplacement :
@@ -92,29 +103,41 @@ class Bob():
         self.speedBuffer = nombreCasesFloat - nombreCasesInt #calcule le nouveau buffer
         return nombreCasesInt
     
+    def caseVisitee(self,coord):
+        return (coord in self.casesMemorisee)
+    
     #modifie les coordonnée d'un bob pour le deplacer aléatoirement du bon nombre de case    
     def calculNouvellesCoordonneeDeplacement(self):
+        i = 0 #compteur pour pas se retrouver bloqué 
+        x = self.coordonnee[0]
+        xBefore = x
+        y = self.coordonnee[1]
+        yBefore = y
+        #self.coordonneePrecedentes = self.coordonnee #on enregiste les coordonnees precentes avant des les modifier
         for i in range(self.calculNbCasesDeplacement()): #une itération par case à bouger
             boucle = True #permet de faire un équivalent de do(changer de coord) while (nouvelles coordonnées pas dans la grille)
             while boucle :
+                i += 1
                 a = randint(1,2) #on modifie soit x soit y
                 b = randint(1, 2) #on modifie de -1 ou +1
                 if a == 1:
                     if b == 1 :
-                        x = self.coordonnee[0] + 1
+                        x = xBefore + 1
                     elif b == 2 :
-                        x = self.coordonnee[0] - 1
-                    if (x<=N-1 and x>=0): #on vérifie que le bob ne s'échappe pas de la grille
-                        self.coordonnee = (x,self.coordonnee[1])
-                        boucle = False
+                        x = xBefore - 1
+                    if (x<=N-1 and x>=0): #on vérifie que le bob ne s'échappe pas de la grille 
+                        if((not self.caseVisitee((x,yBefore))) or i >= 5): #on verifie que la case n'est pas dans la memoire du bob
+                            self.coordonnee = (x,yBefore)
+                            boucle = False
                 elif a == 2:
                     if b == 1 :
-                        y = self.coordonnee[1] + 1
+                        y = yBefore + 1
                     elif b == 2 :
-                        y = self.coordonnee[1] - 1
+                        y = yBefore - 1
                     if (y<=N-1 and y>=0):
-                        self.coordonnee = (self.coordonnee[0],y)
-                        boucle = False
+                        if((not self.caseVisitee((xBefore,y))) or i >= 5):
+                            self.coordonnee = (xBefore,y)
+                            boucle = False
     
     #met le bob dans sa nouvelle case
     def deplacerBobCoordonnee(self):
@@ -167,15 +190,22 @@ class Bob():
         #changement de case
         self.deplacerBobCoordonnee()
         return 0
+      
+    #je pense que c'est la partie du milieu  
+    def bobDeplacement(self):
+        self.coordonneePrecedentes = self.coordonnee
+        if(not self.chercherNouriture()):
+            self.bouger()
+        self.setNourritureMemorisee()
+        self.setCasesMemorisee()
     
 #perception
-    #renvoie une liste qui contient les tuples des coordonnée adjactente à la case du bob
-    def coordAdjacentes(self):
-        x = self.coordonnee[0]
-        y = self.coordonnee[1]
-        coordonneeAdjacentes = [(self.coordonnee)] #liste de tuples
-        for i in range(0,self.perception+2):
-            for j in range(0,self.perception-i+1):
+    def coordAdjacentes(self, coordonnee, perception): #renvoie les case visibles depuis
+        x = coordonnee[0]
+        y = coordonnee[1]
+        coordonneeAdjacentes = [(coordonnee)] #liste de tuples
+        for i in range(0,perception+2):
+            for j in range(0, perception-i+1):
             #peut être ajouter une verification que ca peut bien être dans la grille en terme de coordonnee
                 if(i==0):
                     coordonneeAdjacentes.append((x,y+j))
@@ -189,22 +219,54 @@ class Bob():
                     coordonneeAdjacentes.append((x-i,y+j))
                     coordonneeAdjacentes.append((x-i,y-j))
         return coordonneeAdjacentes
+    
+    def nourritureEnVue(self, coordonnee, perception): #renvoie la liste des nourriture 
+        #mise à jour de la liste de nourriture
+        nourritureEnVue = [] #on vide la liste de tuple
+        
+        for coord in self.coordAdjacentes(coordonnee,perception) :
+            if (coord in grille):
+                if (grille[coord].qtite_nourriture != 0):
+                    nourritureEnVue.append(coord)
+        return nourritureEnVue
+
+        #anciennes version des deux fonctions :
+    #renvoie une liste qui contient les tuples des coordonnée adjactente à la case du bob
+    # def coordAdjacentes(self):
+    #     x = self.coordonnee[0]
+    #     y = self.coordonnee[1]
+    #     coordonneeAdjacentes = [(self.coordonnee)] #liste de tuples
+    #     for i in range(0,self.perception+2):
+    #         for j in range(0,self.perception-i+1):
+    #         #peut être ajouter une verification que ca peut bien être dans la grille en terme de coordonnee
+    #             if(i==0):
+    #                 coordonneeAdjacentes.append((x,y+j))
+    #                 coordonneeAdjacentes.append((x,y-j))
+    #             elif(j==0):
+    #                 coordonneeAdjacentes.append((x+i,y))
+    #                 coordonneeAdjacentes.append((x-i,y))
+    #             else :
+    #                 coordonneeAdjacentes.append((x+i,y+j))
+    #                 coordonneeAdjacentes.append((x+i,y-j))
+    #                 coordonneeAdjacentes.append((x-i,y+j))
+    #                 coordonneeAdjacentes.append((x-i,y-j))
+    #     return coordonneeAdjacentes
  
     #met a jour la liste de nourriture en vue du bob, renvoie le nombre de nourritures vues
     #peut être mieux de juste renoyer la liste comme ça les bobs aurait pas besoin de s'en souvenir
-    def setNourritureEnVue(self): #renvoie le nombre de nourriture
-        x = self.coordonnee[0]
-        y = self.coordonnee[1]
+    # def nourritureEnVue(self): #renvoie le nombre de nourriture
+    #     x = self.coordonnee[0]
+    #     y = self.coordonnee[1]
         
-        #mise à jour de la liste de nourriture
-        self.nourritureEnVue = [] #on vide la liste de tuple
+    #     #mise à jour de la liste de nourriture
+    #     self.nourritureEnVue = [] #on vide la liste de tuple
         
-        for coord in self.coordAdjacentes() :
-            if (coord in grille):
-                if (grille[coord].qtite_nourriture != 0):
-                    print("Le bob voit une nourriture")
-                    self.nourritureEnVue.append(coord)
-        return len(self.nourritureEnVue)
+    #     for coord in self.coordAdjacentes() :
+    #         if (coord in grille):
+    #             if (grille[coord].qtite_nourriture != 0):
+    #                 print("Le bob voit une nourriture")
+    #                 self.nourritureEnVue.append(coord)
+    #     return len(self.nourritureEnVue)
     
     #renvoie la distance entre un bob et des coordonnées
     def distance(self, coord):#pourrait très bien ne pas être dans le classe bob
@@ -212,13 +274,13 @@ class Bob():
     
     #definie la nourriture préférée du bob
     def setNourriturePreferee(self):
-        if(len(self.nourritureEnVue)==0):
+        if(len(self.listeNourritureEnVue)==0):
             print("Erreur, pas de nourriture en vue")
             return -1
-        min = self.distance(self.nourritureEnVue[0])
-        coordPref = self.nourritureEnVue[0]
-        for i in range(1,len(self.nourritureEnVue)):
-            coordN = self.nourritureEnVue[i]
+        min = self.distance(self.listeNourritureEnVue[0])
+        coordPref = self.listeNourritureEnVue[0]
+        for i in range(1,len(self.listeNourritureEnVue)):
+            coordN = self.listeNourritureEnVue[i]
             if (self.distance(coordN)< min):
                 coordPref = coordN
             elif ((self.distance(coordN) == min) and (grille[coordN].qtite_nourriture > grille[coordPref].qtite_nourriture)):
@@ -268,7 +330,63 @@ class Bob():
                             self.coordonnee = (self.coordonnee[0]-1,self.coordonnee[1]-1)
         self.deplacerBobCoordonnee()  
         return 0      
+   
+    def chercherNouriture(self): #renvoie 1 si le bob se deplace pour chercher une nourriture 0 s'il ne trouve pas de bouffe
+        setTempNourriture = set(self.nourritureEnVue(self.coordonnee, self.perception))
+        setTempNourriture |= set(self.nourritureMemorisee) #ajout avec la memoire
+        nourriture = list(setTempNourriture)
+        self.listeNourritureEnVue = nourriture
+        if(len(nourriture)):
+            self.setNourriturePreferee()
+            self.beeline(self.coordNourriturePref)
+            return 1
+        else:
+            return 0
+
+#memoire
     
+    def nourritureAMemoriser(self):
+        ancienneNourriture = self.nourritureEnVue(self.coordonneePrecedentes, self.perception) 
+        nourritureEnVue = self.nourritureEnVue(self.coordonnee,self.perception)
+        nouvelleNourriture = list(set(ancienneNourriture) 
+                                  - set(nourritureEnVue)) #nourriture en vue - ancienne nourriture
+        return nouvelleNourriture
+
+    #jsp pk cette version là elle marche pas
+    # def nourritureAOublier(self):
+    #     #nourritureMemorise - cases adjactente 
+    #     nourritureOubliee = list(set(self.nourritureMemorisee) 
+    #                              - set(self.coordAdjacentes(self.coordonnee,self.perception)))
+    #     print("Cases adj : ",nourritureOubliee)
+    #     self.speak()
+    #     return nourritureOubliee
+    
+    def nourritureAOublier(self):
+        nourritureOubliee = []
+        for n in self.nourritureMemorisee:
+            if(self.distance(n)<=self.perception):
+                nourritureOubliee.append(n)
+        return nourritureOubliee
+    
+    def setNourritureMemorisee(self):
+        tempSet = set(self.nourritureMemorisee)
+        tempSet |= set(self.nourritureAMemoriser())
+        self.nourritureMemorisee = list(tempSet - set(self.nourritureAOublier()))
+        
+        self.memoireDisponible = self.memory - len(self.nourritureMemorisee)
+        while(self.memoireDisponible<0):
+            self.nourritureMemorisee.pop(0) #pour l'instant on en enleve un au hasard, a modifier evetuellement pour supprime la plus loin
+            self.memoireDisponible += 1
+        # if(len(self.nourritureMemorisee)==0):
+        #     print("Pas de nourriture mémorisée")
+        # else:
+        #     print("Nourritures mémorisées : ",self.nourritureMemorisee)
+    
+    def setCasesMemorisee(self):
+        self.casesMemorisee.append(self.coordonnee)
+        while(len(self.casesMemorisee) > (2 * self.memoireDisponible )):
+            self.casesMemorisee.pop(0)
+ 
 #manger
     #renvoie 0 si le bob n'a rien à manger sur sa case et 1 si le bob a mangé
     def manger(self):
@@ -288,11 +406,10 @@ class Bob():
             return -1
 
         if(self.case.qtite_nourriture != 0):
-            self.energy -= 0.5
-            #print("J'ai de la nourriture sur ma case \n")
+            self.coordonneePrecedentes = self.coordonnee #mise a jour des coord precedentes
+            #calcul du gain d'energie et energie restante sur la case
             faim = bobMaxE - self.energy
             reste = self.case.qtite_nourriture - faim
-            #print("j'ai faim de : ",faim, ", reste : ", reste)
             if (reste <= 0) :
                 self.energy += self.case.qtite_nourriture
                 self.case.qtite_nourriture = 0
