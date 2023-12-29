@@ -48,7 +48,7 @@ class Bob():
         
         #booleans
         self.skipingTurn = skiping #indique si le bob doit sauter ce tour (jour de naissance ou s'il a fait un bebe)
-        self.dead = 0
+        self.dead = False
 
         #caracteritiques fixes du bob
         self.energy = bobEnergy
@@ -66,13 +66,15 @@ class Bob():
         
         #memoire
         self.availableMemory = bobMemory #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
-        self.rememberedFoods = []
+        self.rememberedFoods = {}
         self.rememberedSquares = []
 
     def mourir(self):
         self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie
         deadBobs.append(self)
         bobIndex = allBobs.index(self)
+        bobIndexCase = grille[self.coordinates].bobs.index(self)
+        grille[self.coordinates].bobs.pop(bobIndexCase)
         del(allBobs[bobIndex])
 
     #reproduction solo, renvoie 0 si le bob n'a pas assez d'énrgie et 1 si le bob fait un bébé
@@ -90,16 +92,16 @@ class Bob():
         if(self.energy == bobMaxE):
             self.previousCoordinates = self.coordinates #met a jour coordonnee precedente
             #calcul des données héreditaire
-            vitesseBebe = self.speed + random()%0.2 - 0.1
+            vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
             perceptionBebe = max((self.perception + randint(-1,1)),0)
-            memoireBebe = self.memory + randint(-1,1)
+            memoireBebe = max((self.memory + randint(-1,1)),0)
             #creation du bebe
-            allBobs.append(Bob(birthDay = 1, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
+            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
             #perte d'energie
             self.energy -= bobLaborE
-            return 1
+            return True
         else:
-            return 0
+            return False
        
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
@@ -157,7 +159,11 @@ class Bob():
             grille[self.coordinates].ajouterBob(self) #on ajoute un bob a la liste de bob de la case de clé coord
         
     def perdreEnergieDeplacement(self):
-        energyLoss = max(((self.speed)**2 * self.mass + 1/5*self.perception),0.5)
+        #version normale
+        #energyLoss = max(((self.speed)**2 * self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
+        #pour tester : 
+        energyLoss = max(( self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
+
         self.energy -= energyLoss #il faudra adapter ça pour les prochaines versions
     
     #le bob se deplace aléatoirement
@@ -282,16 +288,24 @@ class Bob():
     
     #definie la nourriture préférée du bob
     def setNourriturePreferee(self):
-        if(len(self.seenFoods)==0):
-            print("Erreur, pas de nourriture en vue") #on utilise pas setNourriturePreferee si y'a pas de nourriture en vue
+        if(len(self.seenFoods)):
+            foods = self.seenFoods
+        elif(len(self.rememberedFoods)):
+            foods = list(self.rememberedFoods.keys())
+        else:
+            print("Erreur, pas de nourriture en vue ni en mémoire") #on utilise pas setNourriturePreferee si y'a pas de nourriture en vue
             return -1
-        min = self.distance(self.seenFoods[0])
-        coordPref = self.seenFoods[0]
-        for i in range(1,len(self.seenFoods)):
-            coordN = self.seenFoods[i]
+        
+        min = self.distance(foods[0])
+        coordPref = foods[0]
+        for i in range(1,len(foods)):
+            coordN = foods[i]
             if (self.distance(coordN)< min):
+                min = self.distance(coordN)
                 coordPref = coordN
-            elif ((self.distance(coordN) == min) and (grille[coordN].qtite_nourriture > grille[coordPref].qtite_nourriture)):
+            elif (len(self.seenFoods) and (self.distance(coordN) == min) and (grille[coordN].qtite_nourriture > grille[coordPref].qtite_nourriture)):
+                coordPref = coordN
+            elif(not len(self.seenFoods) and (self.distance(coordN) == min) and (self.rememberedFoods[coordN] > self.rememberedFoods[coordPref])):
                 coordPref = coordN
         self.coordFavouriteFood = coordPref       
 
@@ -340,16 +354,12 @@ class Bob():
         return 0      
    
     def chercherNouriture(self): #renvoie 1 si le bob se deplace pour chercher une nourriture 0 s'il ne trouve pas de bouffe
-        setTempNourriture = set(self.nourritureEnVue(self.coordinates, self.perception))
-        setTempNourriture |= set(self.rememberedFoods) #ajout avec la memoire
-        nourriture = list(setTempNourriture)
-        self.seenFoods = nourriture
-        if(len(nourriture)):
+        if(len(self.seenFoods) or len(self.rememberedFoods)):
             self.setNourriturePreferee()
             self.beeline(self.coordFavouriteFood)
-            return 1
+            return True
         else:
-            return 0
+            return False
 
 #memoire
     
@@ -359,15 +369,6 @@ class Bob():
         nouvelleNourriture = list(set(ancienneNourriture) 
                                   - set(nourritureEnVue)) #nourriture en vue - ancienne nourriture
         return nouvelleNourriture
-
-    #jsp pk cette version là elle marche pas
-    # def nourritureAOublier(self):
-    #     #nourritureMemorise - cases adjactente 
-    #     nourritureOubliee = list(set(self.rememberedFoods) 
-    #                              - set(self.coordAdjacentes(self.coordinates,self.perception)))
-    #     print("Cases adj : ",nourritureOubliee)
-    #     self.speak()
-    #     return nourritureOubliee
     
     def nourritureAOublier(self):
         nourritureOubliee = []
@@ -377,33 +378,38 @@ class Bob():
         return nourritureOubliee
     
     def setNourritureMemorisee(self):
-        tempSet = set(self.rememberedFoods)
-        tempSet |= set(self.nourritureAMemoriser())
-        self.rememberedFoods = list(tempSet - set(self.nourritureAOublier()))
+        #on met a jour la liste de nourriture mémorisées
+        for coord in self.nourritureAOublier():
+            self.rememberedFoods.pop(coord)
+        for coord in self.nourritureAMemoriser():
+            self.rememberedFoods[coord]=grille[coord].qtite_nourriture
         
         self.availableMemory = self.memory - len(self.rememberedFoods)
-        while(self.availableMemory<0):
-            self.rememberedFoods.pop(0) #pour l'instant on en enleve un au hasard, a modifier evetuellement pour supprime la plus loin
+        
+        #on supprime des nourriture si y'en à trop en memoire
+        while(self.availableMemory<0): #on oublie des nourritures tant qu'on en à plus en memoire que la mémoire totale
+            max = 0
+            for c in self.rememberedFoods: #on calcule quelle est la nourriture la plus loin du bob à oublier en priorité
+                if (self.distance(c) > max):
+                    max = self.distance(c)
+                    coord = c
+            #self.rememberedFoods.pop(coord)
             self.availableMemory += 1
-        # if(len(self.rememberedFoods)==0):
-        #     print("Pas de nourriture mémorisée")
-        # else:
-        #     print("Nourritures mémorisées : ",self.rememberedFoods)
-    
+        
     def setCaseMemorisee(self):
         self.rememberedSquares.append(self.coordinates)
         while(len(self.rememberedSquares) > (2 * self.availableMemory )):
             self.rememberedSquares.pop(0)
  
 #reproduction sexuée 
-    def reproductionSexuee(self): #renvoie 1 si le bob fait un bebe et 0 sinon
-        if(self.energy < 150): #remplacer 150 par une variable 
+    def reproductionSexuee(self): #renvoie True si le bob fait un bebe et False sinon
+        if(self.energy < bobMinSexE):  
             #print("Pas assez d'energie")
-            return 0 #pas assez d'energie
+            return False #pas assez d'energie
         bob = self.partenaireDisponible() #avec x un fonction qui renvoie un bob qui à assez d'energie
         if(bob==None):
             #print("Pas de partenaire disponible")
-            return 0 #pas de partenaire dispnnible
+            return False #pas de partenaire dispnnible
         
         #calcul des caractéritiques du bébé :
         vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
@@ -414,12 +420,11 @@ class Bob():
         #perte d'energie
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
-        bob.tourJoue = True
-        return 1
+        bob.skipingTurn = True
+        return True
     
     def partenaireDisponible(self): #renvoie un bob pret à faire un bébé 
         for b in self.case.bobs:
-            b.speak()
             if((b.energy >= 150) and (not b.enDanger()) and (b != self)): #fonction enDanger à remplacer par la fonction de Huy correspondante
                 return b
         return None
@@ -439,16 +444,18 @@ class Bob():
         -calcule la quantité d'energie que le bob peut manger
         -met a jour l'energie du bob et qui reste dans la case
 
-        Valeur de retour : cette fonction renvoie 1 si le bob à mangé,
-        0 s'il n'y avait rien a manger dans la case et -1 si erreur
-
-        Gestion des erreurs :
-        La fonction renvoie -1 si le bob vient de naître ou est mort
+        Valeur de retour : cette fonction renvoie True si le bob à mangé,
+        False s'il n'y avait rien a manger dans la case
         """
-        if(self.dead == 1):
-            return -1
-
+        # if(self.dead == 1):
+        #     return -1
+        
+        
         if(self.case.qtite_nourriture != 0):
+            #Enfaite un bob reste jamais sur une case avec de la nourriture puisque s'il en reste c'est qu'il à full energie et donc il peut faire un bébé
+            # if(self.coordinates == self.previousCoordinates):
+            #     self.energy -= 0.5 #Un bob peut rester sur une nourriture mais il perd 0,5 energie par tour
+
             self.previousCoordinates = self.coordinates #mise a jour des coord precedentes
             #calcul du gain d'energie et energie restante sur la case
             faim = bobMaxE - self.energy
@@ -459,9 +466,9 @@ class Bob():
             else :
                 self.case.qtite_nourriture -= faim  #on enleve à la nourriture l'énergie que le bob consomme
                 self.energy = bobMaxE
-            return 1
+            return True
         else :
-            return 0
+            return False
 
     #indique si deux bobs partagent une même case, pas sure que cette fonction soit utile.
     def memeCase(self, b):
@@ -485,13 +492,13 @@ class Bob():
 #les deux fonctions suivante enfaite c'est Huy qui fait ça
     def enDanger(self):
         #si le bob voit un prédateur la fonction renvoie un
-        return 0
+        return False
     #renvoie 1 si le bob à besoin de se proteger (et fait le nécessaire) et 0 si le bob n'est pas en danger
     def seProteger(self):
         if(self.enDanger):
             #le bob fait une action pour se proteger
-            return 1
-        else : return 0
+            return True
+        else : return False
     
 #fonction de communication
     #le bob printf ses coordonnee et son energie

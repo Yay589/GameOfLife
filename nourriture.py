@@ -7,7 +7,7 @@ def ajouterNourritureGrille(nombreNourriture = numberFood, energieNourriture = f
         ajouterNourritureCase(energieNourriture)
 
 def ajouterNourritureCase(energieNourriture = foodE):
-    coord = (randint(0,N-1),randint(0,N-1));
+    coord = (randint(0,N-1),randint(0,N-1))
     
     if(coord not in grille):
         case = Case(coord)
@@ -16,7 +16,7 @@ def ajouterNourritureCase(energieNourriture = foodE):
         case = grille[coord]
         case.ajouterNourriture(energieNourriture)
 
-def ajouterNourritureCase(coordCase, qtite_nourriture = foodE):
+def ajouterNourritureCaseSpecifique(coordCase, qtite_nourriture = foodE):
         if(coordCase not in grille):
             Case(coord = coordCase, qtite_nourriture = qtite_nourriture)
         else :
@@ -29,8 +29,8 @@ def viderNourritureGrille():
         grille[c].viderNourriture()
         if (grille[c].estVide()):
             caseSuprCoord.append(c)
-        for cSupr in caseSuprCoord: #on est obligés de supprimer après vu qu'on peut pas modifier un dictionnaire en même temps qu'on le parcourt
-            grille[cSupr].supprimer()
+    for cSupr in caseSuprCoord: #on est obligés de supprimer après vu qu'on peut pas modifier un dictionnaire en même temps qu'on le parcourt
+        grille[cSupr].supprimer()
 
 def renouvellerNourriture(nombreNourriture = numberFood, energieNourriture = foodE) :
     viderNourritureGrille()
