@@ -15,8 +15,19 @@ def allBobsSpeak():
 
 if __name__ == '__main__':
     
-    bob1 = Bob(bobSpeed = 1, bobPerception = 4,bobMemory=2, coord = (2,2))
+    bob1 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 4,bobMemory=2, coord = (0,0))
+    bob2 = Bob(bobEnergy=200,bobSpeed = 1.5, bobPerception = 2,bobMemory=5, coord = (2,2))
     allBobs.append(bob1)
+    allBobs.append(bob2)
+    
+    for i in range(20):
+        for b in allBobs:
+            if(not b.dejaJoue()):
+                if (not b.reproductionSexuee()):
+                    b.bobDeplacement()
+        afficheGrilleSimple()
+    
+    allBobsSpeak()
     
     # ajouterNourritureCase((4,4))
     # ajouterNourritureCase((4,3))
@@ -25,6 +36,7 @@ if __name__ == '__main__':
     # ajouterNourritureCase((0,0))
     
     """
+    
     afficheGrilleSimple()
     for i in range(20):
         if(not bob1.reproduction()):
@@ -38,22 +50,8 @@ if __name__ == '__main__':
     
          
     afficheGrilleSimple()
-    """
-    
-    for i in range(10):
-        afficheGrilleSimple()
-        bob1.bobDeplacement()
-        bob1.speak()
-        print(bob1.casesMemorisee)
     
     """
-    bob1.bouger()
-    afficheGrilleSimple()
-    bob1.setNourritureEnVue()
-    print(bob1.coordAdjacentes)
-    print(bob1.nourritureEnVue)
-    """
-    
     
     #print(bob1.seul())
     #print(bob1.choisirUnBob())
