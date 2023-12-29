@@ -160,9 +160,7 @@ class Bob():
         
     def perdreEnergieDeplacement(self):
         #version normale
-        #energyLoss = max(((self.speed)**2 * self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
-        #pour tester : 
-        energyLoss = max(( self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
+        energyLoss = max(((self.speed)**2 * self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
 
         self.energy -= energyLoss #il faudra adapter ça pour les prochaines versions
     
