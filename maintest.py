@@ -23,9 +23,12 @@ class Game:
         self.sombre=200
         self.plat=5
         self.show = False
+        self.dragging = False
+        self.guid = False
         self.show_energy=0
         self.game_running = False
         self.is_paused = False
+        self.showbroad = False
         self.all_gameobject=pygame.sprite.Group()
         self.listObjects = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
@@ -46,7 +49,18 @@ class Game:
             self.rect = self.image.get_rect()
             self.rect.center = i
 
-        
+        self.dragging_offset_x=0
+
+        self.dragging_offset_y=0
+
+        self.image_broad = pygame.image.load('data/images/broad.png')
+
+        self.image_broad.set_colorkey((255, 255, 255))
+
+        self.image_broad = pygame.transform.scale(self.image_broad, (256, 128))
+
+        self.image_broad_rect = self.image_broad.get_rect()
+
             
             
         self.display_surface = pygame.display.get_surface()
@@ -104,6 +118,9 @@ class Game:
         self.draw_cases()
         self.draw_objects()
 
+        self.show_broad()
+
+        self.draw_info()
 
 
         
@@ -116,10 +133,6 @@ class Game:
 
 
         # Afficher l’énergie de Bob
-        if self.show:
-            font = pygame.font.Font(None, 36)
-            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
-            screen.blit(text_show, (350, 100))
 
         # Afficher l'image de pause si le jeu est en pause
         if self.is_paused:
@@ -130,6 +143,17 @@ class Game:
 
         pygame.display.flip()
     
+    def draw_guid(self):
+
+        guid_surface = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.SRCALPHA)
+        guid_surface.fill((128, 128, 128, 128))
+        font = pygame.font.Font(None, 36)
+        text = font.render("This is a guide layer", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        guid_surface.blit(text, text_rect)
+        screen.blit(guid_surface, (0, 0))
+
+
     def draw_background(self):
         image_ground = pygame.image.load('data/images/Ocean-and-Cloud.png')
         image_ground = pygame.transform.scale(image_ground, (1800,1200 ))
@@ -173,6 +197,45 @@ class Game:
             ):
                 self.show_energy=obj.energy
     
+
+
+    def show_broad(self):
+
+        if self.showbroad :
+
+            screen.blit(self.image_broad, self.image_broad_rect)
+
+            font = pygame.font.Font(None, 20)
+
+            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
+
+            screen.blit(text_show, self.image_broad_rect.move(15, 15))
+
+            font = pygame.font.Font(None, 20)
+
+            text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+
+            screen.blit(text_render, self.image_broad_rect.move(15, 45))
+
+    def draw_info(self):        
+
+        image_info = pygame.image.load('data/images/info.png')
+
+        image_info.set_colorkey((255, 255, 255))
+
+        image_info = pygame.transform.scale(image_info, (50, 50))
+
+        screen.blit(image_info, (675, 50))
+
+
+        if self.guid:
+
+            self.draw_guid()
+ 
+
+
+
+
     def draw_cases(self):
         for i in self.list_x_y:
             #screen.blit(self.image, i)
@@ -199,9 +262,6 @@ class Game:
 
            
             screen.blit(image_obj, real_location)
-        font = pygame.font.Font(None, 36)
-        text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
-        screen.blit(text_render, (350,50))
 
         if len(allBobs) != 0:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -323,7 +383,23 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 g.is_paused = not g.is_paused
-    
+            elif event.key == pygame.K_b:
+                g.showbroad = not g.showbroad
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                g.dragging = False
+        elif event.type == pygame.MOUSEMOTION:
+            if g.dragging:
+                g.image_broad_rect.x = event.pos[0] + g.dragging_offset_x
+                g.image_broad_rect.y = event.pos[1] + g.dragging_offset_y
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if g.image_broad_rect.collidepoint(event.pos):
+                g.dragging = True
+                g.dragging_offset_x, g.dragging_offset_y = g.image_broad_rect.x - event.pos[0], g.image_broad_rect.y - event.pos[1]
+            elif event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if 675 < mouse_x < 725 and 50 < mouse_y < 100:
+                    g.guid = not g.guid
     
 
     if g.game_running:
