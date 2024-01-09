@@ -93,6 +93,7 @@ class Game:
 
 
     def draw(self):
+
         # Contrôle du clavier pour déplacer l'écran
         self.keyboard_control()
         
@@ -122,6 +123,7 @@ class Game:
 
         self.draw_info()
 
+        self.draw_restart()
 
         
         # for i in self.random_values_for_tree:
@@ -234,6 +236,15 @@ class Game:
  
 
 
+    def draw_restart(self):        
+
+        image_restart = pygame.image.load('data/images/restart.png')
+
+        image_restart.set_colorkey((255, 255, 255))
+
+        image_restart = pygame.transform.scale(image_restart, (50, 50))
+
+        screen.blit(image_restart, (605, 50))
 
 
     def draw_cases(self):
@@ -349,7 +360,6 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.rect.center = self.gbob.coordonnee
 
 g=Game()
-print(g.list_x_y)
 
 
 
@@ -362,8 +372,8 @@ for bob in allBobs:
     g.all_gameobject.add(BOB_GameObject(bob))
 
 
-bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
-allBobs.append(bob_ex)
+# bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
+# allBobs.append(bob_ex)
 
 
 
@@ -400,7 +410,19 @@ while running:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if 675 < mouse_x < 725 and 50 < mouse_y < 100:
                     g.guid = not g.guid
-    
+                    if not g.is_paused : 
+                        g.is_paused = not g.is_paused
+            # elif event.button == 1:
+            #     mouse_x, mouse_y = pygame.mouse.get_pos()
+            #     if 605 < mouse_x < 655 and 50 < mouse_y < 100:
+            #         g.all_gameobject.empty()
+            #         for bob in allBobs:
+                        
+            #         for i in range(N-1):
+            #                 allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+            #         for bob in allBobs:
+            #             g.all_gameobject.add(BOB_GameObject(bob))
+                
 
     if g.game_running:
         
@@ -411,31 +433,34 @@ while running:
             
 
         if  not g.is_paused:
-            if g.sombre == 200:
-                g.day_night=1
+        
+                if g.sombre == 200:
+                    g.day_night=1
 
-            if g.sombre == 50:
-                g.day_night=0
+                if g.sombre == 50:
+                    g.day_night=0
 
-            if not g.day_night:
-                g.sombre += 1
-            else:
-                g.sombre -= 1
+                if not g.day_night:
+                    g.sombre += 1
+                else:
+                    g.sombre -= 1
 
-            #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
-            for b in allBobs:
-                if(not b.reproduction()):
-                    if(not b.manger()):
-                        b.bouger()
+                #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
+                for b in allBobs:
+                    if(not b.reproduction()):
+                        if(not b.manger()):
+                            b.bouger()
 
-            g.all_gameobject.empty()
+                g.all_gameobject.empty()
 
-            for bob in allBobs:
-                g.all_gameobject.add(BOB_GameObject(bob))
+                for bob in allBobs:
+                    g.all_gameobject.add(BOB_GameObject(bob))
 
 
-                for j in g.all_gameobject:
-                    j.update_position()
+                    for j in g.all_gameobject:
+                        j.update_position()
+            
+
 
 
     else:
