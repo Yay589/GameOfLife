@@ -33,7 +33,6 @@ class Game:
         self.listObjects = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
-        #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
         # available_points = self.list_x_y.copy()
@@ -94,10 +93,9 @@ class Game:
 
 
     def draw(self):
+
         # Contrôle du clavier pour déplacer l'écran
         self.keyboard_control()
-        
-        # Contrôle du clavier pour effectuer un zoom
         
         # Contrôle du clavier pour effectuer un zoom
         self.zoom_keyboard_control()
@@ -121,7 +119,11 @@ class Game:
         self.draw_cases()
         self.draw_objects()
 
+        self.show_broad()
 
+        self.draw_info()
+
+        self.draw_restart()
 
         
         # for i in self.random_values_for_tree:
@@ -133,10 +135,6 @@ class Game:
 
 
         # Afficher l’énergie de Bob
-        if self.show:
-            font = pygame.font.Font(None, 36)
-            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
-            screen.blit(text_show, (350, 100))
 
         # Afficher l'image de pause si le jeu est en pause
         if self.is_paused:
@@ -147,6 +145,17 @@ class Game:
 
         pygame.display.flip()
     
+    def draw_guid(self):
+
+        guid_surface = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.SRCALPHA)
+        guid_surface.fill((128, 128, 128, 128))
+        font = pygame.font.Font(None, 36)
+        text = font.render("This is a guide layer", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        guid_surface.blit(text, text_rect)
+        screen.blit(guid_surface, (0, 0))
+
+
     def draw_background(self):
         image_ground = pygame.image.load('data/images/Ocean-and-Cloud.png')
         image_ground = pygame.transform.scale(image_ground, (1800,1200 ))
@@ -190,6 +199,54 @@ class Game:
             ):
                 self.show_energy=obj.energy
     
+
+
+    def show_broad(self):
+
+        if self.showbroad :
+
+            screen.blit(self.image_broad, self.image_broad_rect)
+
+            font = pygame.font.Font(None, 20)
+
+            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
+
+            screen.blit(text_show, self.image_broad_rect.move(15, 15))
+
+            font = pygame.font.Font(None, 20)
+
+            text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+
+            screen.blit(text_render, self.image_broad_rect.move(15, 45))
+
+    def draw_info(self):        
+
+        image_info = pygame.image.load('data/images/info.png')
+
+        image_info.set_colorkey((255, 255, 255))
+
+        image_info = pygame.transform.scale(image_info, (50, 50))
+
+        screen.blit(image_info, (675, 50))
+
+
+        if self.guid:
+
+            self.draw_guid()
+ 
+
+
+    def draw_restart(self):        
+
+        image_restart = pygame.image.load('data/images/restart.png')
+
+        image_restart.set_colorkey((255, 255, 255))
+
+        image_restart = pygame.transform.scale(image_restart, (50, 50))
+
+        screen.blit(image_restart, (605, 50))
+
+
     def draw_cases(self):
         for i in self.list_x_y:
             #screen.blit(self.image, i)
@@ -222,7 +279,6 @@ class Game:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 self.show=True
                 self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
-   
    
     
     def draw_start(self):
@@ -306,7 +362,6 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
 g=Game()
 
 
-#print(g.list_x_y)
 
 
 for i in range(N-1):
@@ -321,7 +376,10 @@ for bob in allBobs:
 # allBobs.append(bob_ex)
 
 
+
+
 running = True
+
 
 
 save_option_shown = False
@@ -370,6 +428,10 @@ while running:
         
         g.draw()    
         
+
+
+            
+
         if  not g.is_paused:
         
                 if g.sombre == 200:
@@ -404,6 +466,12 @@ while running:
     else:
         g.draw_start()
         
+
+        
+
+        
+
+
 
     
     clock.tick(15)
