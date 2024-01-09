@@ -29,5 +29,5 @@ bobP = 1 #1 Perception before mutation
 bobMem = 0 #0 Memory before mutation
 
 #Paramètre affichage graphique :
-SCREEN_WIDTH=1280/2
-SCREEN_HEIGHT=720/2
+SCREEN_WIDTH=800
+SCREEN_HEIGHT=600
