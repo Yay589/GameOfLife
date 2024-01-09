@@ -29,7 +29,6 @@ def nbBobs():
 
 
 if __name__ == '__main__':
-    if __name__ == '__main__':
         for i in range(N - 1):
             allBobs.append(Bob(coord=(randint(0, N - 1), randint(0, N - 1))))
         renouvellerNourriture()

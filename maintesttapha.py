@@ -17,7 +17,7 @@ def avgSpeed():
             speedSum += b.speed
             i += 1
     if(i==0):
-        print("Tout les bobs sont mort")
+        print("Tout les bobs sont morts")
         return(-1)
     else:
         return speedSum/i
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         stdscr.clear()
 
         # Affiche le jeu
-        for i in range(10):
+        for i in range(numberBob):
             allBobs.append(Bob(coord=(randint(0, N - 1), randint(0, N - 1))))
         renouvellerNourriture()
         afficheGrilleSimple()
