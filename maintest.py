@@ -23,12 +23,16 @@ class Game:
         self.sombre=200
         self.plat=5
         self.show = False
+        self.dragging = False
+        self.guid = False
         self.show_energy=0
         self.game_running = False
         self.is_paused = False
+        self.showbroad = False
         self.all_gameobject=pygame.sprite.Group()
         self.listObjects = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+        #self.random_values_for_tree = random.sample(self.list_x_y, 6)
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
@@ -46,7 +50,18 @@ class Game:
             self.rect = self.image.get_rect()
             self.rect.center = i
 
-        
+        self.dragging_offset_x=0
+
+        self.dragging_offset_y=0
+
+        self.image_broad = pygame.image.load('data/images/broad.png')
+
+        self.image_broad.set_colorkey((255, 255, 255))
+
+        self.image_broad = pygame.transform.scale(self.image_broad, (256, 128))
+
+        self.image_broad_rect = self.image_broad.get_rect()
+
             
             
         self.display_surface = pygame.display.get_surface()
@@ -81,6 +96,8 @@ class Game:
     def draw(self):
         # Contrôle du clavier pour déplacer l'écran
         self.keyboard_control()
+        
+        # Contrôle du clavier pour effectuer un zoom
         
         # Contrôle du clavier pour effectuer un zoom
         self.zoom_keyboard_control()
@@ -199,15 +216,13 @@ class Game:
 
            
             screen.blit(image_obj, real_location)
-        font = pygame.font.Font(None, 36)
-        text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
-        screen.blit(text_render, (350,50))
 
         if len(allBobs) != 0:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 self.show=True
                 self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
+   
    
     
     def draw_start(self):
@@ -267,7 +282,7 @@ class Game:
             self.plat -= 0.1
             self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
 
-       
+        
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
         super().__init__()
@@ -289,6 +304,8 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.rect.center = self.gbob.coordonnee
 
 g=Game()
+
+
 #print(g.list_x_y)
 
 
@@ -300,8 +317,8 @@ for bob in allBobs:
     g.all_gameobject.add(BOB_GameObject(bob))
 
 
-bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
-allBobs.append(bob_ex)
+# bob_ex = Bob( bobEnergy=bobMaxE, coord = (0,0))
+# allBobs.append(bob_ex)
 
 
 running = True
@@ -318,39 +335,70 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 g.is_paused = not g.is_paused
-    
-    
+            elif event.key == pygame.K_b:
+                g.showbroad = not g.showbroad
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                g.dragging = False
+        elif event.type == pygame.MOUSEMOTION:
+            if g.dragging:
+                g.image_broad_rect.x = event.pos[0] + g.dragging_offset_x
+                g.image_broad_rect.y = event.pos[1] + g.dragging_offset_y
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if g.image_broad_rect.collidepoint(event.pos):
+                g.dragging = True
+                g.dragging_offset_x, g.dragging_offset_y = g.image_broad_rect.x - event.pos[0], g.image_broad_rect.y - event.pos[1]
+            elif event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if 675 < mouse_x < 725 and 50 < mouse_y < 100:
+                    g.guid = not g.guid
+                    if not g.is_paused : 
+                        g.is_paused = not g.is_paused
+            # elif event.button == 1:
+            #     mouse_x, mouse_y = pygame.mouse.get_pos()
+            #     if 605 < mouse_x < 655 and 50 < mouse_y < 100:
+            #         g.all_gameobject.empty()
+            #         for bob in allBobs:
+                        
+            #         for i in range(N-1):
+            #                 allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+            #         for bob in allBobs:
+            #             g.all_gameobject.add(BOB_GameObject(bob))
+                
 
     if g.game_running:
         
         g.draw()    
         
         if  not g.is_paused:
-            if g.sombre == 200:
-                g.day_night=1
+        
+                if g.sombre == 200:
+                    g.day_night=1
 
-            if g.sombre == 50:
-                g.day_night=0
+                if g.sombre == 50:
+                    g.day_night=0
 
-            if not g.day_night:
-                g.sombre += 1
-            else:
-                g.sombre -= 1
+                if not g.day_night:
+                    g.sombre += 1
+                else:
+                    g.sombre -= 1
 
-            #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
-            for b in allBobs:
-                if(not b.reproduction()):
-                    if(not b.manger()):
-                        b.bouger()
+                #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
+                for b in allBobs:
+                    if(not b.reproduction()):
+                        if(not b.manger()):
+                            b.bouger()
 
-            g.all_gameobject.empty()
+                g.all_gameobject.empty()
 
-            for bob in allBobs:
-                g.all_gameobject.add(BOB_GameObject(bob))
+                for bob in allBobs:
+                    g.all_gameobject.add(BOB_GameObject(bob))
 
 
-                for j in g.all_gameobject:
-                    j.update_position()
+                    for j in g.all_gameobject:
+                        j.update_position()
+            
+
 
 
     else:
