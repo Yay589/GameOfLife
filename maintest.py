@@ -138,10 +138,14 @@ class Game:
 
         # Afficher l'image de pause si le jeu est en pause
         if self.is_paused:
+
             image_pause = pygame.image.load('data/images/pause.png')
+
             image_pause.set_colorkey((255, 255, 255))
+
             image_pause = pygame.transform.scale(image_pause, (50, 50))
-            screen.blit(image_pause, (375, 275))
+
+            screen.blit(image_pause, (535, 50))
 
         pygame.display.flip()
     
@@ -220,6 +224,9 @@ class Game:
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
 
     def draw_info(self):        
+        if self.guid:
+
+            self.draw_guid()
 
         image_info = pygame.image.load('data/images/info.png')
 
@@ -230,9 +237,7 @@ class Game:
         screen.blit(image_info, (675, 50))
 
 
-        if self.guid:
-
-            self.draw_guid()
+        
  
 
 
@@ -412,16 +417,15 @@ while running:
                     g.guid = not g.guid
                     if not g.is_paused : 
                         g.is_paused = not g.is_paused
-            # elif event.button == 1:
-            #     mouse_x, mouse_y = pygame.mouse.get_pos()
-            #     if 605 < mouse_x < 655 and 50 < mouse_y < 100:
-            #         g.all_gameobject.empty()
-            #         for bob in allBobs:
-                        
-            #         for i in range(N-1):
-            #                 allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
-            #         for bob in allBobs:
-            #             g.all_gameobject.add(BOB_GameObject(bob))
+                if 605 < mouse_x < 655 and 50 < mouse_y < 100:
+                    if len (allBobs) == 0:
+                        g.all_gameobject.empty()
+                        for bob in allBobs:
+                            bob.mourir()
+                        for i in range(N-1):
+                            allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+                        for bob in allBobs:
+                            g.all_gameobject.add(BOB_GameObject(bob))
                 
 
     if g.game_running:
