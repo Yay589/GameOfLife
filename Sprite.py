@@ -18,11 +18,11 @@ class BobSprite(pygame.sprite.Sprite,Bob):
         self.current_sprite = 0
         self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
-        self.rect.center = Bob.coordinates
+        self.rect.center = Bob.coordonnee
 
 
     def update_position(self):
-        self.rect.center = self.gbob.coordinates
+        self.rect.center = self.gbob.coordonnee
 """
 class FoodSprite(pygame.sprite.Sprite,Nourriture):
     def __init__(self,Nourriture):
