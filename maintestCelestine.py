@@ -55,27 +55,35 @@ def nbBobs(): #c'est la même taille que len(allBobs) normalement
             i += 1
     return i
 
-def allBobsSpeak():
+def allBobsSpeakM():
     for b in allBobs:
-         b.speakPerception()
+         b.speakMass()
 
 if __name__ == '__main__':
     
-    for i in range(numberBob):
-        allBobs.append(Bob())
+    # for i in range(numberBob):
+    #     allBobs.append(Bob())
         
-    #bob1 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 4,bobMemory=2, coord = (0,0))
-    #bob2 = Bob(bobEnergy=200,bobSpeed = 1.5, bobPerception = 2,bobMemory=5, coord = (2,2))
-    #allBobs.append(bob1)
-    #allBobs.append(bob2)
+    bob1 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
+    bob2 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMass = 5, coord = (1,1))
+    allBobs.append(bob1)
+    allBobs.append(bob2)
     
+    for i in range(15):
+        print(i)
+        afficheGrilleSimple()
+        for b in allBobs:
+            print(b.coordClosestPray)
+            if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
+                b.bobDeplacement()
+    """
     for k in range(25):
         #print("debut semaine")
         for j in range(7):
             renouvellerNourriture()
             for i in range(T):
                 for b in allBobs:
-                    if(not b.dejaJoue() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
+                    if(not b.dejaJoue() and not b.enDanger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
         #print("fin semaine")
         #afficheGrilleSimple()
@@ -89,7 +97,7 @@ if __name__ == '__main__':
             print("Memoire moyenne : ",avgMemory())
         #allBobsSpeak()
 
-    
+    """
     # ajouterNourritureCase((4,4))
     # ajouterNourritureCase((4,3))
     # ajouterNourritureCase((3,4))
