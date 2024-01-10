@@ -361,11 +361,11 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.current_sprite = 0
         self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
-        self.rect.center = Bob.coordonnee
+        self.rect.center = Bob.coordinates
 
 
     def update_position(self):
-        self.rect.center = self.gbob.coordonnee
+        self.rect.center = self.gbob.coordinates
 
 g=Game()
 
