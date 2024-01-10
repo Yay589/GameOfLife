@@ -63,7 +63,7 @@ class Bob():
         self.seenFoods = []
         self.coordFavouriteFood = None
         self.coordClosestPredator = ()
-        self.coordClosestPray = ()
+        self.coordClosestPrey = ()
         
         #memoire
         self.availableMemory = bobMemory #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
@@ -372,8 +372,8 @@ class Bob():
             self.setNourriturePreferee()
             self.beeline(self.coordFavouriteFood)
             return True
-        elif(self.coordClosestPray):
-            self.beeline(self.coordClosestPray)
+        elif(self.coordClosestPrey):
+            self.beeline(self.coordClosestPrey)
             return True
         else:
             return False    
@@ -417,16 +417,16 @@ class Bob():
                     if (b.mass > 3/2*self.mass):
                         #print("bob dangereux")
                         bobEnDanger = True
-                        if(distance < min_distance_predateur):
+                        if(distance <= min_distance_predateur):
                             min_distance_predateur = distance
                             coordPredateurLePlusProche = b.coordinates  
                     elif(b.mass < 3/2*self.mass):
                         distance = self.distance(b.coordinates)
-                        if(distance < min_distance_proie):
+                        if(distance <= min_distance_proie):
                             min_distance_proie = distance
                             coordProieLaPlusProche = b.coordinates  
         self.coordClosestPredator = coordPredateurLePlusProche   
-        self.coordClosestPray = coordProieLaPlusProche
+        self.coordClosestPrey = coordProieLaPlusProche
         return bobEnDanger
          
     #renvoie 1 si le bob à besoin de se proteger (et fait le nécessaire) et 0 si le bob n'est pas en danger
