@@ -327,11 +327,14 @@ class Game:
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def zoom_keyboard_control(self):
+        
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_c]:
-            self.zoom_scale += 0.1
-        if keys[pygame.K_x]:
-            self.zoom_scale -= 0.1
+        if self.zoom_scale <= 5 :
+            if keys[pygame.K_c]:
+                self.zoom_scale += 0.1
+        if self.zoom_scale >= 0.5 :
+            if keys[pygame.K_x]:
+                self.zoom_scale -= 0.1
     
     def tilt_keyboard_control(self):
         keys = pygame.key.get_pressed()
