@@ -153,10 +153,24 @@ class Game:
 
         guid_surface = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.SRCALPHA)
         guid_surface.fill((128, 128, 128, 128))
-        font = pygame.font.Font(None, 36)
-        text = font.render("This is a guide layer", True, (255, 255, 255))
-        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        guid_surface.blit(text, text_rect)
+        font = pygame.font.Font(None, 24)
+        lines = [
+            "Welcome to the guidance interface.",
+            "You can navigate Bob Land by using the arrow keys: up, down, left, and right.",
+            "Press 'c' to zoom in, and 'x' to zoom out.",
+            "Press the space bar to pause the game.",
+            "Press 'b' to bring up the information board (you can drag it with the mouse).",
+            "Click on a specific Bob to learn more about him;",
+            "Click on this icon again to exit the guidance."
+        ]
+
+        y_position = SCREEN_HEIGHT // 4  # 设置文本的初始纵坐标
+
+        for line in lines:
+            text = font.render(line, True, (0, 0, 0))
+            text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, y_position))
+            guid_surface.blit(text, text_rect)
+            y_position += text_rect.height + SCREEN_HEIGHT // 25
         screen.blit(guid_surface, (0, 0))
 
 
