@@ -7,6 +7,8 @@ from case import Case
 from bob import Bob
 from affichage import *
 import collections
+import time
+#import os
 
 def avgSpeed():
     i = 0
@@ -64,16 +66,20 @@ if __name__ == '__main__':
     # for i in range(numberBob):
     #     allBobs.append(Bob())
         
-    bob1 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
+    bob1 = Bob(bobEnergy=200,bobSpeed = 2, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
     bob2 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMass = 5, coord = (1,1))
     allBobs.append(bob1)
     allBobs.append(bob2)
     
     for i in range(15):
-        print(i)
+        print(i) 
+        #os.system("clear") 
+        print("\033[H\033[J",end="")
+        
         afficheGrilleSimple()
+        time.sleep(0.5)
         for b in allBobs:
-            print(b.coordClosestPray)
+            print(b.coordClosestPrey)
             if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
                 b.bobDeplacement()
     """
