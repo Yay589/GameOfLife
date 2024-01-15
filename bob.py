@@ -420,7 +420,7 @@ class Bob():
                         if(distance <= min_distance_predateur):
                             min_distance_predateur = distance
                             coordPredateurLePlusProche = b.coordinates  
-                    elif(b.mass < 3/2*self.mass):
+                    elif(b.mass < 2/3*self.mass):
                         distance = self.distance(b.coordinates)
                         if(distance <= min_distance_proie):
                             min_distance_proie = distance

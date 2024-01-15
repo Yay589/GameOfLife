@@ -63,9 +63,13 @@ def allBobsSpeakM():
 
 if __name__ == '__main__':
     
-    # for i in range(numberBob):
-    #     allBobs.append(Bob())
-        
+    for i in range(numberBob):
+        allBobs.append(Bob(bobMass = random()%2+0.5,
+                           bobSpeed = random()%2 + 0.5,
+                           bobPerception = randint(0,3), 
+                           bobMemory = randint(0,3),
+                           coord = (randint(0,N-1),randint(0,N-1))))
+    """  
     bob1 = Bob(bobEnergy=200,bobSpeed = 2, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
     bob2 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMass = 5, coord = (1,1))
     allBobs.append(bob1)
@@ -83,11 +87,14 @@ if __name__ == '__main__':
             if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
                 b.bobDeplacement()
     """
-    for k in range(25):
+    for k in range(2):
         #print("debut semaine")
         for j in range(7):
             renouvellerNourriture()
             for i in range(T):
+                print("\033[H\033[J",end="")
+                afficheGrilleSimple()
+                time.sleep(0.2)
                 for b in allBobs:
                     if(not b.dejaJoue() and not b.enDanger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
@@ -111,7 +118,7 @@ if __name__ == '__main__':
     # ajouterNourritureCase((0,0))
     
     """
-    
+    """
     afficheGrilleSimple()
     for i in range(20):
         if(not bob1.reproduction()):
