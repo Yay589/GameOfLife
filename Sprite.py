@@ -18,11 +18,11 @@ class BobSprite(pygame.sprite.Sprite,Bob):
         self.current_sprite = 0
         self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
-        self.rect.center = Bob.coordonnee
+        self.rect.center = Bob.coordinates
 
 
     def update_position(self):
-        self.rect.center = self.gbob.coordonnee
+        self.rect.center = self.gbob.coordinates
 """
 class FoodSprite(pygame.sprite.Sprite,Nourriture):
     def __init__(self,Nourriture):
@@ -31,11 +31,11 @@ class FoodSprite(pygame.sprite.Sprite,Nourriture):
         self.gfood=Nourriture
         self.image = pygame.image.load('data/images/apple.png').convert()
         self.rect = self.image.get_rect()
-        self.rect.center = Nourriture.coordonnee
+        self.rect.center = Nourriture.coordinates
         self.image.set_colorkey((37, 43, 43))
 
 
     def update_position(self):
-        self.rect.center = self.gfood.coordonnee
+        self.rect.center = self.gfood.coordinates
         self.image.set_colorkey((37, 43, 43))
 """
