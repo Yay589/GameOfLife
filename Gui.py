@@ -1,4 +1,5 @@
 from parametre import *
+from nourriture import *
 from Sprite import *
 from Render import *
 from random import *
@@ -12,13 +13,25 @@ g=Render()
 
 
 
+"""
+for i in range(2*N):
+    x,y = randint(0,N-1),randint(0,N-1)
+    grille[(x,y)] = Case(coord = (x,y), qtite_nourriture = foodE )
+"""
+
+ajouterNourritureGrille()
 
 for i in range(N-1):
-    allBobs.append(Bob(bobMemory = 3, coord = (randint(0,N-1),randint(0,N-1))))
-
+    x,y = randint(0,N-1),randint(0,N-1)
+    b = Bob(bobMemory = 3, coord = (x,y))
+    b.coordinates = (x,y)
+    allBobs.append(b)
+    grille[(x,y)].bobs.append(b)
 
 for bob in allBobs:
     g.all_gameobject.add(BobSprite(bob))
+
+
 
 
 running = True
@@ -28,6 +41,9 @@ frame_count_start=0
 
 save_option_shown = False
 clock = pygame.time.Clock()
+
+
+
 
 while running:
 
@@ -127,10 +143,7 @@ while running:
     if g.game_running:
         
         g.draw(frame_count)    
-        
 
-
-            
 
         if  not g.is_paused:
 

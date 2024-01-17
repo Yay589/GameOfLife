@@ -1,10 +1,13 @@
 import pygame
 from random import *
 import math
+
+from nourriture import *
 from parametre import *
 from case import Case
 from bob import Bob
 from affichage import *
+
 pygame.init()
 
 
@@ -22,7 +25,7 @@ class Render:
         self.selected_index = -1
         self.start_anime=False
         self.tick=30
-        self.tick_by_day=15
+        self.tick_by_day= 15
         self.ball_x=0
         self.ball_y=0
         self.angle=0
@@ -318,7 +321,7 @@ class Render:
                     f"Energy for each food:{foodE}",
                     f"SCREEN_WIDTH:{SCREEN_WIDTH}",
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
-                    f"Number of cases:{N}"
+                    f"Number of cases:{N*N}"
                 ]
 
                 deplace=80
@@ -355,7 +358,6 @@ class Render:
 
     def draw_cases(self):
         for i in self.list_x_y:
-            #screen.blit(self.image, i)
             vect_list = [x * self.zoom_scale for x in (self.rect.width ,self.rect.height*(self.plat/5))]
             image=pygame.transform.scale(self.image, vect_list)
 
@@ -368,14 +370,7 @@ class Render:
         for obj in self.all_gameobject:
 
             location=()
-            location=obj.gbob.previousCoordinates
-            #screen.blit(obj.image, list(eval(k)))
-            
-            #screen.blit(image_obj, [(obj.rect.x*10+205-self.offset.x)*self.zoom_scale,(obj.rect.y*5+170-self.offset.y)*self.zoom_scale])
-            #obj.update()
-            
-                
-
+            location=obj.gbob.previousCoordinates     
 
             x=obj.gbob.coordinates[0]-obj.gbob.previousCoordinates[0]
             y=obj.gbob.coordinates[1]-obj.gbob.previousCoordinates[1]
@@ -395,7 +390,6 @@ class Render:
             real_location_y=(100 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat + (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj[1]*(1/2) 
             real_location=[real_location_x,real_location_y]
 
-            
             if -100< real_location [0] and real_location [0] < SCREEN_WIDTH and -100 < real_location [1] and real_location [1] <SCREEN_HEIGHT:
 
                 
@@ -414,8 +408,21 @@ class Render:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     self.show=True
                     self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
-   
-    
+        
+        #mise à jour de la position des pommes chaque jour écoulé
+        
+        img_appel = pygame.image.load('data/images/apple.png').convert()
+        img_appel.set_colorkey((37, 43, 43))
+        if walk_i % self.sombre == 0:
+            renouvellerNourriture()
+            print("finito")
+        
+        print("(x,y)")
+        for (x,y) in grille:
+                if (grille[(x,y)].qtite_nourriture != 0):
+                    screen.blit(img_appel, ((150 + x* 10 - y * 10-self.offset.x)*self.zoom_scale ,(100 + x* self.plat + y* self.plat-self.offset.y+self.plat)*self.zoom_scale )) 
+        
+        
     def draw_start(self,frame):
 
         
