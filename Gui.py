@@ -11,14 +11,6 @@ pygame.font.init()
 
 g=Render()
 
-
-
-"""
-for i in range(2*N):
-    x,y = randint(0,N-1),randint(0,N-1)
-    grille[(x,y)] = Case(coord = (x,y), qtite_nourriture = foodE )
-"""
-
 ajouterNourritureGrille()
 
 for i in range(N-1):

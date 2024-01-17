@@ -415,9 +415,7 @@ class Render:
         img_appel.set_colorkey((37, 43, 43))
         if walk_i % self.sombre == 0:
             renouvellerNourriture()
-            print("finito")
-        
-        print("(x,y)")
+            
         for (x,y) in grille:
                 if (grille[(x,y)].qtite_nourriture != 0):
                     screen.blit(img_appel, ((150 + x* 10 - y * 10-self.offset.x)*self.zoom_scale ,(100 + x* self.plat + y* self.plat-self.offset.y+self.plat)*self.zoom_scale )) 
