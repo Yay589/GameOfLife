@@ -18,24 +18,20 @@ class BobSprite(pygame.sprite.Sprite,Bob):
         self.current_sprite = 0
         self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
-        self.rect.center = Bob.coordonnee
+        self.rect.center = Bob.coordinates
+        self.sprites = [pygame.image.load(f'data/images/kirby1.{i}.png').convert() for i in range(9)]  
 
-
-    def update_position(self):
-        self.rect.center = self.gbob.coordonnee
-"""
-class FoodSprite(pygame.sprite.Sprite,Nourriture):
-    def __init__(self,Nourriture):
-        super().__init__()
-        self.taille=0.42
-        self.gfood=Nourriture
-        self.image = pygame.image.load('data/images/apple.png').convert()
-        self.rect = self.image.get_rect()
-        self.rect.center = Nourriture.coordonnee
-        self.image.set_colorkey((37, 43, 43))
-
+        self.current_sprite = 0
+        self.animation_timer = pygame.time.get_ticks()  
 
     def update_position(self):
-        self.rect.center = self.gfood.coordonnee
-        self.image.set_colorkey((37, 43, 43))
-"""
+        self.rect.center = self.gbob.previousCoordinates
+        
+    #def update_animation(self,i):
+        
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.animation_timer > 100: 
+            self.animation_timer = now
+            self.current_sprite = (self.current_sprite + 1) % len(self.sprites)
+            self.image = self.sprites[self.current_sprite]
