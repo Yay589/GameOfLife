@@ -44,6 +44,8 @@ class Render:
         self.listObjects = []
         self.linital_position = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+        
+    
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
@@ -54,6 +56,33 @@ class Render:
         #     self.selected_points.append(random_point)
         #     available_points.remove(random_point)
 
+        self.image_setting = pygame.image.load('data/images/setting.png')
+        self.image_setting.set_colorkey((255, 255, 255))
+        self.image_setting = pygame.transform.scale(self.image_setting, (50, 50))
+
+        self.image_restart = pygame.image.load('data/images/restart.png')
+        self.image_restart.set_colorkey((255, 255, 255))
+        self.image_restart = pygame.transform.scale(self.image_restart, (50, 50))
+
+        self.image_skip = pygame.image.load('data/images/skip.png')
+        self.image_skip = pygame.transform.scale(self.image_skip, (50, 50))
+
+        self.image_info = pygame.image.load('data/images/info.png')
+        self.image_info.set_colorkey((255, 255, 255))
+        self.image_info = pygame.transform.scale(self.image_info, (50, 50))
+
+        self.image_ball = pygame.image.load('data/images/full.png')
+        self.image_ball = pygame.transform.scale(self.image_ball, (100, 100))
+
+        self.image_pause = pygame.image.load('data/images/pause.png')
+        self.image_pause.set_colorkey((255, 255, 255))
+        self.image_pause = pygame.transform.scale(self.image_pause, (50, 50))
+
+        self.up = pygame.image.load(f'data/images/setting/up.png')
+        self.up = pygame.transform.scale(self.up, (50,50))
+
+        self.img_appel = pygame.image.load('data/images/apple.png').convert()
+        self.img_appel.set_colorkey((37, 43, 43))
         
         self.image = pygame.image.load('data/images/grass.png').convert()
         self.image.set_colorkey((0, 0, 0))
@@ -153,13 +182,7 @@ class Render:
         # Afficher l'image de pause si le jeu est en pause
         if self.is_paused:
 
-            image_pause = pygame.image.load('data/images/pause.png')
-
-            image_pause.set_colorkey((255, 255, 255))
-
-            image_pause = pygame.transform.scale(image_pause, (50, 50))
-
-            screen.blit(image_pause, (535, 50))
+            screen.blit(self.image_pause, (535, 50))
         
         self.draw_setting()
 
@@ -197,9 +220,8 @@ class Render:
         screen.blit(image_ground, (0, 0))
     
     def draw_sun(self):
-        image_ball = pygame.image.load('data/images/full.png')
-        image_ball = pygame.transform.scale(image_ball, (100, 100))
-        ball_rect = image_ball.get_rect()
+        
+        ball_rect = self.image_ball.get_rect()
         if not self.is_paused:
             self.angle += 0.02
             self.ball_x = 400 + 400 * math.cos(self.angle)
@@ -208,10 +230,9 @@ class Render:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if self.ball_x < mouse_x < self.ball_x + 100 and self.ball_y < mouse_y < self.ball_y + 100:
-                    image_ball = pygame.image.load('data/images/full1.png')
-                    image_ball = pygame.transform.scale(image_ball, (100*self.zoom_scale, 100*self.zoom_scale))
+                    self.image_ball = pygame.transform.scale(self.image_ball, (100*self.zoom_scale, 100*self.zoom_scale))
                 
-        screen.blit(image_ball, (self.ball_x - ball_rect.width // 2,self.ball_y - ball_rect.height // 2))
+        screen.blit(self.image_ball, (self.ball_x - ball_rect.width // 2,self.ball_y - ball_rect.height // 2))
 
     def draw_Floating_Island_Cliff(self):
         lenth_under=2*N * 10 * self.zoom_scale
@@ -261,59 +282,36 @@ class Render:
 
     def draw_info(self):        
         if self.guid:
-
             self.draw_guid()
-
-        image_info = pygame.image.load('data/images/info.png')
-
-        image_info.set_colorkey((255, 255, 255))
-
-        image_info = pygame.transform.scale(image_info, (50, 50))
-
-        screen.blit(image_info, (675, 50))
+        screen.blit(self.image_info, (675, 50))
 
     def draw_skip(self):        
-        
-        image_skip = pygame.image.load('data/images/skip.png')
 
-        image_skip = pygame.transform.scale(image_skip, (50, 50))
-
-        screen.blit(image_skip, (SCREEN_WIDTH-125, 50))
+        screen.blit(self.image_skip, (SCREEN_WIDTH-125, 50))
         
  
 
 
     def draw_restart(self):        
 
-        image_restart = pygame.image.load('data/images/restart.png')
-
-        image_restart.set_colorkey((255, 255, 255))
-
-        image_restart = pygame.transform.scale(image_restart, (50, 50))
-
-        screen.blit(image_restart, (605, 50))
+        screen.blit(self.image_restart, (605, 50))
     
 
     def draw_setting(self):        
 
-        image_setting = pygame.image.load('data/images/setting.png')
-
-        image_setting.set_colorkey((255, 255, 255))
-
-        image_setting = pygame.transform.scale(image_setting, (50, 50))
-
-        screen.blit(image_setting, (SCREEN_WIDTH-100, SCREEN_HEIGHT-100))
+        
+        screen.blit(self.image_setting, (SCREEN_WIDTH-100, SCREEN_HEIGHT-100))
 
         if self.setting :
             if self.setting_frame < 5:
                 self.setting_frame+=1
-                image_setting_a = pygame.image.load(f'data/images/setting/setting{self.setting_frame}.png')
-                image_setting_a = pygame.transform.scale(image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
-                screen.blit(image_setting_a, (SCREEN_WIDTH/6, 0))
+                self.image_setting_a = pygame.image.load(f'data/images/setting/setting{self.setting_frame}.png')
+                self.image_setting_a = pygame.transform.scale(self.image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
+                screen.blit(self.image_setting_a, (SCREEN_WIDTH/6, 0))
             else:
-                image_setting_a = pygame.image.load(f'data/images/setting/setting{5}.png')
-                image_setting_a = pygame.transform.scale(image_setting_a, (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT))
-                screen.blit(image_setting_a, (SCREEN_WIDTH/6, 0))
+                self.image_setting_a = pygame.image.load('data/images/setting/setting5.png')
+                self.image_setting_a = pygame.transform.scale(self.image_setting_a, (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT))
+                screen.blit(self.image_setting_a, (SCREEN_WIDTH/6, 0))
 
                 font = pygame.font.Font(None, 24)
                 lines = [
@@ -326,9 +324,7 @@ class Render:
 
                 deplace=80
                 
-                up = pygame.image.load(f'data/images/setting/up.png')
-                up = pygame.transform.scale(up, (50,50))
-                screen.blit(up, (SCREEN_WIDTH/6+40, 370))
+                screen.blit(self.up, (SCREEN_WIDTH/6+40, 370))
                 
                 keys = pygame.key.get_pressed()
                 
@@ -410,15 +406,13 @@ class Render:
                     self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
         
         #mise à jour de la position des pommes chaque jour écoulé
-        
-        img_appel = pygame.image.load('data/images/apple.png').convert()
-        img_appel.set_colorkey((37, 43, 43))
+    
         if walk_i % self.sombre == 0:
             renouvellerNourriture()
             
         for (x,y) in grille:
                 if (grille[(x,y)].qtite_nourriture != 0):
-                    screen.blit(img_appel, ((150 + x* 10 - y * 10-self.offset.x)*self.zoom_scale ,(100 + x* self.plat + y* self.plat-self.offset.y+self.plat)*self.zoom_scale )) 
+                    screen.blit(self.img_appel, ((150 + x* 10 - y * 10-self.offset.x)*self.zoom_scale ,(100 + x* self.plat + y* self.plat-self.offset.y+self.plat)*self.zoom_scale )) 
         
         
     def draw_start(self,frame):
