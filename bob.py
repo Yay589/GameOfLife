@@ -32,7 +32,7 @@ class Bob():
                  bobMass = bobM, 
                  bobPerception = bobP, 
                  bobMemory = bobMem,
-                 coord = [randint(0,N-1),randint(0,N-1)] ) :
+                 coord = (randint(0,N-1),randint(0,N-1)) ) :
         #coordonnee
         self.coordinates = coord #avec randint les deux bornes sont inclusives
         self.previousCoordinates = coord #pour l'instant on va dire ça s'il vient de pop

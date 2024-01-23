@@ -7,6 +7,8 @@ from nourriture import *
 from case import Case
 from bob import Bob
 from affichage import *
+import collections
+import time
 
 #fonction pour avoir des infos globales sur notre grille
 def avgSpeed():
@@ -22,19 +24,36 @@ def avgSpeed():
     else:
         return speedSum/i
 
-def nbBobs():
-    i = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            i += 1
-    return i
 
 
 if __name__ == '__main__':
-    for i in range(numberBob):
-        allBobs.append(Bob(coord=(randint(0, N - 1), randint(0, N - 1))))
-        renouvellerNourriture()
-        afficheGrilleSimple()
+    # for x in range(T):
+        for i in range(3):
+        
+            allBobs.append(Bob(coord=(randint(0,N-1),randint(0,N-1)),bobPerception=10))
+            # allBobs[i].speak()
+        
+        for j in range(7):
+            #os.system("clear")  
+            print("Debut de journée")
+            renouvellerNourriture() 
+            for k in range(20):
+                print("\033[H\033[J",end="")
+                afficheGrilleSimple()
+                time.sleep(0.5)
+                for b in allBobs:
+                
+                    if(not b.dejaJoue() and not b.seProteger() and not b.manger() and not b.reproduction()):
+                        b.bobDeplacement()
+                        b.speak()
+       
+            afficheGrilleSimple()
+        
+        
+        
+            
+          
+            
 
 
 

@@ -48,7 +48,7 @@ deadBobs = []
 
 
 #Paramètres simulation :
-N = 10 #100 Length or width of the map (grid of N*N)
+N = 50 #100 Length or width of the map (grid of N*N)
 numberBob = 100 #100 Number of Bobs at the begining 
 numberFood = 25 #200 Number of food points par day
 foodE = 100 #100 Quantity of energy per food point
