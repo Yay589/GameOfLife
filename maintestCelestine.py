@@ -62,48 +62,39 @@ def allBobsSpeakM():
          b.speakMass()
 
 if __name__ == '__main__':
+    for i in range(10):
+        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
     
-    # for i in range(numberBob):
-    #     allBobs.append(Bob())
-        
-    bob1 = Bob(bobEnergy=200,bobSpeed = 2, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
-    bob2 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMass = 5, coord = (1,1))
-    allBobs.append(bob1)
-    allBobs.append(bob2)
+    """
+    renouvellerNourriture()
     
-    for i in range(15):
+    for i in range(8):
         print(i) 
-        #os.system("clear") 
-        print("\033[H\033[J",end="")
-        
         afficheGrilleSimple()
-        time.sleep(0.5)
         for b in allBobs:
             print(b.coordClosestPrey)
             if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
                 b.bobDeplacement()
+    
+    
+    #test du fonctionnnement global du jeu
     """
+    
     for k in range(25):
-        #print("debut semaine")
         for j in range(7):
             renouvellerNourriture()
-            for i in range(T):
+            for i in range(20):
                 for b in allBobs:
                     if(not b.dejaJoue() and not b.enDanger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
-        #print("fin semaine")
-        #afficheGrilleSimple()
-        print("Semaine ",k)
-        print("nombre de bob en vie : ", nbBobs())
+                print("\033[H\033[J",end="")
+                afficheGrilleSimple()
+                time.sleep(0.5)
+
         if(nbBobs() == 0):
             print("Tout les bobs sont morts")
-        else:
-            print("Vitesse moyenne des bobs : ",avgSpeed())
-            print("Perception moyenne : ",avgPerception())
-            print("Memoire moyenne : ",avgMemory())
-        #allBobsSpeak()
 
-    """
+    
     # ajouterNourritureCase((4,4))
     # ajouterNourritureCase((4,3))
     # ajouterNourritureCase((3,4))

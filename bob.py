@@ -208,6 +208,7 @@ class Bob():
     def bobDeplacement(self):
         self.previousCoordinates = self.coordinates
         if(not self.chercherNouriture()):
+            print("no food seen")
             self.bouger()
         self.setNourritureMemorisee()
         self.setCaseMemorisee()
@@ -243,11 +244,11 @@ class Bob():
           
         return coordonneeAdjacentes
     
-    def nourritureEnVue(self, coordonnee, perception): #renvoie la liste des nourriture 
+    def nourritureEnVue(self, coordonnee): #renvoie la liste des nourriture 
         #mise à jour de la liste de nourriture
         nourritureEnVue = [] #on vide la liste de tuple
         
-        for coord in self.coordAdjacentes(coordonnee,perception) :
+        for coord in self.coordAdjacentes(coordonnee,self.perception) :
             if (coord in grille):
                 if (grille[coord].qtite_nourriture != 0):
                     nourritureEnVue.append(coord)
@@ -323,6 +324,7 @@ class Bob():
     #se deplace de manière optimisée mais aléatoire vers les coordonnées données
     def beeline(self,coordCible): #déplacement en zigzag vers une cible
         #fuire est un "flag" qui dit si on doit fuire ou ses rapprocher des coordonnée 
+        print("doing a beeline")
         if(self.coordinates == coordCible):
             print("Erreur, le bob est déjà sur cette case")
             return -1
@@ -368,22 +370,18 @@ class Bob():
         return 0      
    
     def chercherNouriture(self): #renvoie 1 si le bob se deplace pour chercher une nourriture 0 s'il ne trouve pas de bouffe
+        self.seenFoods = self.nourritureEnVue(self.coordinates)
         if(len(self.seenFoods) or len(self.rememberedFoods)):
+            print("going after some food")
             self.setNourriturePreferee()
             self.beeline(self.coordFavouriteFood)
             return True
         elif(self.coordClosestPrey):
+            print("going after a bob")
             self.beeline(self.coordClosestPrey)
             return True
         else:
             return False    
-    
-    #indique si un bob est seul sur sa case
-    def seul(self):
-            #version si les bobs stockent leur case
-        #return len(self.case.bobs)==1 #si la taille de la liste de bob de sa case est 1 il est seul
-            #version si on dit que les bobs ne sockent plus leur case :
-        return len(grille[self.coordinates].bobs) == 1
     
     #choisi un bob parmis ceux qui sont sur la même case
     #cette fonction est inutile vu qu'on va remelanger le dict plutôt
@@ -411,20 +409,20 @@ class Bob():
         min_distance_predateur = self.perception
         min_distance_proie = self.perception
         for coord in self.bobsEnVue():
-            for b in grille[coord].bobs:
-                if(not (b is self)):
-                    distance = self.distance(b.coordinates)
-                    if (b.mass > 3/2*self.mass):
+            for otherBob in grille[coord].bobs:
+                if(not (otherBob is self)):
+                    distance = self.distance(otherBob.coordinates)
+                    if (otherBob.mass > 3/2*self.mass):
                         #print("bob dangereux")
                         bobEnDanger = True
                         if(distance <= min_distance_predateur):
                             min_distance_predateur = distance
-                            coordPredateurLePlusProche = b.coordinates  
-                    elif(b.mass < 3/2*self.mass):
+                            coordPredateurLePlusProche = otherBob.coordinates  
+                    elif(otherBob.mass < 2/3*self.mass):
                         distance = self.distance(b.coordinates)
                         if(distance <= min_distance_proie):
                             min_distance_proie = distance
-                            coordProieLaPlusProche = b.coordinates  
+                            coordProieLaPlusProche = otherBob.coordinates  
         self.coordClosestPredator = coordPredateurLePlusProche   
         self.coordClosestPrey = coordProieLaPlusProche
         return bobEnDanger
@@ -519,8 +517,8 @@ class Bob():
 #memoire
     
     def nourritureAMemoriser(self):
-        ancienneNourriture = self.nourritureEnVue(self.previousCoordinates, self.perception) 
-        nourritureEnVue = self.nourritureEnVue(self.coordinates,self.perception)
+        ancienneNourriture = self.nourritureEnVue(self.previousCoordinates) 
+        nourritureEnVue = self.nourritureEnVue(self.coordinates)
         nouvelleNourriture = list(set(ancienneNourriture) 
                                   - set(nourritureEnVue)) #nourriture en vue - ancienne nourriture
         return nouvelleNourriture
