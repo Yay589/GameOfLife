@@ -92,10 +92,19 @@ class Bob():
         """
         if(self.energy == bobMaxE):
             self.previousCoordinates = self.coordinates #met a jour coordonnee precedente
-            #calcul des données héreditaire
-            vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
-            perceptionBebe = max((self.perception + randint(-1,1)),0)
-            memoireBebe = max((self.memory + randint(-1,1)),0)
+            
+            #valeurs de base
+            vitesseBebe = bobS
+            perceptionBebe = bobP
+            memoireBebe = bobMem
+            
+            #calcul des données héreditaire (si caractéritique activée)
+            if(speedON):
+                vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
+            if(perceptionON):    
+                perceptionBebe = max((self.perception + randint(-1,1)),0)
+            if(memoryON):
+                memoireBebe = max((self.memory + randint(-1,1)),0)
             #creation du bebe
             allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
             #perte d'energie
@@ -208,10 +217,10 @@ class Bob():
     def bobDeplacement(self):
         self.previousCoordinates = self.coordinates
         if(not self.chercherNouriture()):
-            print("no food seen")
             self.bouger()
-        self.setNourritureMemorisee()
-        self.setCaseMemorisee()
+        if(memoryON):
+            self.setNourritureMemorisee()
+            self.setCaseMemorisee()
     
 #perception
     def coordAdjacentes(self, coordonnee, perception): #renvoie les case visibles depuis
@@ -234,10 +243,8 @@ class Bob():
                 
         #On enleve les coordonnée qui sortent de la grille
         k = len(coordonneeAdjacentes)
-        #print("k : ")
         while(k>0):
             k-=1
-            #print(k, end = ' ')
             coord = coordonneeAdjacentes[k]
             if (coord[0] < 0)or(coord[0]>= N)or(coord[1]<0)or(coord[1]>=N):
                 del(coordonneeAdjacentes[k])                
@@ -289,7 +296,6 @@ class Bob():
         for coord in self.coordAdjacentes() :
             if (coord in grille):
                 if (grille[coord].qtite_nourriture != 0):
-                    print("Le bob voit une nourriture")
                     self.nourritureEnVue.append(coord)
         return len(self.nourritureEnVue)
     
@@ -324,7 +330,6 @@ class Bob():
     #se deplace de manière optimisée mais aléatoire vers les coordonnées données
     def beeline(self,coordCible): #déplacement en zigzag vers une cible
         #fuire est un "flag" qui dit si on doit fuire ou ses rapprocher des coordonnée 
-        print("doing a beeline")
         if(self.coordinates == coordCible):
             print("Erreur, le bob est déjà sur cette case")
             return -1
@@ -372,12 +377,10 @@ class Bob():
     def chercherNouriture(self): #renvoie 1 si le bob se deplace pour chercher une nourriture 0 s'il ne trouve pas de bouffe
         self.seenFoods = self.nourritureEnVue(self.coordinates)
         if(len(self.seenFoods) or len(self.rememberedFoods)):
-            print("going after some food")
             self.setNourriturePreferee()
             self.beeline(self.coordFavouriteFood)
             return True
         elif(self.coordClosestPrey):
-            print("going after a bob")
             self.beeline(self.coordClosestPrey)
             return True
         else:
@@ -413,7 +416,6 @@ class Bob():
                 if(not (otherBob is self)):
                     distance = self.distance(otherBob.coordinates)
                     if (otherBob.mass > 3/2*self.mass):
-                        #print("bob dangereux")
                         bobEnDanger = True
                         if(distance <= min_distance_predateur):
                             min_distance_predateur = distance
@@ -557,17 +559,24 @@ class Bob():
 #reproduction sexuée 
     def reproductionSexuee(self): #renvoie True si le bob fait un bebe et False sinon
         if(self.energy < bobMinSexE):  
-            #print("Pas assez d'energie")
             return False #pas assez d'energie
         bob = self.partenaireDisponible() #avec x un fonction qui renvoie un bob qui à assez d'energie
         if(bob==None):
-            #print("Pas de partenaire disponible")
             return False #pas de partenaire dispnnible
         
-        #calcul des caractéritiques du bébé :
-        vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
-        perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
-        memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
+        #valeurs de base
+        vitesseBebe = bobS
+        perceptionBebe = bobP
+        memoireBebe = bobMem
+            
+        #calcul des données héreditaire (si caractéritique activée)
+        if(speedON):
+            vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
+        if(perceptionON):    
+            perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
+        if(memoryON):
+            memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
+
         #creation du bebe
         allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
         #perte d'energie
