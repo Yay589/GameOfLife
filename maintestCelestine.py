@@ -85,7 +85,7 @@ if __name__ == '__main__':
             renouvellerNourriture()
             for i in range(20):
                 for b in allBobs:
-                    if(not b.dejaJoue() and not b.enDanger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
                 print("\033[H\033[J",end="")
                 afficheGrilleSimple()

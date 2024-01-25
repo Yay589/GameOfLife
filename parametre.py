@@ -68,13 +68,15 @@ bobP = 1 #1 Perception before mutation
 bobMem = 0 #0 Memory before mutation
 
 #Paramètre ON/OFF
-graphicalInterfaceON = 1 #0 : terminal, 1 : graphique
-#1 : ON 
-#0 : OFF
-speedON = 1
-massON = 1 
-perceptionON = 1
-memoryON = 1
+graphicalInterfaceON = True #False : terminal, True : graphique
+#True : ON 
+#False : OFF
+soloReproductionON = True
+duoReproductionON = True
+speedON = True
+massON = True
+perceptionON = True
+memoryON = True
 
 #previous action
 NAITRE = 0

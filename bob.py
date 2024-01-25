@@ -25,6 +25,138 @@ from math import trunc
 
 
 class Bob():
+#Fonction qui devraient être utilisées dans le reste du programme :
+#########################################################################################
+    #Toutes les fonctions (sauf déplacement) renvoient False si elle ne font rien et True si elles font l'action correpondante
+    def dejaJoue(self):
+        if(self.skipingTurn):
+            self.skipingTurn = False
+            return True
+        else:
+            return False
+    
+    #renvoie True si le bob à besoin de se proteger (et fait le nécessaire) et False si le bob n'est pas en danger
+    def seProteger(self):
+        if(perceptionON and massON and self.enDanger() and self.fuire(self.coordClosestPredator)):
+            return True
+        else : 
+            return False
+    
+    #reproduction solo
+    def reproduction(self):
+        """
+        Cette fonction
+        -verifie le niveau d'energie du parent
+        -créer un bébé bob (dans la liste de nos bobs)
+        -met à jour le niveau d'energie du parent
+
+        Valeur de retour : la fonction renvoie 1 si le bob à assez
+        d'energie pour faire un bébé et renvoie 0 s'il n'y a pas de bob
+        créé.
+        """
+        if(soloReproductionON and self.energy == bobMaxE):
+            self.previousCoordinates = self.coordinates #met a jour coordonnee precedente
+            
+            #valeurs de base
+            vitesseBebe = bobS
+            perceptionBebe = bobP
+            memoireBebe = bobMem
+            
+            #calcul des données héreditaire (si caractéritique activée)
+            if(speedON):
+                vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
+            if(perceptionON):    
+                perceptionBebe = max((self.perception + randint(-1,1)),0)
+            if(memoryON):
+                memoireBebe = max((self.memory + randint(-1,1)),0)
+            #creation du bebe
+            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
+            #perte d'energie
+            self.energy -= bobLaborE
+            self.previousAction = REPRODUCTION_SOLO
+            return True
+        else:
+            return False
+    
+    #reproduction duo   
+    def reproductionSexuee(self): #renvoie True si le bob fait un bebe et False sinon
+        if((not duoReproductionON) or self.energy < bobMinSexE):  
+            return False #pas assez d'energie
+        bob = self.partenaireDisponible() #avec x un fonction qui renvoie un bob qui à assez d'energie
+        if(not duoReproductionON) or bob==None):
+            return False #pas de partenaire dispnnible
+        
+        #valeurs de base
+        vitesseBebe = bobS
+        perceptionBebe = bobP
+        memoireBebe = bobMem
+            
+        #calcul des données héreditaire (si caractéritique activée)
+        if(speedON):
+            vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
+        if(perceptionON):    
+            perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
+        if(memoryON):
+            memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
+
+        #creation du bebe
+        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
+        #perte d'energie
+        self.energy -= bobSexLaborE
+        bob.energy -= bobSexLaborE
+        bob.skipingTurn = True
+        self.previousAction = REPRODUCTION_DUO
+        bob.previousAction = REPRODUCTION_DUO
+        return True
+    
+    #manger
+    #renvoie 0 si le bob n'a rien à manger sur sa case et 1 si le bob a mangé
+    def manger(self):
+        """
+        Cette fonction
+        -calcule la quantité d'energie que le bob peut manger
+        -met a jour l'energie du bob et qui reste dans la case
+
+        Valeur de retour : cette fonction renvoie True si le bob à mangé,
+        False s'il n'y avait rien a manger dans la case
+        """
+        # if(self.dead == 1):
+        #     return -1
+        
+        
+        if(self.case.qtite_nourriture != 0):
+            #Enfaite un bob reste jamais sur une case avec de la nourriture puisque s'il en reste c'est qu'il à full energie et donc il peut faire un bébé
+            # if(self.coordinates == self.previousCoordinates):
+            #     self.energy -= 0.5 #Un bob peut rester sur une nourriture mais il perd 0,5 energie par tour
+
+            self.previousCoordinates = self.coordinates #mise a jour des coord precedentes
+            #calcul du gain d'energie et energie restante sur la case
+            faim = bobMaxE - self.energy
+            reste = self.case.qtite_nourriture - faim
+            if (reste <= 0) :
+                self.energy += self.case.qtite_nourriture
+                self.case.qtite_nourriture = 0
+            else :
+                self.case.qtite_nourriture -= faim  #on enleve à la nourriture l'énergie que le bob consomme
+                self.energy = bobMaxE
+            return True
+        else :
+            return False  
+    
+    #Deplacement - regroupe toutes les fonctions de déplacement
+    #permet de deplacer un bob, soit pour chercher de la nourriture, soit aléatoirement  
+    def bobDeplacement(self):
+        self.previousCoordinates = self.coordinates
+        if(not self.chercherNouriture()):
+            self.bouger()
+            self.previousAction = DEPLACEMENT_ALEATOIRE
+        if(memoryON):
+            self.setNourritureMemorisee()
+            self.setCaseMemorisee()
+ 
+#########################################################################################
+    
+    #Fonctions internes à ce fichier 
     def __init__(self, 
                  skiping = False, #True si le bob naît d'un autre bob
                  bobEnergy = bobSpawnE, 
@@ -82,42 +214,6 @@ class Bob():
         del(allBobs[bobIndex])
         self.previousAction = MOURIR
 
-    #reproduction solo, renvoie 0 si le bob n'a pas assez d'énrgie et 1 si le bob fait un bébé
-    def reproduction(self):
-        """
-        Cette fonction
-        -verifie le niveau d'energie du parent
-        -créer un bébé bob (dans la liste de nos bobs)
-        -met à jour le niveau d'energie du parent
-
-        Valeur de retour : la fonction renvoie 1 si le bob à assez
-        d'energie pour faire un bébé et renvoie 0 s'il n'y a pas de bob
-        créé.
-        """
-        if(self.energy == bobMaxE):
-            self.previousCoordinates = self.coordinates #met a jour coordonnee precedente
-            
-            #valeurs de base
-            vitesseBebe = bobS
-            perceptionBebe = bobP
-            memoireBebe = bobMem
-            
-            #calcul des données héreditaire (si caractéritique activée)
-            if(speedON):
-                vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
-            if(perceptionON):    
-                perceptionBebe = max((self.perception + randint(-1,1)),0)
-            if(memoryON):
-                memoireBebe = max((self.memory + randint(-1,1)),0)
-            #creation du bebe
-            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
-            #perte d'energie
-            self.energy -= bobLaborE
-            self.previousAction = REPRODUCTION_SOLO
-            return True
-        else:
-            return False
-       
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
     def calculNbCasesDeplacement(self):
@@ -213,16 +309,6 @@ class Bob():
         self.deplacerBobCoordonnee()
         return 0
       
-    #permet de deplacer un bob, soit pour chercher de la nourriture, soit aléatoirement  
-    def bobDeplacement(self):
-        self.previousCoordinates = self.coordinates
-        if(not self.chercherNouriture()):
-            self.bouger()
-            self.previousAction = DEPLACEMENT_ALEATOIRE
-        if(memoryON):
-            self.setNourritureMemorisee()
-            self.setCaseMemorisee()
-    
 #perception
     def coordAdjacentes(self, coordonnee, perception): #renvoie les case visibles depuis
         x = coordonnee[0]
@@ -270,7 +356,7 @@ class Bob():
     def setNourriturePreferee(self): #ajouter les bobs
         if(len(self.seenFoods)):
             foods = self.seenFoods
-        elif(len(self.rememberedFoods)):
+        elif(memoryON and len(self.rememberedFoods)):
             foods = list(self.rememberedFoods.keys())
         else:
             print("Erreur, pas de nourriture en vue ni en mémoire") #on utilise pas setNourriturePreferee si y'a pas de nourriture en vue
@@ -289,7 +375,6 @@ class Bob():
                 coordPref = coordN
         self.coordFavouriteFood = coordPref       
 
-    ########################################
     #se deplace de manière optimisée mais aléatoire vers les coordonnées données
     def beeline(self,coordCible): #déplacement en zigzag vers une cible
         #fuire est un "flag" qui dit si on doit fuire ou ses rapprocher des coordonnée 
@@ -338,25 +423,21 @@ class Bob():
         return 0      
    
     def chercherNouriture(self): #renvoie 1 si le bob se deplace pour chercher une nourriture 0 s'il ne trouve pas de bouffe
-        self.seenFoods = self.nourritureEnVue(self.coordinates)
-        if(len(self.seenFoods) or len(self.rememberedFoods)):
-            self.setNourriturePreferee()
-            self.beeline(self.coordFavouriteFood)
-            self.previousAction = CHERCHER_NOURRITURE
-            return True
-        elif(self.coordClosestPrey):
-            self.beeline(self.coordClosestPrey)
-            self.previousAction = CHASSER
-            return True
+        if(perceptionON):
+            self.seenFoods = self.nourritureEnVue(self.coordinates)
+            if(len(self.seenFoods) or len(self.rememberedFoods)):
+                self.setNourriturePreferee()
+                self.beeline(self.coordFavouriteFood)
+                self.previousAction = CHERCHER_NOURRITURE
+                return True
+            elif(self.coordClosestPrey):
+                self.beeline(self.coordClosestPrey)
+                self.previousAction = CHASSER
+                return True
+            else:
+                return False
         else:
             return False    
-    
-    #choisi un bob parmis ceux qui sont sur la même case
-    #cette fonction est inutile vu qu'on va remelanger le dict plutôt
-    #def choisirUnBob(self):
-        n = len(grille[self.coordinates].bobs)
-        indexBobChoisi = randint(0,n-1)
-        return indexBobChoisi
     
     def bobsEnVue(self):
         bobsEnVue = []
@@ -393,14 +474,7 @@ class Bob():
         self.coordClosestPredator = coordPredateurLePlusProche   
         self.coordClosestPrey = coordProieLaPlusProche
         return bobEnDanger
-         
-    #renvoie 1 si le bob à besoin de se proteger (et fait le nécessaire) et 0 si le bob n'est pas en danger
-    def seProteger(self):
-        if(self.enDanger() and self.fuire(self.coordClosestPredator)):
-            return True
-        else : 
-            return False
-        
+            
     def fuire(self,coordCible): #déplacement en zigzag pour fuir une cible        
         self.case.enleverBob(self)
         x = coordCible[0] - self.coordinates[0] 
@@ -438,7 +512,6 @@ class Bob():
             return True
         else:
             return False      
-    #######################   
 
 #memoire
     
@@ -481,82 +554,11 @@ class Bob():
             self.rememberedSquares.pop(0)
  
 #reproduction sexuée 
-    def reproductionSexuee(self): #renvoie True si le bob fait un bebe et False sinon
-        if(self.energy < bobMinSexE):  
-            return False #pas assez d'energie
-        bob = self.partenaireDisponible() #avec x un fonction qui renvoie un bob qui à assez d'energie
-        if(bob==None):
-            return False #pas de partenaire dispnnible
-        
-        #valeurs de base
-        vitesseBebe = bobS
-        perceptionBebe = bobP
-        memoireBebe = bobMem
-            
-        #calcul des données héreditaire (si caractéritique activée)
-        if(speedON):
-            vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
-        if(perceptionON):    
-            perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
-        if(memoryON):
-            memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
-
-        #creation du bebe
-        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
-        #perte d'energie
-        self.energy -= bobSexLaborE
-        bob.energy -= bobSexLaborE
-        bob.skipingTurn = True
-        self.previousAction = REPRODUCTION_DUO
-        bob.previousAction = REPRODUCTION_DUO
-        return True
-    
     def partenaireDisponible(self): #renvoie un bob pret à faire un bébé 
         for b in self.case.bobs:
             if((b.energy >= 150) and (not b.enDanger()) and (b != self)): #fonction enDanger à remplacer par la fonction de Huy correspondante
                 return b
         return None
-    
-    def dejaJoue(self):
-        if(self.skipingTurn):
-            self.skipingTurn = False
-            return True
-        else:
-            return False
-
-#manger
-    #renvoie 0 si le bob n'a rien à manger sur sa case et 1 si le bob a mangé
-    def manger(self):
-        """
-        Cette fonction
-        -calcule la quantité d'energie que le bob peut manger
-        -met a jour l'energie du bob et qui reste dans la case
-
-        Valeur de retour : cette fonction renvoie True si le bob à mangé,
-        False s'il n'y avait rien a manger dans la case
-        """
-        # if(self.dead == 1):
-        #     return -1
-        
-        
-        if(self.case.qtite_nourriture != 0):
-            #Enfaite un bob reste jamais sur une case avec de la nourriture puisque s'il en reste c'est qu'il à full energie et donc il peut faire un bébé
-            # if(self.coordinates == self.previousCoordinates):
-            #     self.energy -= 0.5 #Un bob peut rester sur une nourriture mais il perd 0,5 energie par tour
-
-            self.previousCoordinates = self.coordinates #mise a jour des coord precedentes
-            #calcul du gain d'energie et energie restante sur la case
-            faim = bobMaxE - self.energy
-            reste = self.case.qtite_nourriture - faim
-            if (reste <= 0) :
-                self.energy += self.case.qtite_nourriture
-                self.case.qtite_nourriture = 0
-            else :
-                self.case.qtite_nourriture -= faim  #on enleve à la nourriture l'énergie que le bob consomme
-                self.energy = bobMaxE
-            return True
-        else :
-            return False
     
 #fonction de communication
     #le bob printf ses coordonnee et son energie
