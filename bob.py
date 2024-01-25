@@ -359,7 +359,7 @@ class Bob():
         return abs(coord[0] - self.coordinates[0]) + abs(coord[1] - self.coordinates[1])
     
     #definie la nourriture préférée du bob
-    def setNourriturePreferee(self): #ajouter les bobs
+    def setNourriturePrefereeDistance(self): #ajouter les bobs
         if(len(self.seenFoods)):
             foods = self.seenFoods
         elif(memoryON and len(self.rememberedFoods)):
@@ -382,7 +382,7 @@ class Bob():
         self.coordFavouriteFood = coordPref  
         
     #definie la nourriture préférée du bob
-    def setNourriturePreferee(self): #ajouter les bobs
+    def setNourriturePrefereeQuantite(self): #ajouter les bobs
         if(len(self.seenFoods)):
             foods = self.seenFoods
         elif(memoryON and len(self.rememberedFoods)):
@@ -391,17 +391,20 @@ class Bob():
             print("Erreur, pas de nourriture en vue ni en mémoire") #on utilise pas setNourriturePreferee si y'a pas de nourriture en vue
             return -1
         
-        min = self.distance(foods[0])
         coordPref = foods[0]
+        maxNourriture = 0
         for i in range(1,len(foods)):
             coordN = foods[i]
-            if (self.distance(coordN)< min):
-                min = self.distance(coordN)
-                coordPref = coordN
-            elif (len(self.seenFoods) and (self.distance(coordN) == min) and (grille[coordN].qtite_nourriture > grille[coordPref].qtite_nourriture)):
-                coordPref = coordN
-            elif(not len(self.seenFoods) and (self.distance(coordN) == min) and (self.rememberedFoods[coordN] > self.rememberedFoods[coordPref])):
-                coordPref = coordN
+            if(len(self.seenFoods)):
+                if (grille[coordN].qtite_nourriture > maxNourriture): #Si on voit des nourritures
+                    coordPref = coordN
+                elif (grille[coordN].qtite_nourriture == maxNourriture and self.distance(coordN) < self.distance(coordPref)):
+                    coordPref = coordN
+            else:
+                if (self.rememberedFoods[coordN] > maxNourriture): #Si on voit des nourritures
+                    coordPref = coordN
+                elif ((self.rememberedFoods[coordN] == maxNourriture) and (self.distance(coordN) < self.distance(coordPref))):
+                    coordPref = coordN
         self.coordFavouriteFood = coordPref       
 
     #se deplace de manière optimisée mais aléatoire vers les coordonnées données
@@ -455,7 +458,10 @@ class Bob():
         if(perceptionON):
             self.seenFoods = self.nourritureEnVue(self.coordinates)
             if(len(self.seenFoods) or len(self.rememberedFoods)):
-                self.setNourriturePreferee()
+                if(nourriturePref_quantite):
+                    self.setNourriturePrefereeQuantite()
+                else:
+                    self.setNourriturePrefereeDistance()
                 self.beeline(self.coordFavouriteFood)
                 self.previousAction = CHERCHER_NOURRITURE
                 return True

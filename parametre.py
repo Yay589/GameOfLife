@@ -37,20 +37,33 @@ class Case():
         print("(Case) Je suis en : ", self.coordonnee, ", je contiens : " \
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
 
-
-#La grille     
-grille = defaultdict(Case)
-
-#Les listes de Bobs
-allBobs = []
-aliveBobs = []
-deadBobs = []
-
+###########################################################
+#Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
 N = 20 #100 Length or width of the map (grid of N*N)
 numberBob = 100 #100 Number of Bobs at the begining 
-numberFood = 10 #200 Number of food points par day
-foodE = 50 #100 Quantity of energy per food point
+
+bobS = 1 #1 Speed before mutation
+bobM = 1 #1 Mass before mutation
+bobP = 1 #1 Perception before mutation
+bobMem = 0 #0 Memory before mutation
+
+###########################################################
+#Variable qui peuvent être modifiées EN COURS DE PARTIE :
+    #Paramètre ON/OFF :
+graphicalInterfaceON = True #False : terminal, True : graphique
+#True : ON 
+#False : OFF
+soloReproductionON = True
+duoReproductionON = True
+speedON = True
+massON = True
+perceptionON = True
+memoryON = True
+
+    #Valeurs des variables :
+numberFood = 200 #200 Number of food points par day
+foodE = 100 #100 Quantity of energy per food point
 
 T = 100 #100 Number of ticks in a day
 
@@ -62,21 +75,30 @@ bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproductio
 bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
 
-bobS = 1 #1 Speed before mutation
-bobM = 1 #1 Mass before mutation
-bobP = 1 #1 Perception before mutation
-bobMem = 0 #0 Memory before mutation
+    #modes spéciaux
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = False
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
 
-#Paramètre ON/OFF
-graphicalInterfaceON = True #False : terminal, True : graphique
-#True : ON 
-#False : OFF
-soloReproductionON = True
-duoReproductionON = True
-speedON = True
-massON = True
-perceptionON = True
-memoryON = True
+#Est ce que les bobs prefere les nourriture proches ou grosses
+nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
+#par les bobs en fonction de la quantité (True) ou de la distance (False)
+#Fonctionnement normal -> quantité
+
+###########################################################
+#Variable qui ne doivent pas être modifiées par les joueurs :
+
+#La grille     
+grille = defaultdict(Case)
+
+#Les listes de Bobs
+allBobs = []
+aliveBobs = []
+deadBobs = []
 
 #previous action
 NAITRE = 0
@@ -95,10 +117,3 @@ SCREEN_HEIGHT=600
 
 list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
 
-#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
-#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = False
-maxRandomSpeed = 3
-maxRandomMass = 3
-maxRandomPerception = 6
-maxRandomMemory = 4
