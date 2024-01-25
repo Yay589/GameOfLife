@@ -46,9 +46,8 @@ allBobs = []
 aliveBobs = []
 deadBobs = []
 
-
 #Paramètres simulation :
-N = 50 #100 Length or width of the map (grid of N*N)
+N = 20 #100 Length or width of the map (grid of N*N)
 numberBob = 100 #100 Number of Bobs at the begining 
 numberFood = 10 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point
@@ -67,6 +66,24 @@ bobS = 1 #1 Speed before mutation
 bobM = 1 #1 Mass before mutation
 bobP = 1 #1 Perception before mutation
 bobMem = 0 #0 Memory before mutation
+
+#Paramètre ON/OFF
+graphicalInterfaceON = 1 #0 : terminal, 1 : graphique
+#1 : ON 
+#0 : OFF
+speedON = 1
+massON = 1 
+perceptionON = 1
+memoryON = 1
+
+#previous action
+NAITRE = 0
+MANGER = 1
+REPRODUCTION_SOLO = 2
+REPRODUCTION_DUO = 3
+FUIRE = 4
+CHASSER = 5
+DEPLACEMENT_ALEATOIRE = 6
 
 #Paramètre affichage graphique :
 SCREEN_WIDTH=800
