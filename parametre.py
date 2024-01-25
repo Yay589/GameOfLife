@@ -40,8 +40,8 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 20 #100 Length or width of the map (grid of N*N)
-numberBob = 100 #100 Number of Bobs at the begining 
+N = 30 #100 Length or width of the map (grid of N*N)
+numberBob = 50 #100 Number of Bobs at the begining 
 
 bobS = 1 #1 Speed before mutation
 bobM = 1 #1 Mass before mutation
@@ -62,10 +62,10 @@ perceptionON = True
 memoryON = True
 
     #Valeurs des variables :
-numberFood = 200 #200 Number of food points par day
-foodE = 100 #100 Quantity of energy per food point
+numberFood = 100 #200 Number of food points par day
+foodE = 50 #100 Quantity of energy per food point
 
-T = 100 #100 Number of ticks in a day
+T = 50 #100 Number of ticks in a day
 
 bobMaxE = 200 #200 Max of energy of a bob
 bobSpawnE = 100 #100 Quantity of energy when spawning
@@ -78,7 +78,7 @@ bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual re
     #modes spéciaux
 #Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
 #Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = False
+randomStartOn = True
 maxRandomSpeed = 3
 maxRandomMass = 3
 maxRandomPerception = 6

@@ -129,3 +129,32 @@ def afficheGrilleCrochet():
             else:
                 print("[         ]", end="")
         print("")
+
+#\033[0;95m
+     
+def afficheGrilleSimpleCouleur():
+    for a in range(N // 2 * 3):
+        print(" _", end="")
+    print("")
+    for i in range(N):
+        print("|", end="")
+        for j in range(N):
+            if ((i, j) in grille):
+                if (grille[(i, j)].bobs != []):
+                    if (grille[(i, j)].bobs[0].speed >1.1):
+                        print("\033[0;36m ○ \033[0;30m", end="")
+                    if ((grille[(i, j)].bobs[0].speed < 1.1) and (grille[(i, j)].bobs[0].speed >= 1)):
+                        print("\033[0;34m ○ \033[0;30m", end="")
+                    if ((grille[(i, j)].bobs[0].speed < 1) and (grille[(i, j)].bobs[0].speed >= 0.9)):
+                        print("\033[0;32m ○ \033[0;30m", end="")
+                    if (grille[(i, j)].bobs[0].speed < 0.9):
+                        print("\033[0;33m ○ \033[0;30m", end="")
+                else:
+                    print(" ♥ ", end="")
+            else:
+                print("   ", end="")
+        print("|", end="")
+        print("")
+    for a in range(N // 2 * 3):
+        print(" _", end="")
+    print("\n")

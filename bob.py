@@ -348,7 +348,7 @@ class Bob():
         #mise à jour de la liste de nourriture
         nourritureEnVue = [] #on vide la liste de tuple
         
-        for coord in self.coordAdjacentes(coordonnee,self) :
+        for coord in self.coordAdjacentes(coordonnee) :
             if (coord in grille):
                 if (grille[coord].qtite_nourriture != 0):
                     nourritureEnVue.append(coord)
@@ -477,7 +477,7 @@ class Bob():
     def bobsEnVue(self):
         bobsEnVue = []
         coordAdj = self.coordAdjacentes(self.coordinates)
-        coordAdj.remove(self.coordinates)
+        #coordAdj.remove(self.coordinates)
         for coord in coordAdj:
             if (coord in grille) and (len(grille[coord].bobs)!=0) :
                 bobsEnVue.append(coord)
@@ -502,7 +502,7 @@ class Bob():
                             min_distance_predateur = distance
                             coordPredateurLePlusProche = otherBob.coordinates  
                     elif(otherBob.mass < 2/3*self.mass):
-                        distance = self.distance(b.coordinates)
+                        distance = self.distance(otherBob.coordinates)
                         if(distance <= min_distance_proie):
                             min_distance_proie = distance
                             coordProieLaPlusProche = otherBob.coordinates  
@@ -511,37 +511,39 @@ class Bob():
         return bobEnDanger
             
     def fuire(self,coordCible): #déplacement en zigzag pour fuir une cible        
-        self.case.enleverBob(self)
         x = coordCible[0] - self.coordinates[0] 
         y = coordCible[1] - self.coordinates[1]
                 
-        uneCase = 1
         nbCase = self.calculNbCasesDeplacement()
         
-        self.perdreEnergieDeplacement()
-        
-        for i in range(nbCase):
-            deplacementFait = False     
-                
-            if(not deplacementFait): #on s'eloigne de la cible
-                choix = randint(0,1)
-                deplacementFait = True
-                if (choix):
-                    if(x>0 and self.coordinates[0]-1>=0):
-                        self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-                    elif(self.coordinates[0]+1<N):
-                        self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
+        if(nbCase):
+            self.perdreEnergieDeplacement()
+            self.case.enleverBob(self)
+
+            for i in range(nbCase):
+                deplacementFait = False     
+                    
+                if(not deplacementFait): #on s'eloigne de la cible
+                    choix = randint(0,1)
+                    deplacementFait = True
+                    if (choix):
+                        if(x>0 and self.coordinates[0]-1>=0):
+                            self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
+                        elif(self.coordinates[0]+1<N):
+                            self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
+                        else:
+                            deplacementFait = False
                     else:
-                        deplacementFait = False
-                else:
-                    if(y>0 and self.coordinates[1]-1>=0):
-                        self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                    elif(self.coordinates[0]+1<N):
-                        self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
-                    else:
-                        deplacementFait = False
-            
-        self.deplacerBobCoordonnee() 
+                        if(y>0 and self.coordinates[1]-1>=0):
+                            self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
+                        elif(self.coordinates[0]+1<N):
+                            self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
+                        else:
+                            deplacementFait = False
+            self.deplacerBobCoordonnee() 
+        else:
+            deplacementFait = True #Si le bob à une vitesse trop faible et donc ne peux pas bouger
+
         if(deplacementFait): #si le bob n'a pas pu s'eloigner on renvoie false
             self.previousAction = FUIRE
             return True
