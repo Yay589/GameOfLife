@@ -35,7 +35,10 @@ class Bob():
                  coord = (randint(0,N-1),randint(0,N-1)) ) :
         #coordonnee
         self.coordinates = coord #avec randint les deux bornes sont inclusives
+        
+        #pour l'affichage graphique :
         self.previousCoordinates = coord #pour l'instant on va dire ça s'il vient de pop
+        self.previousAction = NAITRE
         
         #ajout du bob dans la grille
         if(coord not in grille):
@@ -77,6 +80,7 @@ class Bob():
         bobIndexCase = grille[self.coordinates].bobs.index(self)
         grille[self.coordinates].bobs.pop(bobIndexCase)
         del(allBobs[bobIndex])
+        self.previousAction = MOURIR
 
     #reproduction solo, renvoie 0 si le bob n'a pas assez d'énrgie et 1 si le bob fait un bébé
     def reproduction(self):
@@ -109,6 +113,7 @@ class Bob():
             allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
             #perte d'energie
             self.energy -= bobLaborE
+            self.previousAction = REPRODUCTION_SOLO
             return True
         else:
             return False
@@ -191,12 +196,7 @@ class Bob():
         if(self.dead == 1):
             print("Attention ce bob est mort")
             return -1
-        #On a pas besoin de tester si le bob à la droit de jouer dans chaque fonction prck on le fait une fois au debut avec la fonction deja joué
-        # if(self.skipingTurn):
-        #     self.skipingTurn = False
-        #     #print("This bob just apeared, wait till the next tic")
-        #     return -1
-
+        
         #pour diminuer son niveau d'énergie
         self.perdreEnergieDeplacement()
 
@@ -218,6 +218,7 @@ class Bob():
         self.previousCoordinates = self.coordinates
         if(not self.chercherNouriture()):
             self.bouger()
+            self.previousAction = DEPLACEMENT_ALEATOIRE
         if(memoryON):
             self.setNourritureMemorisee()
             self.setCaseMemorisee()
@@ -260,44 +261,6 @@ class Bob():
                 if (grille[coord].qtite_nourriture != 0):
                     nourritureEnVue.append(coord)
         return nourritureEnVue
-
-
-        #anciennes version des deux fonctions :
-    #renvoie une liste qui contient les tuples des coordonnée adjactente à la case du bob
-    #def coordAdjacentes(self):
-    #     x = self.coordinates[0]
-    #     y = self.coordinates[1]
-    #     coordonneeAdjacentes = [(self.coordinates)] #liste de tuples
-    #     for i in range(0,self.perception+2):
-    #         for j in range(0,self.perception-i+1):
-    #         #peut être ajouter une verification que ca peut bien être dans la grille en terme de coordonnee
-    #             if(i==0):
-    #                 coordonneeAdjacentes.append((x,y+j))
-    #                 coordonneeAdjacentes.append((x,y-j))
-    #             elif(j==0):
-    #                 coordonneeAdjacentes.append((x+i,y))
-    #                 coordonneeAdjacentes.append((x-i,y))
-    #             else :
-    #                 coordonneeAdjacentes.append((x+i,y+j))
-    #                 coordonneeAdjacentes.append((x+i,y-j))
-    #                 coordonneeAdjacentes.append((x-i,y+j))
-    #                 coordonneeAdjacentes.append((x-i,y-j))
-    #     return coordonneeAdjacentes
- 
-    #met a jour la liste de nourriture en vue du bob, renvoie le nombre de nourritures vues
-    #peut être mieux de juste renoyer la liste comme ça les bobs aurait pas besoin de s'en souvenir
-    #def nourritureEnVue(self): #renvoie le nombre de nourriture
-        x = self.coordinates[0]
-        y = self.coordinates[1]
-        
-        #mise à jour de la liste de nourriture
-        self.nourritureEnVue = [] #on vide la liste de tuple
-        
-        for coord in self.coordAdjacentes() :
-            if (coord in grille):
-                if (grille[coord].qtite_nourriture != 0):
-                    self.nourritureEnVue.append(coord)
-        return len(self.nourritureEnVue)
     
     #renvoie la distance entre un bob et des coordonnées
     def distance(self, coord):#pourrait très bien ne pas être dans le classe bob
@@ -379,9 +342,11 @@ class Bob():
         if(len(self.seenFoods) or len(self.rememberedFoods)):
             self.setNourriturePreferee()
             self.beeline(self.coordFavouriteFood)
+            self.previousAction = CHERCHER_NOURRITURE
             return True
         elif(self.coordClosestPrey):
             self.beeline(self.coordClosestPrey)
+            self.previousAction = CHASSER
             return True
         else:
             return False    
@@ -447,48 +412,7 @@ class Bob():
         self.perdreEnergieDeplacement()
         
         for i in range(nbCase):
-            deplacementFait = False
-            """
-            #les deux bobs sont sur la même ligne
-            if(x == 0):
-                deplacementFait = True
-                if(y>0 and self.coordinates[1]-1>=0 ):
-                    self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                elif(y<0 and self.coordinates[1]+1<N ):
-                    self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
-                else:
-                    choix = randint(0,1)
-                    if choix:
-                        if(self.coordinates[0]-1>=0):
-                            self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-                        elif(self.coordinates[0]+1<N):
-                            self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
-                    else:
-                        if(self.coordinates[0]+1<N):
-                            self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
-                        elif(self.coordinates[0]+1<N):
-                            self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-            
-            #les deux bobs sont sur la même colone
-            elif(y == 0):
-                deplacementFait = True
-                if(x>0 and self.coordinates[0]-1>=0):
-                    self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-                elif(x<0 and self.coordinates[0]+1<N ):
-                    self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
-                else:
-                    choix = randint(0,1)
-                    if choix:
-                        if(self.coordinates[1]-1>=0):
-                            self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                        elif(self.coordinates[1]+1<N):
-                            self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
-                    else:
-                        if(self.coordinates[1]+1<N):
-                            self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
-                        elif(self.coordinates[0]+1<N):
-                            self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-            """      
+            deplacementFait = False     
                 
             if(not deplacementFait): #on s'eloigne de la cible
                 choix = randint(0,1)
@@ -508,9 +432,9 @@ class Bob():
                     else:
                         deplacementFait = False
             
-                
         self.deplacerBobCoordonnee() 
         if(deplacementFait): #si le bob n'a pas pu s'eloigner on renvoie false
+            self.previousAction = FUIRE
             return True
         else:
             return False      
@@ -583,6 +507,8 @@ class Bob():
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
         bob.skipingTurn = True
+        self.previousAction = REPRODUCTION_DUO
+        bob.previousAction = REPRODUCTION_DUO
         return True
     
     def partenaireDisponible(self): #renvoie un bob pret à faire un bébé 
@@ -631,12 +557,6 @@ class Bob():
             return True
         else :
             return False
-
-    #indique si deux bobs partagent une même case, pas sure que cette fonction soit utile.
-    def memeCase(self, b):
-        if(self.coordinates == b.coordonnee): return 1
-        else : return 0
-    
     
 #fonction de communication
     #le bob printf ses coordonnee et son energie
