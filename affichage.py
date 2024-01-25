@@ -138,6 +138,7 @@ def afficheGrilleSimpleCouleur():
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
+    print("Nombre de bob",len(allBobs))
     print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maimum : ",trunc(vitesseMax*1000)/1000)
     print("Masse moyenne : ",trunc(avgMass()*1000)/1000,"Perception moyenne : ",trunc(avgPerception()*1000)/1000, "Mémoire moyenne : ",trunc(avgMemory()*1000)/1000)
     for a in range(N // 2 * 3):

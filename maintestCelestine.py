@@ -16,7 +16,7 @@ def allBobsSpeakM():
 if __name__ == '__main__':
     for i in range(numberBob):
         allBobs.append(Bob(bobPerception=4,bobMemory=4, coord=(randint(0,N-1),randint(0,N-1))))
-    
+        
     """
     renouvellerNourriture()
     
@@ -32,15 +32,15 @@ if __name__ == '__main__':
     #test du fonctionnnement global du jeu
     """
     
-    for k in range(25):
+    for k in range(250):
         renouvellerNourriture()
         for i in range(T):
             for b in allBobs:
                 if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                     b.bobDeplacement()
-            print("\033[H\033[J",end="")
-            afficheGrilleSimpleCouleur()
-            time.sleep(0.09)
+        print("\033[H\033[J",end="")
+        afficheGrilleSimpleCouleur()
+            #time.sleep(0.09)
 
 
     
