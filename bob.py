@@ -83,7 +83,7 @@ class Bob():
         if((not duoReproductionON) or self.energy < bobMinSexE):  
             return False #pas assez d'energie
         bob = self.partenaireDisponible() #avec x un fonction qui renvoie un bob qui à assez d'energie
-        if(not duoReproductionON) or bob==None):
+        if((not duoReproductionON) or bob==None):
             return False #pas de partenaire dispnnible
         
         #valeurs de base
