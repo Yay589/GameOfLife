@@ -8,54 +8,6 @@ from bob import Bob
 from affichage import *
 import collections
 import time
-#import os
-
-def avgSpeed():
-    i = 0
-    speedSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            speedSum += b.speed
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(speedSum/i)
-    
-def avgPerception():
-    i = 0
-    perceptionSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            perceptionSum += b.perception
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(perceptionSum/i)
-    
-def avgMemory():
-    i = 0
-    memSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            memSum += b.memory
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(memSum/i)
-
-
-def nbBobs(): #c'est la même taille que len(allBobs) normalement
-    i = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            i += 1
-    return i
 
 def allBobsSpeakM():
     for b in allBobs:
@@ -88,7 +40,7 @@ if __name__ == '__main__':
                     b.bobDeplacement()
             print("\033[H\033[J",end="")
             afficheGrilleSimpleCouleur()
-            time.sleep(0.01)
+            time.sleep(0.09)
 
 
     

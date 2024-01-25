@@ -187,10 +187,10 @@ class Bob():
 
         #caracteritiques fixes du bob
         if(randomStartOn):
-            self.speed = random() % maxRandomSpeed
-            self.mass = random() % maxRandomMass
-            self.perception = random() % maxRandomPerception
-            self.memory = random() % maxRandomMemory
+            self.speed = random() % maxRandomSpeed + 1
+            self.mass = random() % maxRandomMass + 1
+            self.perception = random() % maxRandomPerception + 1
+            self.memory = random() % maxRandomMemory + 1
         else:
             self.speed = bobSpeed
             self.mass = bobMass
@@ -411,7 +411,7 @@ class Bob():
     def beeline(self,coordCible): #déplacement en zigzag vers une cible
         #fuire est un "flag" qui dit si on doit fuire ou ses rapprocher des coordonnée 
         if(self.coordinates == coordCible):
-            print("Erreur, le bob est déjà sur cette case")
+            #print("Erreur, le bob est déjà sur cette case")
             return -1
         self.case.enleverBob(self)
         x = coordCible[0] - self.coordinates[0] 
