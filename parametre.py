@@ -94,3 +94,11 @@ SCREEN_WIDTH=800
 SCREEN_HEIGHT=600
 
 list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = False
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
