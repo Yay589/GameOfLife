@@ -1,3 +1,5 @@
+from parametre import *
+
 """
 Ce fichier defini la classe Case
 
@@ -6,9 +8,6 @@ Une case contient :
 -une quantité de nouriture : qtite_nourriture
 
 """
-
-from parametre import *
-
 
 class Case():
     def __init__(self, coord, liste_bobs=None, qtite_nourriture=0):
@@ -21,6 +20,7 @@ class Case():
         grille[coord] = self
 
     def ajouterBob(self, bob):
+        #print ("self.bobs = ",self.bobs)
         self.bobs.append(bob)
 
     def enleverBob(self, bob):
@@ -46,3 +46,4 @@ class Case():
     def speak(self):
         print("(Case) Je suis en : ", self.coordonnee, ", je contiens : " \
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
+        

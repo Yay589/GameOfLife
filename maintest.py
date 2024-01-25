@@ -1,6 +1,7 @@
 import pygame
 from random import *
 import math
+from Sprite import *
 from parametre import *
 from case import Case
 from bob import Bob
@@ -51,7 +52,7 @@ class Game:
         #     self.selected_points.append(random_point)
         #     available_points.remove(random_point)
 
-        
+        self.img_appel = pygame.image.load('data/images/apple.png').convert()
         self.image = pygame.image.load('data/images/grass.png').convert()
         self.image.set_colorkey((0, 0, 0))
         for i in self.list_x_y:
@@ -307,6 +308,7 @@ class Game:
                 image_setting_a = pygame.image.load(f'data/images/setting/setting{self.setting_frame}.png')
                 image_setting_a = pygame.transform.scale(image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
                 screen.blit(image_setting_a, (SCREEN_WIDTH/6, 0))
+            
             else:
                 image_setting_a = pygame.image.load(f'data/images/setting/setting{5}.png')
                 image_setting_a = pygame.transform.scale(image_setting_a, (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT))
@@ -346,7 +348,14 @@ class Game:
                         pygame.draw.rect(screen, (169, 169, 169), text_rect, 2)  # Highlight with a gray rectangle
                     
                     deplace += 30  # Move to the next line
-                
+            
+        
+        else:
+            if self.setting_frame > 0:
+                self.setting_frame-=1
+                image_setting_a = pygame.image.load(f'data/images/setting/setting{self.setting_frame}.png')
+                image_setting_a = pygame.transform.scale(image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
+                screen.blit(image_setting_a, (SCREEN_WIDTH/6, 0))
                     
 
 
@@ -383,13 +392,22 @@ class Game:
             # if (self.gbob.previousCoordinates[1]- self.gbob.coordinates[1])*(self.gbob.previousCoordinates[0]- self.gbob.coordinates[0])<0:
             #     self.image = pygame.image.load(f'data/images/walking/walking{walk_i%10+1}.png')
             # else:
-            
+           
             if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
                 obj.image = pygame.image.load(f'data/images/walking/walking{walk_i%10+1}.png') 
             else:
+                image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
                 obj.image = pygame.image.load(f'data/images/walking1/walking{walk_i%10+1}.png')
             vect_list_obj = [x * self.zoom_scale*obj.taille*0.08 for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]      
+            
+        
+            for case_f in grille:
+                if case_f == obj.gbob.previousCoordinates :
+                    obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png') 
+
             image_obj=pygame.transform.scale(obj.image, vect_list_obj)
+            
             
             real_location_x=(150 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * 10 - (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2 
             real_location_y=(100 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat + (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj[1]*(1/2) 
@@ -399,13 +417,14 @@ class Game:
             if -100< real_location [0] and real_location [0] < SCREEN_WIDTH and -100 < real_location [1] and real_location [1] <SCREEN_HEIGHT:
 
                 
-                # image_red = pygame.image.load('data/images/kirbyred.png')
-                # image_red=pygame.transform.scale(image_red, vect_list_obj)
+                
+                image_red=pygame.transform.scale(image_red, vect_list_obj)
 
-                # image_red.set_alpha(obj.energy*2)  # Set alpha value based on energy
+                image_red.set_alpha(obj.energy)  # Set alpha value based on energy
                 screen.blit(image_obj, real_location)
+                screen.blit(image_red, real_location)
             #screen.blit(image_obj, real_location_1)
-            #screen.blit(image_red, real_location)
+            
             
 
         if len(allBobs) != 0:
@@ -413,6 +432,16 @@ class Game:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 self.show=True
                 self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
+        
+        
+        for (x,y) in grille:
+            if (grille[(x,y)].qtite_nourriture != 0):
+                vect_list_obj_f = [x * self.zoom_scale*0.5 for x in (pygame.Surface.get_width(self.img_appel),pygame.Surface.get_height(self.img_appel))]      
+                img_appel=pygame.transform.scale(self.img_appel, vect_list_obj_f)
+                real_location_x_f=(150 + (x) * 10 - (y) * 10-self.offset.x)*self.zoom_scale-vect_list_obj_f[0]/2 
+                real_location_y_f=(100 + (x) * self.plat + (y) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj_f[1]*(1/2) 
+                real_location_f=[real_location_x_f,real_location_y_f]
+                screen.blit(img_appel, real_location_f) 
    
     
     def draw_start(self,frame):
@@ -510,6 +539,14 @@ class Game:
             self.plat -= 0.1
             self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
 
+    def save_game(self):
+        with open('src/save.txt', 'w') as file:
+            for bob in allBobs:
+                for key, value in bob():
+                    print(bob.energy)
+                    print(value)
+                    print("\n")
+                    file.write(f"{key},{value}\n")
         
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
     def __init__(self,Bob):
@@ -526,7 +563,7 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.image = pygame.image.load('data/images/kirby.png')
         self.rect = self.image.get_rect()
         self.rect.center = Bob.coordinates
-        self.sprites = [pygame.image.load(f'data/images/kirby1.{i}.png').convert() for i in range(9)]  
+        #self.sprites = [pygame.image.load(f'data/images/kirby1.{i}.png').convert() for i in range(9)]  
 
         self.current_sprite = 0
         self.animation_timer = pygame.time.get_ticks()  
@@ -557,9 +594,17 @@ g=Game()
 
 
 
-for i in range(N-1):
-    allBobs.append(Bob(bobMemory = 3, coord = (randint(0,N-1),randint(0,N-1))))
 
+
+
+ajouterNourritureGrille()
+
+for i in range(N-1):
+    x,y = randint(0,N-1),randint(0,N-1)
+    b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
+    b.coordinates = (x,y)
+    allBobs.append(b)
+    # grille[(x,y)].bobs.append(b)
 
 for bob in allBobs:
     g.all_gameobject.add(BOB_GameObject(bob))
@@ -598,7 +643,6 @@ while running:
                 else:
                     SCREEN_WIDTH=800
                     SCREEN_HEIGHT=600
-                    SCREEN_HEIGHT=SCREEN_HEIGHT_FULL
                     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
@@ -635,7 +679,7 @@ while running:
                         frame_count_start+=30
 
                 if SCREEN_WIDTH-100 < mouse_x < SCREEN_WIDTH - 50 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
-                    g.setting_frame = 0
+                    #g.setting_frame = 0
                     g.selected_index=-1
                     g.setting = not g.setting
 
@@ -685,7 +729,7 @@ while running:
         if  not g.is_paused:
 
             frame_count += 1
-            if frame_count % 15 == 0:
+            if frame_count % g.tick_by_day == 0:
                 if g.sombre == 200:
                     g.day_night=1
 
@@ -697,7 +741,8 @@ while running:
                 else:
                     g.sombre -= 1
 
-                #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
+                if (frame_count%100==0):
+                    renouvellerNourriture()
                 for b in allBobs:
                     if(not b.reproduction()):
                         if(not b.manger()):

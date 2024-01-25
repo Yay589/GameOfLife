@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from random import *
 from parametre import *
 from math import trunc
@@ -36,9 +35,7 @@ if __name__ == '__main__':
 
         afficheGrille()
         print(grille)
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 from random import *
 from parametre import *
 from math import trunc
@@ -204,7 +201,6 @@ if __name__ == '__main__':
         print("Vitesse moyenne des bobs : ",avgSpeed())
 
 
-=======
 from random import *
 from parametre import *
 from math import trunc
@@ -370,8 +366,7 @@ if __name__ == '__main__':
         print("Vitesse moyenne des bobs : ",avgSpeed())
 
 
->>>>>>> bb52c2c6c99675430ca25acece2616dfd70ed219
-=======
+
 from random import *
 from parametre import *
 from math import trunc
@@ -410,5 +405,4 @@ if __name__ == '__main__':
 
         afficheGrille()
         print(grille)
->>>>>>> 43d1b1af36d40a2d7c831b23dc6985cf2aa5a9c6
->>>>>>> main
+
