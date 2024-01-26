@@ -141,12 +141,12 @@ def afficheGrilleSimpleCouleur():
     print("Nombre de bob",len(allBobs))
     print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maimum : ",trunc(vitesseMax*1000)/1000)
     print("Masse moyenne : ",trunc(avgMass()*1000)/1000,"Perception moyenne : ",trunc(avgPerception()*1000)/1000, "Mémoire moyenne : ",trunc(avgMemory()*1000)/1000)
-    for a in range(N // 2 * 3):
+    for a in range(M // 2 * 3):
         print(" _", end="")
     print("")
     for i in range(N):
         print("|", end="")
-        for j in range(N):
+        for j in range(M):
             if ((i, j) in grille):
                 if (grille[(i, j)].bobs != []):
                     #if (grille[(i, j)].bobs[0].speed == vitesseMin):
@@ -167,6 +167,6 @@ def afficheGrilleSimpleCouleur():
                 print("   ", end="")
         print("|", end="")
         print("")
-    for a in range(N // 2 * 3):
+    for a in range(M // 2 * 3):
         print(" _", end="")
     print("\n")

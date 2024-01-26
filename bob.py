@@ -164,7 +164,7 @@ class Bob():
                  bobMass = bobM, 
                  bobPerception = bobP, 
                  bobMemory = bobMem,
-                 coord = (randint(0,N-1),randint(0,N-1)) ) :
+                 coord = (randint(0,N-1),randint(0,M-1)) ) :
         self.energy = bobEnergy
         #coordonnee
         self.coordinates = coord #avec randint les deux bornes sont inclusives
@@ -260,7 +260,7 @@ class Bob():
                         y = yBefore + 1
                     elif b == 2 :
                         y = yBefore - 1
-                    if (y<=N-1 and y>=0):
+                    if (y<=M-1 and y>=0):
                         if((not self.caseVisitee((xBefore,y))) or i >= 5):
                             self.coordinates = (xBefore,y)
                             boucle = False
