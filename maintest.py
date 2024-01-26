@@ -812,8 +812,8 @@ class Game:
         save_data = {
             'tick_by_day': self.tick_by_day,
             'foodE': foodE,
-            # 'SCREEN_WIDTH': SCREEN_WIDTH,
-            # 'SCREEN_HEIGHT': SCREEN_HEIGHT,
+            'SCREEN_WIDTH': SCREEN_WIDTH,
+            'SCREEN_HEIGHT': SCREEN_HEIGHT,
             'N': N,
             'num_bobs': len(allBobs),  # Enregistrez le nombre total de bobs
             'initial_bob_positions': initial_bob_positions,  # Enregistrez uniquement les coordonnées initiales
