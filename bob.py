@@ -172,6 +172,16 @@ class Bob():
                 elif(1.5*self.mass < bob.mass):
                     bob.mass += 0.5*self.mass
                     self.mourir()
+    
+    def attaque(self):
+        if(len(grille[self.coordinates].bobs)>= 2):
+            for smallBob in (grille[self.coordinates].bobs) :
+                if(smallBob != self):
+                    if(self.mass > 1.5*bob.mass):
+                        self.energy += 0.5*smallBob.energy*(1-smallBob.mass/self.mass)
+                        smallBob.mourir()
+                        return True
+        return False
 #########################################################################################
     
     #Fonctions internes à ce fichier 
