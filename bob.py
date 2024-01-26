@@ -61,6 +61,7 @@ class Bob():
             vitesseBebe = bobS
             perceptionBebe = bobP
             memoireBebe = bobMem
+            massBebe = bobM
             
             #calcul des données héreditaire (si caractéritique activée)
             if(speedON):
@@ -69,9 +70,13 @@ class Bob():
                 perceptionBebe = max((self.perception + randint(-1,1)),0)
             if(memoryON):
                 memoireBebe = max((self.memory + randint(-1,1)),0)
+             if(massON):
+                massBebe = max((self.mass + random()), 0)
+                 
             #creation du bebe
-            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
-            #perte d'energie
+            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
+            #perte d'energie et de poid
+            self.mass -= massBebe
             self.energy -= bobLaborE
             self.previousAction = REPRODUCTION_SOLO
             return True
@@ -90,6 +95,7 @@ class Bob():
         vitesseBebe = bobS
         perceptionBebe = bobP
         memoireBebe = bobMem
+        massBebe = bobM
             
         #calcul des données héreditaire (si caractéritique activée)
         if(speedON):
@@ -98,10 +104,13 @@ class Bob():
             perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
         if(memoryON):
             memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
-
+        if(massON):
+            massBebe = max(((self.mass + bob.mass)/2 + random()), 0)
+        
         #creation du bebe
-        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, coord = self.coordinates))
-        #perte d'energie
+        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
+        #perte d'energie et de poid
+        self.mass -= massBebe
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
         bob.skipingTurn = True
@@ -153,7 +162,16 @@ class Bob():
         if(memoryON):
             self.setNourritureMemorisee()
             self.setCaseMemorisee()
- 
+
+    def attack(self):
+        for bob in allBobs:
+            if(self.coordinates == bob.coordinates and self != bob):
+                if(self.mass > 1.5*bob.mass):
+                    self.mass += 0.5*bob.mass
+                    bob.mourir()
+                elif(1.5*self.mass < bob.mass):
+                    bob.mass += 0.5*self.mass
+                    self.mourir()
 #########################################################################################
     
     #Fonctions internes à ce fichier 
@@ -596,7 +614,19 @@ class Bob():
             if((b.energy >= 150) and (not b.enDanger()) and (b != self)): #fonction enDanger à remplacer par la fonction de Huy correspondante
                 return b
         return None
-    
+
+#Attaquez vos semblables s'ils manquent de nourriture    
+    def cannibal(self):
+        if not self.chercherNouriture():
+            if self.enDanger() and self.coordClosestPrey:
+                self.fuire(self.coordClosestPrey)
+                return True
+            elif self.coordClosestPrey:
+                bob_predateur = grille[self.coordClosestPrey].bobs[0]
+                self.attack(bob_predateur)
+                return True
+        return False
+        
 #fonction de communication
     #le bob printf ses coordonnee et son energie
     def speak(self): #juste pour faire des tests
