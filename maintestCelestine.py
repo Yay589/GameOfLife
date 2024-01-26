@@ -14,8 +14,8 @@ def allBobsSpeakM():
          b.speakMass()
 
 if __name__ == '__main__':
-    for i in range(numberBob):
-        allBobs.append(Bob(bobPerception=4,bobMemory=4, coord=(randint(0,N-1),randint(0,N-1))))
+    for i in range(10):
+        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
     
     """
     renouvellerNourriture()
@@ -33,14 +33,15 @@ if __name__ == '__main__':
     """
     
     for k in range(25):
-        renouvellerNourriture()
-        for i in range(T):
-            for b in allBobs:
-                if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
-                    b.bobDeplacement()
-            print("\033[H\033[J",end="")
-            afficheGrilleSimpleCouleur()
-            time.sleep(0.09)
+        for j in range(7):
+            renouvellerNourriture()
+            for i in range(20):
+                for b in allBobs:
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
+                        b.bobDeplacement()
+                print("\033[H\033[J",end="")
+                afficheGrilleSimple()
+                time.sleep(0.5)
 
 
     
