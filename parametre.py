@@ -37,6 +37,7 @@ class Case():
         print("(Case) Je suis en : ", self.coordonnee, ", je contiens : " \
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
 
+
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
@@ -63,7 +64,7 @@ perceptionON = True
 memoryON = True
 
     #Valeurs des variables :
-numberFood = 100 #200 Number of food points par day
+numberFood = 20 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
@@ -116,5 +117,10 @@ MOURIR = 8
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=600
 
-list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+#list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+
+def N_diminuer():
+    N-=1
+def N_augment():
+    N+=1
 
