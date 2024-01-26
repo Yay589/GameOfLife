@@ -152,17 +152,17 @@ def afficheGrilleSimpleCouleur():
                     #if (grille[(i, j)].bobs[0].speed == vitesseMin):
                     #    print("\033[0;96m ○ \033[0;30m", end="") #cyan clair
                     if ((grille[(i, j)].bobs[0].speed < (vitesseMin + 1/4*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= vitesseMin)):
-                        print("\033[0;34m ○ \033[0;30m", end="") #bleu
+                        print("\033[0;35m ○ \033[0;30m", end="") #bleu
                     elif ((grille[(i, j)].bobs[0].speed < (vitesseMin + 1/2*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 1/4*(vitesseMax-vitesseMin)))):
-                        print("\033[0;32m ○ \033[0;30m", end="") #vert
+                        print("\033[0;34m ○ \033[0;30m", end="") #vert
                     elif ((grille[(i, j)].bobs[0].speed < (vitesseMin + 3/4*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 1/2*(vitesseMax-vitesseMin)))):
-                        print("\033[0;33m ○ \033[0;30m", end="")#jaune
+                        print("\033[0;32m ○ \033[0;30m", end="")#jaune
                     elif ((grille[(i, j)].bobs[0].speed <= vitesseMax ) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 3/4*(vitesseMax-vitesseMin)))):
-                        print("\033[0;31m ○ \033[0;30m", end="")#rouge
+                        print("\033[0;33m ○ \033[0;30m", end="")#rouge
                     #if (grille[(i, j)].bobs[0].speed == vitesseMax):
                     #    print("\033[0;33m ○ \033[0;30m", end="") #jaune
                 else:
-                    print(" ♥ ", end="")
+                    print("\033[0;31m  \033[0;30m", end="")
             else:
                 print("   ", end="")
         print("|", end="")
