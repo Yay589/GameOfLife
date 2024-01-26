@@ -37,21 +37,46 @@ class Case():
         print("(Case) Je suis en : ", self.coordonnee, ", je contiens : " \
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
 
+<<<<<<< HEAD
 
-#La grille     
-grille = defaultdict(Case)
-
-#Les listes de Bobs
-allBobs = []
-aliveBobs = []
-deadBobs = []
-
-
+###########################################################
+#Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
+#Paramètres simulation :
+N = 20 #100 Length or width of the map (grid of N*N)
+numberBob = N*2 #100 Number of Bobs at the begining 
+=======
+###########################################################
+#Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
 N = 30 #100 Length or width of the map (grid of N*N)
-numberBob = 100 #100 Number of Bobs at the begining 
-numberFood = 25 #200 Number of food points par day
-foodE = 100 #100 Quantity of energy per food point
+numberBob = 50 #100 Number of Bobs at the begining 
+>>>>>>> 66c21dc0168070e014e39b1b83088cd145a18e03
+
+bobS = 1 #1 Speed before mutation
+bobM = 1 #1 Mass before mutation
+bobP = 1 #1 Perception before mutation
+bobMem = 0 #0 Memory before mutation
+
+###########################################################
+#Variable qui peuvent être modifiées EN COURS DE PARTIE :
+    #Paramètre ON/OFF :
+graphicalInterfaceON = True #False : terminal, True : graphique
+#True : ON 
+#False : OFF
+soloReproductionON = True
+duoReproductionON = True
+speedON = True
+massON = True
+perceptionON = True
+memoryON = True
+
+    #Valeurs des variables :
+<<<<<<< HEAD
+numberFood = 20 #200 Number of food points par day
+=======
+numberFood = 100 #200 Number of food points par day
+>>>>>>> 66c21dc0168070e014e39b1b83088cd145a18e03
+foodE = 50 #100 Quantity of energy per food point
 
 T = 100 #100 Number of ticks in a day
 
@@ -73,3 +98,5 @@ SCREEN_WIDTH=800
 SCREEN_HEIGHT=600
 
 list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+>>>>>>> 66c21dc0168070e014e39b1b83088cd145a18e03
+
