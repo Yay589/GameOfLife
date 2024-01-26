@@ -172,7 +172,7 @@ class Bob():
                     self.mourir()
     
     def attaque(self):
-        if(len(grille[self.coordinates].bobs)>= 2):
+        if(perceptionON and len(grille[self.coordinates].bobs)>= 2):
             for smallBob in (grille[self.coordinates].bobs) :
                 if(smallBob != self):
                     if(self.mass > 1.5*smallBob.mass):
