@@ -38,36 +38,20 @@ class Case():
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
 
 
-#La grille     
-grille = defaultdict(Case)
-
-#Les listes de Bobs
-allBobs = []
-aliveBobs = []
-deadBobs = []
-
+###########################################################
+#Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
 N = 20 #100 Length or width of the map (grid of N*N)
-numberBob = 100 #100 Number of Bobs at the begining 
-numberFood = 10 #200 Number of food points par day
-foodE = 50 #100 Quantity of energy per food point
-
-T = 100 #100 Number of ticks in a day
-
-bobMaxE = 200 #200 Max of energy of a bob
-bobSpawnE = 100 #100 Quantity of energy when spawning
-bobBirthE = 50 #50 Quantity of energy for babies
-bobLaborE = 150 #150 Quantity of energy lost when giving birth
-bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproduction
-bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
-bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
+numberBob = N*2 #100 Number of Bobs at the begining 
 
 bobS = 1 #1 Speed before mutation
 bobM = 1 #1 Mass before mutation
 bobP = 1 #1 Perception before mutation
 bobMem = 0 #0 Memory before mutation
 
-#Paramètre ON/OFF
+###########################################################
+#Variable qui peuvent être modifiées EN COURS DE PARTIE :
+    #Paramètre ON/OFF :
 graphicalInterfaceON = True #False : terminal, True : graphique
 #True : ON 
 #False : OFF
@@ -77,6 +61,45 @@ speedON = True
 massON = True
 perceptionON = True
 memoryON = True
+
+    #Valeurs des variables :
+numberFood = 20 #200 Number of food points par day
+foodE = 50 #100 Quantity of energy per food point
+
+T = 50 #100 Number of ticks in a day
+
+bobMaxE = 200 #200 Max of energy of a bob
+bobSpawnE = 100 #100 Quantity of energy when spawning
+bobBirthE = 50 #50 Quantity of energy for babies
+bobLaborE = 150 #150 Quantity of energy lost when giving birth
+bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproduction
+bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
+bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
+
+    #modes spéciaux
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = True
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
+
+#Est ce que les bobs prefere les nourriture proches ou grosses
+nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
+#par les bobs en fonction de la quantité (True) ou de la distance (False)
+#Fonctionnement normal -> quantité
+
+###########################################################
+#Variable qui ne doivent pas être modifiées par les joueurs :
+
+#La grille     
+grille = defaultdict(Case)
+
+#Les listes de Bobs
+allBobs = []
+aliveBobs = []
+deadBobs = []
 
 #previous action
 NAITRE = 0
@@ -93,4 +116,10 @@ MOURIR = 8
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=600
 
-list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+#list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+
+def N_diminuer():
+    N-=1
+def N_augment():
+    N+=1
+

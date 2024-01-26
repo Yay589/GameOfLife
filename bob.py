@@ -165,6 +165,7 @@ class Bob():
                  bobPerception = bobP, 
                  bobMemory = bobMem,
                  coord = (randint(0,N-1),randint(0,N-1)) ) :
+        self.energy = bobEnergy
         #coordonnee
         self.coordinates = coord #avec randint les deux bornes sont inclusives
         
@@ -185,11 +186,16 @@ class Bob():
         self.dead = False
 
         #caracteritiques fixes du bob
-        self.energy = bobEnergy
-        self.speed = bobSpeed
-        self.mass = bobMass
-        self.perception = bobPerception
-        self.memory = bobMemory
+        if(randomStartOn):
+            self.speed = random() % maxRandomSpeed + 1
+            self.mass = random() % maxRandomMass + 1
+            self.perception = random() % maxRandomPerception + 1
+            self.memory = random() % maxRandomMemory + 1
+        else:
+            self.speed = bobSpeed
+            self.mass = bobMass
+            self.perception = bobPerception
+            self.memory = bobMemory
         
         #vitesse
         self.speedBuffer = 0
@@ -201,7 +207,7 @@ class Bob():
         self.coordClosestPrey = ()
         
         #memoire
-        self.availableMemory = bobMemory #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
+        self.availableMemory = trunc(bobMemory) #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
         self.rememberedFoods = {}
         self.rememberedSquares = []
 
@@ -271,7 +277,7 @@ class Bob():
         
     def perdreEnergieDeplacement(self):
         #version normale
-        energyLoss = max(((self.speed)**2 * self.mass + 1/5*self.perception + 1/5*self.memory),0.5)
+        energyLoss = max(((self.speed)**2 * self.mass + 1/5*trunc(self.perception) + 1/5*trunc(self.memory)),0.5)
 
         self.energy -= energyLoss #il faudra adapter ça pour les prochaines versions
     
@@ -310,12 +316,12 @@ class Bob():
         return 0
       
 #perception
-    def coordAdjacentes(self, coordonnee, perception): #renvoie les case visibles depuis
+    def coordAdjacentes(self, coordonnee): #renvoie les case visibles depuis
         x = coordonnee[0]
         y = coordonnee[1]
         coordonneeAdjacentes = [] #liste de tuples
-        for i in range(0,int(perception+2)):
-            for j in range(0, int(perception-i+1)):
+        for i in range(0,trunc(self.perception+2)):
+            for j in range(0, trunc(self.perception-i+1)):
                 if(i==0):
                     coordonneeAdjacentes.append((x,y+j))
                     coordonneeAdjacentes.append((x,y-j))
@@ -342,7 +348,7 @@ class Bob():
         #mise à jour de la liste de nourriture
         nourritureEnVue = [] #on vide la liste de tuple
         
-        for coord in self.coordAdjacentes(coordonnee,self.perception) :
+        for coord in self.coordAdjacentes(coordonnee) :
             if (coord in grille):
                 if (grille[coord].qtite_nourriture != 0):
                     nourritureEnVue.append(coord)
@@ -353,7 +359,7 @@ class Bob():
         return abs(coord[0] - self.coordinates[0]) + abs(coord[1] - self.coordinates[1])
     
     #definie la nourriture préférée du bob
-    def setNourriturePreferee(self): #ajouter les bobs
+    def setNourriturePrefereeDistance(self): #ajouter les bobs
         if(len(self.seenFoods)):
             foods = self.seenFoods
         elif(memoryON and len(self.rememberedFoods)):
@@ -373,13 +379,39 @@ class Bob():
                 coordPref = coordN
             elif(not len(self.seenFoods) and (self.distance(coordN) == min) and (self.rememberedFoods[coordN] > self.rememberedFoods[coordPref])):
                 coordPref = coordN
+        self.coordFavouriteFood = coordPref  
+        
+    #definie la nourriture préférée du bob
+    def setNourriturePrefereeQuantite(self): #ajouter les bobs
+        if(len(self.seenFoods)):
+            foods = self.seenFoods
+        elif(memoryON and len(self.rememberedFoods)):
+            foods = list(self.rememberedFoods.keys())
+        else:
+            print("Erreur, pas de nourriture en vue ni en mémoire") #on utilise pas setNourriturePreferee si y'a pas de nourriture en vue
+            return -1
+        
+        coordPref = foods[0]
+        maxNourriture = 0
+        for i in range(1,len(foods)):
+            coordN = foods[i]
+            if(len(self.seenFoods)):
+                if (grille[coordN].qtite_nourriture > maxNourriture): #Si on voit des nourritures
+                    coordPref = coordN
+                elif (grille[coordN].qtite_nourriture == maxNourriture and self.distance(coordN) < self.distance(coordPref)):
+                    coordPref = coordN
+            else:
+                if (self.rememberedFoods[coordN] > maxNourriture): #Si on voit des nourritures
+                    coordPref = coordN
+                elif ((self.rememberedFoods[coordN] == maxNourriture) and (self.distance(coordN) < self.distance(coordPref))):
+                    coordPref = coordN
         self.coordFavouriteFood = coordPref       
 
     #se deplace de manière optimisée mais aléatoire vers les coordonnées données
     def beeline(self,coordCible): #déplacement en zigzag vers une cible
         #fuire est un "flag" qui dit si on doit fuire ou ses rapprocher des coordonnée 
         if(self.coordinates == coordCible):
-            print("Erreur, le bob est déjà sur cette case")
+            #print("Erreur, le bob est déjà sur cette case")
             return -1
         self.case.enleverBob(self)
         x = coordCible[0] - self.coordinates[0] 
@@ -426,7 +458,10 @@ class Bob():
         if(perceptionON):
             self.seenFoods = self.nourritureEnVue(self.coordinates)
             if(len(self.seenFoods) or len(self.rememberedFoods)):
-                self.setNourriturePreferee()
+                if(nourriturePref_quantite):
+                    self.setNourriturePrefereeQuantite()
+                else:
+                    self.setNourriturePrefereeDistance()
                 self.beeline(self.coordFavouriteFood)
                 self.previousAction = CHERCHER_NOURRITURE
                 return True
@@ -441,8 +476,8 @@ class Bob():
     
     def bobsEnVue(self):
         bobsEnVue = []
-        coordAdj = self.coordAdjacentes(self.coordinates, self.perception)
-        coordAdj.remove(self.coordinates)
+        coordAdj = self.coordAdjacentes(self.coordinates)
+        #coordAdj.remove(self.coordinates)
         for coord in coordAdj:
             if (coord in grille) and (len(grille[coord].bobs)!=0) :
                 bobsEnVue.append(coord)
@@ -455,8 +490,8 @@ class Bob():
         bobEnDanger = False
         coordPredateurLePlusProche = ()
         coordProieLaPlusProche = ()
-        min_distance_predateur = self.perception
-        min_distance_proie = self.perception
+        min_distance_predateur = trunc(self.perception)
+        min_distance_proie = trunc(self.perception)
         for coord in self.bobsEnVue():
             for otherBob in grille[coord].bobs:
                 if(not (otherBob is self)):
@@ -467,7 +502,7 @@ class Bob():
                             min_distance_predateur = distance
                             coordPredateurLePlusProche = otherBob.coordinates  
                     elif(otherBob.mass < 2/3*self.mass):
-                        distance = self.distance(b.coordinates)
+                        distance = self.distance(otherBob.coordinates)
                         if(distance <= min_distance_proie):
                             min_distance_proie = distance
                             coordProieLaPlusProche = otherBob.coordinates  
@@ -476,37 +511,39 @@ class Bob():
         return bobEnDanger
             
     def fuire(self,coordCible): #déplacement en zigzag pour fuir une cible        
-        self.case.enleverBob(self)
         x = coordCible[0] - self.coordinates[0] 
         y = coordCible[1] - self.coordinates[1]
                 
-        uneCase = 1
         nbCase = self.calculNbCasesDeplacement()
         
-        self.perdreEnergieDeplacement()
-        
-        for i in range(nbCase):
-            deplacementFait = False     
-                
-            if(not deplacementFait): #on s'eloigne de la cible
-                choix = randint(0,1)
-                deplacementFait = True
-                if (choix):
-                    if(x>0 and self.coordinates[0]-1>=0):
-                        self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-                    elif(self.coordinates[0]+1<N):
-                        self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
+        if(nbCase):
+            self.perdreEnergieDeplacement()
+            self.case.enleverBob(self)
+
+            for i in range(nbCase):
+                deplacementFait = False     
+                    
+                if(not deplacementFait): #on s'eloigne de la cible
+                    choix = randint(0,1)
+                    deplacementFait = True
+                    if (choix):
+                        if(x>0 and self.coordinates[0]-1>=0):
+                            self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
+                        elif(self.coordinates[0]+1<N):
+                            self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
+                        else:
+                            deplacementFait = False
                     else:
-                        deplacementFait = False
-                else:
-                    if(y>0 and self.coordinates[1]-1>=0):
-                        self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                    elif(self.coordinates[0]+1<N):
-                        self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
-                    else:
-                        deplacementFait = False
-            
-        self.deplacerBobCoordonnee() 
+                        if(y>0 and self.coordinates[1]-1>=0):
+                            self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
+                        elif(self.coordinates[0]+1<N):
+                            self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
+                        else:
+                            deplacementFait = False
+            self.deplacerBobCoordonnee() 
+        else:
+            deplacementFait = True #Si le bob à une vitesse trop faible et donc ne peux pas bouger
+
         if(deplacementFait): #si le bob n'a pas pu s'eloigner on renvoie false
             self.previousAction = FUIRE
             return True
@@ -525,7 +562,7 @@ class Bob():
     def nourritureAOublier(self):
         nourritureOubliee = []
         for n in self.rememberedFoods:
-            if(self.distance(n)<=self.perception):
+            if(self.distance(n)<=trunc(self.perception)):
                 nourritureOubliee.append(n)
         return nourritureOubliee
     
@@ -536,7 +573,7 @@ class Bob():
         for coord in self.nourritureAMemoriser():
             self.rememberedFoods[coord]=grille[coord].qtite_nourriture
         
-        self.availableMemory = self.memory - len(self.rememberedFoods)
+        self.availableMemory = trunc(self.memory) - len(self.rememberedFoods)
         
         #on supprime des nourriture si y'en à trop en memoire
         while(self.availableMemory<0): #on oublie des nourritures tant qu'on en à plus en memoire que la mémoire totale
@@ -550,7 +587,7 @@ class Bob():
         
     def setCaseMemorisee(self):
         self.rememberedSquares.append(self.coordinates)
-        while(len(self.rememberedSquares) > (2 * self.availableMemory )):
+        while(len(self.rememberedSquares) > (2 * trunc(self.availableMemory))):
             self.rememberedSquares.pop(0)
  
 #reproduction sexuée 
