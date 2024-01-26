@@ -50,7 +50,7 @@ class Game:
         self.all_gameobject=pygame.sprite.Group()
         self.listObjects = []
         self.linital_position = []
-        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
@@ -740,11 +740,11 @@ class Game:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.plat += 0.1
-            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
 
         if keys[pygame.K_s]:
             self.plat -= 0.1
-            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
     
     def demander_nom_sauvegarde(self):
         pygame.font.init()
@@ -968,7 +968,7 @@ while running:
                         for bob in allBobs:
                             bob.mourir()
                         for i in range(N-1):
-                            allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+                            allBobs.append(Bob(coord = (randint(0,N-1),randint(0,M-1))))
                         for bob in allBobs:
                             g.all_gameobject.add(BOB_GameObject(bob))
                         frame_count = 0
@@ -1016,14 +1016,14 @@ while running:
                     if event.button == 4:  # Mouse wheel scroll up
                                     # Increase value of the selected line
                         N+=1   # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
                         # for co in grille:
                         #     co.supprimer()
 
                     elif event.button == 5:  # Mouse wheel scroll down
                                     # Decrease value of the selected line
                         N-=1  # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
                         # for co in grille:
                         #     co.supprimer()
                         # grille=g.list_x_y
