@@ -365,7 +365,7 @@ class Bob():
         while(k>0):
             k-=1
             coord = coordonneeAdjacentes[k]
-            if (coord[0] < 0)or(coord[0]>= N)or(coord[1]<0)or(coord[1]>=N):
+            if (coord[0] < 0)or(coord[0]>= N)or(coord[1]<0)or(coord[1]>=M):
                 del(coordonneeAdjacentes[k])                
           
         return coordonneeAdjacentes
@@ -555,14 +555,14 @@ class Bob():
                     if (choix):
                         if(x>0 and self.coordinates[0]-1>=0):
                             self.coordinates = (self.coordinates[0]-1,self.coordinates[1])
-                        elif(self.coordinates[0]+1<N):
+                        elif(self.coordinates[0]+1<N-1):
                             self.coordinates = (self.coordinates[0]+1,self.coordinates[1])
                         else:
                             deplacementFait = False
                     else:
                         if(y>0 and self.coordinates[1]-1>=0):
                             self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                        elif(self.coordinates[0]+1<N):
+                        elif(self.coordinates[0]+1<N-1):
                             self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
                         else:
                             deplacementFait = False
