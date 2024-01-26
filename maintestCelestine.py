@@ -14,23 +14,23 @@ def allBobsSpeakM():
          b.speakMass()
 
 if __name__ == '__main__':
-    #for i in range(10):
+    #for i in range(20):
     #    allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
     
     allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
     allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    allBobs.append(Bob(bobMass = 9, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
 
-    
-    for k in range(25):
-        for j in range(7):
-            renouvellerNourriture()
-            for i in range(20):
-                for b in allBobs:
-                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger() and not b.attack()):
-                        b.bobDeplacement()
-                print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleur()
-                time.sleep(0.05)
+
+    """
+    while (len(allBobs)>1):
+        #renouvellerNourriture()
+        for b in allBobs:
+            if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger() and not b.attaque()):
+                b.bobDeplacement()
+        #print("\033[H\033[J",end="")
+        afficheGrilleSimpleCouleur()
+        time.sleep(0.05)
     
     """
     for k in range(25):
@@ -38,12 +38,12 @@ if __name__ == '__main__':
             renouvellerNourriture()
             for i in range(20):
                 for b in allBobs:
-                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger() and not b.attaque()):
                         b.bobDeplacement()
                 print("\033[H\033[J",end="")
                 afficheGrilleSimpleCouleur()
-                time.sleep(0.05)
-    """
+                time.sleep(0.5)
+    
     
     """
     

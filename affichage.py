@@ -138,9 +138,29 @@ def afficheGrilleSimpleCouleur():
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
+    masseMoy = avgMass()
+    masseMax = maxMass()
+    masseMin = minMass()
+    perceptionMoy = avgPerception()
+    perceptionMax = maxPerception()
+    perceptionMin = minPerception()
+    memoireMoy = avgMemory()
+    memoireMax = maxMemory()
+    memoireMin = minMemory()
+    
+    
+    parametreAffichageMoy = avgChosenCaracteristic()
+    parametreAffichageMin = minChosenCaracteristic()
+    parametreAffichageMax = maxChosenCaracteristic()
+    
     print("Nombre de bob",len(allBobs))
     print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maimum : ",trunc(vitesseMax*1000)/1000)
-    print("Masse moyenne : ",trunc(avgMass()*1000)/1000,"Perception moyenne : ",trunc(avgPerception()*1000)/1000, "Mémoire moyenne : ",trunc(avgMemory()*1000)/1000)
+    print("Masse moyenne : ",trunc(masseMoy*1000)/1000,"Masse minimale : ", trunc(masseMin*1000)/1000, "Masse maimum : ",trunc(masseMax*1000)/1000)
+    print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maimum : ",trunc(perceptionMax*1000)/1000)
+    print("Perception moyenne : ",trunc(memoireMoy*1000)/1000,"Perception minimale : ", trunc(memoireMin*1000)/1000, "Perception maimum : ",trunc(memoireMax*1000)/1000)
+    print("Masse moyenne : ",trunc(parametreAffichageMoy*1000)/1000,"Masse minimale : ", trunc(parametreAffichageMin*1000)/1000, "Masse maimum : ",trunc(parametreAffichageMax*1000)/1000)
+    print("nombre : ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "autre nombre : ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))
+
     for a in range(M // 2 * 3):
         print(" _", end="")
     print("")
@@ -149,18 +169,23 @@ def afficheGrilleSimpleCouleur():
         for j in range(M):
             if ((i, j) in grille):
                 if (grille[(i, j)].bobs != []):
-                    #if (grille[(i, j)].bobs[0].speed == vitesseMin):
-                    #    print("\033[0;96m ○ \033[0;30m", end="") #cyan clair
-                    if ((grille[(i, j)].bobs[0].speed < (vitesseMin + 1/4*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= vitesseMin)):
-                        print("\033[0;35m ○ \033[0;30m", end="") #bleu
-                    elif ((grille[(i, j)].bobs[0].speed < (vitesseMin + 1/2*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 1/4*(vitesseMax-vitesseMin)))):
-                        print("\033[0;34m ○ \033[0;30m", end="") #vert
-                    elif ((grille[(i, j)].bobs[0].speed < (vitesseMin + 3/4*(vitesseMax-vitesseMin))) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 1/2*(vitesseMax-vitesseMin)))):
-                        print("\033[0;32m ○ \033[0;30m", end="")#jaune
-                    elif ((grille[(i, j)].bobs[0].speed <= vitesseMax ) and (grille[(i, j)].bobs[0].speed >= (vitesseMin + 3/4*(vitesseMax-vitesseMin)))):
-                        print("\033[0;33m ○ \033[0;30m", end="")#rouge
-                    #if (grille[(i, j)].bobs[0].speed == vitesseMax):
-                    #    print("\033[0;33m ○ \033[0;30m", end="") #jaune
+                    if(chosenCarateristic == VITESSE):
+                        caracteritique = grille[(i, j)].bobs[0].speed
+                    elif(chosenCarateristic == MASSE):
+                        caracteritique = grille[(i, j)].bobs[0].mass
+                    elif(chosenCarateristic == PERCEPTION):
+                        caracteritique = grille[(i, j)].bob[0].perception
+                    elif(chosenCarateristic == MEMOIRE):
+                        caracteritique = grille[(i, j)].bob[0].memory
+                    
+                    if (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
+                        print("\033[0;35m ○ \033[0;30m", end="") #rose 35
+                    elif ((caracteritique < (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique >= (parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin)))):
+                        print("\033[0;34m ○ \033[0;30m", end="") #bleu 34
+                    elif ((caracteritique < (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique>= (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin)))):
+                        print("\033[0;32m ○ \033[0;30m", end="")#vert 32
+                    elif (caracteritique >= (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))):
+                        print("\033[0;33m ○ \033[0;30m", end="")#jaune 33
                 else:
                     print("\033[0;31m  \033[0;30m", end="")
             else:

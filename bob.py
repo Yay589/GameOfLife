@@ -76,7 +76,6 @@ class Bob():
             #creation du bebe
             allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
             #perte d'energie et de poid
-            self.mass -= massBebe
             self.energy -= bobLaborE
             self.previousAction = REPRODUCTION_SOLO
             return True
@@ -110,7 +109,6 @@ class Bob():
         #creation du bebe
         allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
         #perte d'energie et de poid
-        self.mass -= massBebe
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
         bob.skipingTurn = True

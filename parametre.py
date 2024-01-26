@@ -41,8 +41,8 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 30 #100 Length 
-M = 20 #100 width of the map
+N = 5 #100 Length 
+M = 5 #100 width of the map
 numberBob = 50 #100 Number of Bobs at the begining 
 
 bobS = 1 #1 Speed before mutation
@@ -77,10 +77,20 @@ bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproductio
 bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
 
+#caracteristiques -> pas modifiable mais si c'est plus bas ça fait un bug :
+ENERGIE = 20
+VITESSE = 21
+MASSE = 22
+PERCEPTION = 23
+MEMOIRE = 24
+#modifiable :
+chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
+#ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
+
     #modes spéciaux
 #Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
 #Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = True
+randomStartOn = False
 maxRandomSpeed = 3
 maxRandomMass = 3
 maxRandomPerception = 6

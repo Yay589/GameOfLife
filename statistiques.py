@@ -87,3 +87,118 @@ def minSpeed():
         return(-1)
     else:
         return(minSpeed)
+
+def maxMass():
+    i = 0
+    maxMass = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.mass > maxMass):
+                maxMass = b.mass
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(maxMass)
+    
+def minMass():
+    i = 0
+    minMass = avgMass()
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.mass < minMass):
+                minMass = b.mass
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(minMass)
+    
+def maxPerception():
+    i = 0
+    maxPerception = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.perception > maxPerception):
+                maxPerception = b.perception
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(maxPerception)
+    
+def minPerception():
+    i = 0
+    minPerception = avgPerception()
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.perception < minPerception):
+                minPerception = b.perception
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(minPerception)
+    
+def maxMemory():
+    i = 0
+    maxMemory = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.memory > maxMemory):
+                maxMemory = b.memory
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(maxMemory)
+    
+def minMemory():
+    i = 0
+    minMemory = avgMemory()
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.memory < minMemory):
+                minMemory = b.memory
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(minMemory)
+    
+def minChosenCaracteristic():
+    if(chosenCarateristic == VITESSE):
+        return minSpeed()
+    elif(chosenCarateristic == MASSE):
+        return minMass()
+    elif(chosenCarateristic == PERCEPTION):
+        return minPerception()
+    elif(chosenCarateristic == MEMOIRE):
+        return minMemory()
+    
+def maxChosenCaracteristic():
+    if(chosenCarateristic == VITESSE):
+        return maxSpeed()
+    elif(chosenCarateristic == MASSE):
+        return maxMass()
+    elif(chosenCarateristic == PERCEPTION):
+        return maxPerception()
+    elif(chosenCarateristic == MEMOIRE):
+        return maxMemory()
+    
+def avgChosenCaracteristic():
+    if(chosenCarateristic == VITESSE):
+        return avgSpeed()
+    elif(chosenCarateristic == MASSE):
+        return avgMass()
+    elif(chosenCarateristic == PERCEPTION):
+        return avgPerception()
+    elif(chosenCarateristic == MEMOIRE):
+        return avgMemory()
+    
