@@ -14,24 +14,25 @@ def allBobsSpeakM():
          b.speakMass()
 
 if __name__ == '__main__':
-    for i in range(10):
-        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
+    #for i in range(10):
+    #    allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
+    
+    allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+
+    
+    for k in range(25):
+        for j in range(7):
+            renouvellerNourriture()
+            for i in range(20):
+                for b in allBobs:
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger() and not b.attack()):
+                        b.bobDeplacement()
+                print("\033[H\033[J",end="")
+                afficheGrilleSimpleCouleur()
+                time.sleep(0.05)
     
     """
-    renouvellerNourriture()
-    
-    for i in range(8):
-        print(i) 
-        afficheGrilleSimple()
-        for b in allBobs:
-            print(b.coordClosestPrey)
-            if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
-                b.bobDeplacement()
-    
-    
-    #test du fonctionnnement global du jeu
-    """
-    
     for k in range(25):
         for j in range(7):
             renouvellerNourriture()
@@ -42,14 +43,7 @@ if __name__ == '__main__':
                 print("\033[H\033[J",end="")
                 afficheGrilleSimpleCouleur()
                 time.sleep(0.05)
-
-
-    
-    # ajouterNourritureCase((4,4))
-    # ajouterNourritureCase((4,3))
-    # ajouterNourritureCase((3,4))
-    # ajouterNourritureCase((1,0))
-    # ajouterNourritureCase((0,0))
+    """
     
     """
     

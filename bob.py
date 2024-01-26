@@ -177,7 +177,7 @@ class Bob():
         if(len(grille[self.coordinates].bobs)>= 2):
             for smallBob in (grille[self.coordinates].bobs) :
                 if(smallBob != self):
-                    if(self.mass > 1.5*bob.mass):
+                    if(self.mass > 1.5*smallBob.mass):
                         self.energy += 0.5*smallBob.energy*(1-smallBob.mass/self.mass)
                         smallBob.mourir()
                         return True
