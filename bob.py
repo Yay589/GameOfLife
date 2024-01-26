@@ -70,7 +70,7 @@ class Bob():
                 perceptionBebe = max((self.perception + randint(-1,1)),0)
             if(memoryON):
                 memoireBebe = max((self.memory + randint(-1,1)),0)
-             if(massON):
+            if(massON):
                 massBebe = max((self.mass + random()), 0)
                  
             #creation du bebe
@@ -80,7 +80,7 @@ class Bob():
             self.energy -= bobLaborE
             self.previousAction = REPRODUCTION_SOLO
             return True
-        else:
+        else: 
             return False
     
     #reproduction duo   

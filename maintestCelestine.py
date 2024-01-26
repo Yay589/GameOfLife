@@ -40,8 +40,8 @@ if __name__ == '__main__':
                     if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
                 print("\033[H\033[J",end="")
-                afficheGrilleSimple()
-                time.sleep(0.5)
+                afficheGrilleSimpleCouleur()
+                time.sleep(0.05)
 
 
     
