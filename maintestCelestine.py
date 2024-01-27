@@ -30,7 +30,7 @@ if __name__ == '__main__':
     #allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
     #allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
     #allBobs.append(Bob(bobMass = 9, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
-
+ 
 
     """
     while (len(allBobs)>1):
@@ -59,10 +59,10 @@ if __name__ == '__main__':
                     b.avantUnTour()
                     if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
                         b.partageEnergie()
-                        if(not b.manger() and not b.attaque()):
+                        if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                             b.bobDeplacement()
                 print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleur(tick, day)
+                afficheGrilleSimpleCouleurBoolean(tick, day)
                 time.sleep(0.1)
                 #allBobsPreviousNotRandomMove()
 

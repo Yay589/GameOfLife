@@ -81,6 +81,14 @@ def nbBobs_malade():
                 i += 1
     return i
 
+def nbBobs_educated():
+    i = 0
+    for c in grille:
+        for bob in grille[c].bobs :
+            if bob.educated:
+                i += 1
+    return i
+
 def avgLongevity():
     i = 0
     j = 0

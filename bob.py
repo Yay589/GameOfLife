@@ -201,8 +201,10 @@ class Bob():
         return False
     
     def partageEnergie(self):
-        if(kindnessON and self.kindness>0):
-            for coord in self.coordAdjacentes(1):
+        if(educationON and self.educated and self.sick):
+            return False
+        elif(kindnessON and self.kindness>0):
+            for coord in self.coordAdjacentes(self.coordinates,1): 
                 if coord in grille :
                     for b in grille[coord].bobs:
                         gentillesse = self.kindness
@@ -227,7 +229,16 @@ class Bob():
                                 b.sick = True
                                 b.sickTicsLeft = nbSickTics
                             
-                            
+    def eduquer(self):
+        if(educationON and self.educated):
+            for coord in self.coordAdjacentes(self.coordinates,1):
+                if coord in grille :
+                    for b in grille[coord].bobs:
+                        if(b.skipingTurn == False and b.educated == False):
+                            b.educated = True
+                            b.skipingTurn = True
+                            return True
+        return False
                             
 #########################################################################################
     
@@ -291,7 +302,7 @@ class Bob():
         self.rememberedSquares = []
         
         #caractéristique supplémentaire :
-        self.kindness = 0
+        self.kindness = birthKindness
         self.sick = False
         self.sickTicsLeft = 0
         if(bobTribe == 0):
@@ -308,6 +319,10 @@ class Bob():
                     self.tribe = 4
         else:
             self.tribe = bobTribe
+        self.educated = False
+        if(educationON and randint(1,chancesOfBeingBornEducated)==1):  
+            self.educated = True
+
 
     def mourir(self):
         self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie

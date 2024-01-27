@@ -42,7 +42,7 @@ class Case():
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
 N = 20
-M = 40
+M = 30
 numberBob = 20
 
 ###########################################################
@@ -92,14 +92,18 @@ maxRandomPerception = 6
 maxRandomMemory = 4
 #Gentillesse
 kindnessON = True
+birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
 deseaseON = True
-chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
+chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
-tribesON = True
+tribesON = False
 tribesRandom = False 
+#Education
+educationON = True
+chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses

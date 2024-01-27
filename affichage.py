@@ -109,6 +109,77 @@ def afficheGrilleSimpleCouleur(tick, day):
         print(" _", end="")
     print("\n")
 
+def afficheGrilleSimpleCouleurBoolean(tick, day):
+    vitesseMoy = avgSpeed()
+    vitesseMax = maxSpeed()
+    vitesseMin = minSpeed()
+    masseMoy = avgMass()
+    masseMax = maxMass()
+    masseMin = minMass()
+    perceptionMoy = avgPerception()
+    perceptionMax = maxPerception()
+    perceptionMin = minPerception()
+    memoireMoy = avgMemory()
+    memoireMax = maxMemory()
+    memoireMin = minMemory()
+    energieMoy = avgEnergy()
+    energieMax = maxEnergy()
+    energieMin = minEnergy()
+    
+    nbmalade = nbBobs_malade()
+    longevityMoy = avgLongevity()
+    
+    print("Jour : ",day,"Tic : ",tick)
+    print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
+    print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
+    print("Nombre de Bob malade :", nbmalade, "Age moyen :", longevityMoy, "Nombre de bob éduqués : ",nbBobs_educated())
+    if(speedON):
+        print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maximum : ",trunc(vitesseMax*1000)/1000)
+    if(massON):
+        print("Masse moyenne : ",trunc(masseMoy*1000)/1000,"Masse minimale : ", trunc(masseMin*1000)/1000, "Masse maximum : ",trunc(masseMax*1000)/1000)
+    if(perceptionON):
+        print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
+    if(memoryON):
+        print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
+
+    for a in range(M // 2 * 3):
+        print(" _", end="")
+    print("")
+    for i in range(N):
+        print("|", end="")
+        for j in range(M):
+            if ((i, j) in grille):
+                if (grille[(i, j)].bobs != []):
+                    b = grille[(i, j)].bobs[0]
+                    caracteristique = b.educated
+                        
+                    c = "○"
+                    if(tribesON):
+                        if(b.tribe == EAU):
+                            c = "✿"
+                        elif(b.tribe == GLACE):
+                            c = "❖"
+                        elif(b.tribe == FEU):
+                            c = "♣"
+                        elif(b.tribe == TERRE):
+                            c = "▲"
+                    
+                    if (deseaseON and grille[(i,j)].bobs[0].sick):
+                        print("\033[0;37m", c ,"\033[0;30m", end="") # blanc
+                    elif (caracteristique):
+                        print("\033[0;35m", c ,"\033[0;30m", end="") #rose 35
+                    else:
+                        print("\033[0;34m", c ,"\033[0;30m", end="") #bleu 34
+                else:
+                    print("\033[0;31m  \033[0;30m", end="")
+            else:
+                print("   ", end="")
+        print("|", end="")
+        print("")
+    for a in range(M // 2 * 3):
+        print(" _", end="")
+    print("\n")
+
 # version d'affichage avec des contours, pour une petite grille
 def afficheGrille():
     for a in range(int(N * 4.5)):
