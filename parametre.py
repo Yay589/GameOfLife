@@ -48,15 +48,15 @@ numberBob = 20
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = True #False : terminal, True : graphique
+graphicalInterfaceON = False
 #True : ON 
 #False : OFF
 soloReproductionON = True
 duoReproductionON = True
-speedON = True
+speedON = False
 massON = True
 perceptionON = True
-memoryON = True
+memoryON = False
 
     #Valeurs des variables :
 numberFood = 60 #200 Number of food points par day
@@ -107,7 +107,8 @@ chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
-nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
+nourriturePref_quantite = True
+#True Indique si la nourriture doit être favorisée 
 #par les bobs en fonction de la quantité (True) ou de la distance (False)
 #Fonctionnement normal -> quantité
 
