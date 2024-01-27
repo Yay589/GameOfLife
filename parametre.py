@@ -41,9 +41,9 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 20
-M = 30
-numberBob = 20
+N = 30
+M = 50
+numberBob = 50
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
@@ -100,10 +100,10 @@ chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = False
-tribesRandom = False 
+tribesRandom = False
 #Education
 educationON = True
-chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
+chancesOfBeingBornEducated = False
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses

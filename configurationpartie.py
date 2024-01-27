@@ -21,7 +21,7 @@ light_blue = (173, 216, 230)  # Couleur de fond lorsqu'une boîte est active
 light_red = (255, 99, 71)  # Couleur de fond pour indiquer une saisie incorrecte
 
 # Police
-font = pygame.font.Font(None, 36)
+font = pygame.font.Font("font/Gumela.ttf", 24)
 
 # Fonction pour vérifier si une chaîne est un nombre
 def is_number(s):
