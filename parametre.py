@@ -42,7 +42,7 @@ class Case():
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
 N = 5 #100 Length 
-M = 5 #100 width of the map
+M = 100 #100 width of the map
 numberBob = 50 #100 Number of Bobs at the begining 
 
 bobS = 1 #1 Speed before mutation
