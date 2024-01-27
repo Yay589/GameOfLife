@@ -2,14 +2,16 @@ import subprocess
 
 def start():
     while True:
-        print(" ---------------------------------------")
+        print(" _______________________________________")
+        print("|                                       |")
         print("|   Bienvenue dans le menu principal    |")
-        print("| ---------------------------------------")
+        print("|_______________________________________|")
+        print("|                                       |")
         print("|      Veuillez choisir une option      |")
         print("|    1-  Interface Graphique            |")
         print("|    2-  Interface Console.             |")
         print("|    3-      Quitter                    |")
-        print(" ---------------------------------------")
+        print("|_______________________________________|")
         
         x = input()
         
