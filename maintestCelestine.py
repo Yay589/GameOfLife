@@ -25,7 +25,7 @@ def allBobsPreviousNotRandomMove():
 
 if __name__ == '__main__':
     for i in range(numberBob):
-        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
+        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,M-1))))
     
     #allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
     #allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
@@ -43,13 +43,16 @@ if __name__ == '__main__':
         time.sleep(0.05)
     
     """
-    
+    afficheGrilleSimpleCouleur(0,0)
+    time.sleep(1)
+
     day = 0
     for k in range(10):
         for j in range(3):
             day += 1
             tick = 0
             renouvellerNourriture()
+            
             for i in range(20):
                 tick += 1
                 for b in allBobs:

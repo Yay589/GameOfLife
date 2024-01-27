@@ -53,7 +53,7 @@ def afficheGrilleSimpleCouleur(tick, day):
     if(memoryON):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
     print("Valeur de la caracteristique choisie en fonction de la couleur : ")
-    print("\033[0;35mviolet\033[0;30m < ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "\033[0;34mbleu\033[0;30m < ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin), "\033[0;32mvert\033[0;30m < ",(parametreAffichageMin) + 3/4*(parametreAffichageMax-parametreAffichageMin), "\033[0;33mjaune\033[0;30m < ",parametreAffichageMax)
+    print("\033[0;35mviolet\033[0;30m < ",trunc((parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;34mbleu\033[0;30m < ", trunc((parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;32mvert\033[0;30m < ",trunc((parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;33mjaune\033[0;30m < ",trunc(parametreAffichageMax*1000)/1000)
     if(deseaseON):
         print("Bob \033[0;37mblanc\033[0;30m : malade")
 
