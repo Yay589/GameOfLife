@@ -72,7 +72,26 @@ def nbBobs(): #c'est la même taille que len(allBobs) normalement
         for b in grille[c].bobs :
             i += 1
     return i
-    
+
+def nbBobs_malade():
+    i = 0
+    for c in grille:
+        for bob in grille[c].bobs :
+            if bob.sick:
+                i += 1
+    return i
+
+def avgLongevity():
+    i = 0
+    j = 0
+    for bob in deadBobs:
+        i += bob.age
+        j += 1
+    if j > 0:
+        return i / j
+    else:
+        return 0
+        
 def maxSpeed():
     i = 0
     maxSpeed = 0

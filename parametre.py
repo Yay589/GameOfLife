@@ -41,9 +41,9 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 20 #100 Length 
-M = 20 #100 width of the map
-numberBob = 10 #100 Number of Bobs at the begining 
+N = 15
+M = 50
+numberBob = 20
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :

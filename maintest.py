@@ -9,6 +9,7 @@ import pickle
 import os
 import sys
 from affichage import *
+from statistiques import *
 pygame.init()
 
 
@@ -37,6 +38,7 @@ class Game:
         self.sombre=200
         self.plat=5
         self.costum=0
+        self.costum_case=0
         self.active=False
         self.show = False
         self.dragging = False
@@ -51,6 +53,8 @@ class Game:
         self.listObjects = []
         self.linital_position = []
         self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
+        self.random_case=[]
+        
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
 
         # num_points_to_select = N // 5 + 1
@@ -62,7 +66,7 @@ class Game:
         #     available_points.remove(random_point)
 
         self.img_appel = pygame.image.load('data/images/apple.png').convert()
-        self.image = pygame.image.load('data/images/grass.png').convert()
+        self.image = pygame.image.load('data/images/grass0.png').convert()
         self.image.set_colorkey((0, 0, 0))
         for i in self.list_x_y:
             self.rect = self.image.get_rect()
@@ -80,7 +84,13 @@ class Game:
 
         self.image_broad_rect = self.image_broad.get_rect()
 
-            
+        self.line_color = (0,0,0)
+
+        self.line_width = 5
+        self.line_padding = 40
+        self.max_data_points = 20  # 最大数据点数
+
+        self.data = []
             
         self.display_surface = pygame.display.get_surface()
         self.offset = pygame.math.Vector2()
@@ -146,8 +156,9 @@ class Game:
 
         self.draw_restart()
 
+        self.draw_menu()
         
-
+        self.draw_summary_graph(walk_i)
         
         # for i in self.random_values_for_tree:
         #     image_tree = pygame.image.load('data/images/05.png')
@@ -168,12 +179,40 @@ class Game:
 
             image_pause = pygame.transform.scale(image_pause, (50, 50))
 
-            screen.blit(image_pause, (535, 50))
+            screen.blit(image_pause, (SCREEN_WIDTH-265, 50))
         
         self.draw_setting()
+        self.draw_statistics()
 
         pygame.display.flip()
     
+
+    def draw_statistics(self):
+
+        #font_color = (0, 128, 255)
+        font_size = 18
+        font = pygame.font.Font(None, font_size)
+        
+
+        lines = [
+            f"avgSpeed():{avgSpeed()}",
+            f"avgPerception():{avgPerception()}",
+            f"avgMemory():{avgMemory()}",
+            f"avgMass():{avgMass()}",
+            f"avgEnergy():{avgEnergy()}",
+            f"nbBobs():{nbBobs()}",
+            f"maxSpeed():{maxSpeed()}"
+        ]
+
+        
+        # 绘制多行文本框
+        text_y = SCREEN_HEIGHT - (font_size + 5) * len(lines) - 10
+        for line in lines:
+            text_surface = font.render(line, True, (0,0,0))
+            text_rect = text_surface.get_rect(bottomleft=(10, text_y))
+            screen.blit(text_surface, text_rect)
+            text_y += font_size + 5
+
     def draw_guid(self):
 
         guid_surface = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT), pygame.SRCALPHA)
@@ -268,6 +307,7 @@ class Game:
 
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
 
+
     def draw_info(self):        
         if self.guid:
 
@@ -279,7 +319,7 @@ class Game:
 
         image_info = pygame.transform.scale(image_info, (50, 50))
 
-        screen.blit(image_info, (675, 50))
+        screen.blit(image_info, (SCREEN_WIDTH-125, 50))
 
     def draw_skip(self):        
         
@@ -300,7 +340,7 @@ class Game:
 
         image_restart = pygame.transform.scale(image_restart, (50, 50))
 
-        screen.blit(image_restart, (605, 50))
+        screen.blit(image_restart, (SCREEN_WIDTH-195, 50))
     
 
     def draw_setting(self):        
@@ -320,6 +360,7 @@ class Game:
                 image_setting_a = pygame.transform.scale(image_setting_a, (8*SCREEN_HEIGHT//9,SCREEN_HEIGHT))
                 screen.blit(image_setting_a, ((SCREEN_WIDTH - 8 * SCREEN_HEIGHT // 9) // 2, 0))
             
+            
             else:
                 image_setting_a = pygame.image.load(f'data/images/setting/setting{5}.png')
                 image_setting_a = pygame.transform.scale(image_setting_a, (8*SCREEN_HEIGHT // 9, SCREEN_HEIGHT))
@@ -332,7 +373,8 @@ class Game:
                     f"SCREEN_WIDTH:{SCREEN_WIDTH}",
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
                     f"Number of cases:{N}",
-                    f"Bob custom:{self.costum}"
+                    f"Bob custom:{self.costum}",
+                    f"case custom:{self.costum_case}"
                 ]
 
                 deplace=SCREEN_HEIGHT//8
@@ -344,7 +386,7 @@ class Game:
                 keys = pygame.key.get_pressed()
                 
                 if keys[pygame.K_n]:
-                    if self.selected_index < 6 :
+                    if self.selected_index < 7 :
                         self.selected_index += 0.5
                     else:
                         self.selected_index=-1
@@ -374,14 +416,35 @@ class Game:
                     
 
 
-                
+    def draw_summary_graph(self,frame):
+        if frame%self.tick_by_day==0:
+            new_data_point = avgEnergy()
+            self.data.append(new_data_point)
 
+            # 保持数据点数量不超过最大值
+            if len(self.data) > self.max_data_points:
+                self.data.pop(0)
+
+        width=400
+        height=300
+        # 绘制折线图
+        for i in range(len(self.data) - 1):
+            x1 = self.line_padding + i * (width - 2 * self.line_padding) // (self.max_data_points - 1)
+            y1 = height - (self.data[i] * (height - 2 * self.line_padding) // max(self.data)) - self.line_padding
+
+            x2 = self.line_padding + (i + 1) * (width - 2 * self.line_padding) // (self.max_data_points - 1)
+            y2 = height - (self.data[i + 1] * (height - 2 * self.line_padding) // max(self.data)) - self.line_padding
+
+
+            pygame.draw.line(screen, self.line_color, (x1, y1), (x2, y2), self.line_width)
 
     def draw_cases(self):
-        for i in self.list_x_y:
+        self.image = pygame.image.load(f'data/images/grass{self.costum_case}.png')
+        for i, j in zip(self.list_x_y, self.random_case):
             #screen.blit(self.image, i)
             vect_list = [x * self.zoom_scale for x in (self.rect.width ,self.rect.height*(self.plat/5))]
             image=pygame.transform.scale(self.image, vect_list)
+            image.set_alpha(j+180) 
 
             case_locattion=[(i[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
                                 ,(i[1]-self.offset.y)* self.zoom_scale]
@@ -415,7 +478,7 @@ class Game:
                 #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
                 obj.image = pygame.image.load(f'data/images/walking1/walking{walk_i%10+1}.png')
             vect_list_obj = [x * self.zoom_scale*obj.taille*0.08 for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]      
-            
+            vect_list_obj_searching = [x * self.zoom_scale*0.008 for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
 
             if self.costum%self.costum_number == 1:
                 if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
@@ -480,16 +543,14 @@ class Game:
                     obj.image = pygame.image.load(f'data/images/walking81/walking80_{walk_i%10+1}.png')      
                 vect_list_obj[0]*=0.7
 
-            if obj.action== MANGER :
-                obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png')
-
+            
             
             
 
-            if obj.action== MANGER :
-                obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png')
-
-            # if obj.action== CHERCHER_NOURRITURE :
+            # if obj.action== MANGER :
+            #     obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png')
+            
+            
             #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
             #         #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
             #         obj.image = pygame.image.load(f'data/images/searching/walking{walk_i%10+1}.png') 
@@ -497,7 +558,7 @@ class Game:
             #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
             #         obj.image = pygame.image.load(f'data/images/searching1/walking{walk_i%10+1}.png')
                     
-            image_obj=pygame.transform.scale(obj.image, vect_list_obj)
+            
             
             
             real_location_x=(150 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * 10 - (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2 
@@ -505,6 +566,19 @@ class Game:
             real_location=[real_location_x,real_location_y]
 
             
+            real_location_x_search=(157 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * 10 - (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2 
+            real_location_y_search=(97 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat + (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj[1]*(1/2) 
+            real_location_search=[real_location_x_search,real_location_y_search]
+            
+
+            if obj.action== MANGER :
+                obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png')
+                real_location_x=(148 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * 10 - (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2 
+                real_location_y=(98 + (location[0]+ x*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat + (location[1]+ y*(walk_i%self.tick_by_day)/self.tick_by_day) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj[1]*(1/2) 
+                real_location=[real_location_x,real_location_y]
+            
+            image_obj=pygame.transform.scale(obj.image, vect_list_obj)
+
             if -100< real_location [0] and real_location [0] < SCREEN_WIDTH and -100 < real_location [1] and real_location [1] <SCREEN_HEIGHT:
 
                 
@@ -512,6 +586,10 @@ class Game:
                 # image_red=pygame.transform.scale(image_red, vect_list_obj)
 
                 # image_red.set_alpha(obj.energy)  # Set alpha value based on energy
+                if obj.action== CHERCHER_NOURRITURE :
+                    searching_image= pygame.image.load(f'data/images/searching/3342_37{walk_i%6}.png')
+                    searching_image=pygame.transform.scale(searching_image,vect_list_obj_searching )
+                    screen.blit(searching_image, real_location_search)
                 screen.blit(image_obj, real_location)
                 #screen.blit(image_red, real_location)
             #screen.blit(image_obj, real_location_1)
@@ -527,19 +605,27 @@ class Game:
         
         for (x,y) in grille:
             if (grille[(x,y)].qtite_nourriture != 0):
-                vect_list_obj_f = [x * self.zoom_scale*0.5 for x in (pygame.Surface.get_width(self.img_appel),pygame.Surface.get_height(self.img_appel))]      
+                vect_list_obj_f = [x * self.zoom_scale*0.3 for x in (pygame.Surface.get_width(self.img_appel),pygame.Surface.get_height(self.img_appel))]      
                 img_appel=pygame.transform.scale(self.img_appel, vect_list_obj_f)
                 real_location_x_f=(150 + (x) * 10 - (y) * 10-self.offset.x)*self.zoom_scale-vect_list_obj_f[0]/2 
                 real_location_y_f=(100 + (x) * self.plat + (y) * self.plat-self.offset.y+self.plat)*self.zoom_scale-vect_list_obj_f[1]*(1/2) 
                 real_location_f=[real_location_x_f,real_location_y_f]
-                screen.blit(img_appel, real_location_f) 
+                if -100< real_location_f [0] and real_location_f [0] < SCREEN_WIDTH and -100 < real_location_f [1] and real_location_f [1] <SCREEN_HEIGHT:
+                    screen.blit(img_appel, real_location_f) 
+    
+    def draw_menu(self):
+
+        image_menu = pygame.image.load('data/images/menu.png')
+        image_menu.set_colorkey((0,0,0))
+        image_menu = pygame.transform.scale(image_menu, (50, 50))
+        screen.blit(image_menu, (SCREEN_WIDTH-170, SCREEN_HEIGHT-100))
    
     def draw_select_load (self,frame=0):
-
+        
         screen.fill((0, 0, 0))
         frame+=1
-        self.draw_background(frame)
-        font = pygame.font.Font(None, 50)
+        
+        font = pygame.font.Font(None, 56)
 
         
         selected_directory = 'saves/'
@@ -558,31 +644,124 @@ class Game:
 
         selected_file = None
 
+        # 定义颜色
+        white = (255, 255, 255)
+
+        # 定义字体和字体大小
+        font = pygame.font.Font(None, 36)
+
+        # 定义按钮的大小和位置
+        button_width, button_height = 120, 50
+        button_x = SCREEN_WIDTH // 2 - button_width // 2
+        load_button_y = SCREEN_HEIGHT // 2 - 30
+        delete_button_y = SCREEN_HEIGHT // 2 + 30
+        return_button_y = SCREEN_HEIGHT // 2 + 90
+
+        # 定义按钮颜色
+        button_color = (100, 100, 100)
+        hover_color = (150, 150, 150)
+
+        # 定义按钮标签
+        load_text = font.render("Load", True, white)
+        delete_text = font.render("Delete", True, white)
+        return_text = font.render("Return", True, white)
+
+        image_setting = pygame.image.load('data/images/menu.png')
+
+        image_setting.set_colorkey((0,0,0))
+
+        image_setting = pygame.transform.scale(image_setting, (50, 50))
+
+        image_board = pygame.image.load('data/images/board.png')
+
+        image_board = pygame.transform.scale(image_board, (512,256))
+
+        
+
+            # 游戏循环
+        click=False
+                    
+        
+
         while True:
+            self.draw_background(frame)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:  # Left mouse button
-                        
-                        for text, rect in text_positions:
-                            if rect.collidepoint(event.pos):
-                                selected_file = files[text_positions.index((text, rect))]
-                                chars_to_remove = [".", "p", "k", "l"]
-                                for char in chars_to_remove:
-                                    selected_file=selected_file.replace(char, "")
-                                print(f"Selected file: {selected_file}")
-                                return selected_file
+                    if not click:
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        if event.button == 1:  # Left mouse button
+                            for text, rect in text_positions:
+                                if rect.collidepoint(event.pos):
+                                    selected_file = files[text_positions.index((text, rect))]
+                                    chars_to_remove = [".", "p", "k", "l"]
+                                    for char in chars_to_remove:
+                                        selected_file=selected_file.replace(char, "")
+                                    print(f"Selected file: {selected_file}")
+                                    text_s=selected_file
+                                    click=True
+
+                    if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
+                        return 0
+                    
+                    if click:
+                        if button_x <= mouse_x <= button_x + button_width:
+                            if load_button_y <= mouse_y <= load_button_y + button_height:
+                                print("Load按钮被点击")
+                                return text_s
+                            elif delete_button_y <= mouse_y <= delete_button_y + button_height:
+                                head="saves/"
+                                tail=".pkl"
+                                file_path_to_delete=head+text_s+tail
+                                print(file_path_to_delete)
+                                self.delete_file(file_path_to_delete)
+                            elif return_button_y <= mouse_y <= return_button_y + button_height:
+                                click=False
+
 
             
-
             
+            screen.blit(image_setting, (SCREEN_WIDTH-170, SCREEN_HEIGHT-100))
             for text, rect in text_positions:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if rect[0] <= mouse_x <= rect[0] + button_width:
+                    if rect[1] <= mouse_y <= rect[1] + button_height:
+                        pygame.draw.rect(screen, hover_color, (rect[0], rect[1], button_width, button_height))
                 screen.blit(text, rect)
+            if click:
+
+                # 绘制按钮
+                pygame.draw.rect(screen, button_color, (button_x, load_button_y, button_width, button_height))
+                pygame.draw.rect(screen, button_color, (button_x, delete_button_y, button_width, button_height))
+                pygame.draw.rect(screen, button_color, (button_x, return_button_y, button_width, button_height))
+
+                # 绘制按钮上的文本
+                screen.blit(image_board, (SCREEN_WIDTH/2-256, SCREEN_HEIGHT/2-70))
+                screen.blit(load_text, (button_x + 20, load_button_y + 10))
+                screen.blit(delete_text, (button_x + 10, delete_button_y + 10))
+                screen.blit(return_text, (button_x + 10, return_button_y + 10))
+
+                # 检测鼠标悬停
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if button_x <= mouse_x <= button_x + button_width:
+                    if load_button_y <= mouse_y <= load_button_y + button_height:
+                        pygame.draw.rect(screen, hover_color, (button_x, load_button_y, button_width, button_height))
+                    elif delete_button_y <= mouse_y <= delete_button_y + button_height:
+                        pygame.draw.rect(screen, hover_color, (button_x, delete_button_y, button_width, button_height))
+                    elif return_button_y <= mouse_y <= return_button_y + button_height:
+                        pygame.draw.rect(screen, hover_color, (button_x, return_button_y, button_width, button_height))
 
             pygame.display.flip()
     
+
+    def delete_file(self,file_path):
+        try:
+            os.remove(file_path)
+            print(f"The file {file_path} has been successfully deleted.")
+        except OSError as e:
+            print(f"An error occurred while deleting the file {file_path}: {e}")
 
     def draw_start(self,frame):
 
@@ -637,13 +816,14 @@ class Game:
                     
                 deplace += 30  # Move to the next line
             # screen.blit(text, text_rect)
+            
             if int(self.selected_index_start) == 0:
                 if keys[pygame.K_RETURN]:
 
                     ajouterNourritureGrille()
 
                     for i in range(N-1):
-                        x,y = randint(0,N-1),randint(0,N-1)
+                        x,y = randint(0,N-1),randint(0,M-1)
                         b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
                         b.coordinates = (x,y)
                         allBobs.append(b)
@@ -656,16 +836,18 @@ class Game:
                 
             if int(self.selected_index_start) == 1:
                 if keys[pygame.K_RETURN]:
-                    for i in range(N-1):
-                        x,y = randint(0,N-1),randint(0,N-1)
-                        b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
-                        b.coordinates = (x,y)
-                        allBobs.append(b)
-                    for bob in allBobs:
-                        g.all_gameobject.add(BOB_GameObject(bob))
+                    
                     nom_sauvegarde = self.draw_select_load()
-                    self.charger_jeu(nom_sauvegarde)
-                    self.start_anime = True
+                    if not(nom_sauvegarde == 0):
+                        for i in range(N-1):
+                            x,y = randint(0,N-1),randint(0,M-1)
+                            b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
+                            b.coordinates = (x,y)
+                            allBobs.append(b)
+                        for bob in allBobs:
+                            g.all_gameobject.add(BOB_GameObject(bob))
+                        self.charger_jeu(nom_sauvegarde)
+                        self.start_anime = True
                     
             
             self.draw_setting()
@@ -755,9 +937,27 @@ class Game:
         color = color_inactive
         active = False
         text = ''
-        clock = pygame.time.Clock()
+
+        white = (255, 255, 255)
+
+        # 定义字体和字体大小
+        font = pygame.font.Font(None, 36)
+
+        # 定义按钮的大小和位置
+        button_width, button_height = 120, 50
+        button_x = input_box.x + 100
+        return_button_y = input_box.y + 100
+
+        # 定义按钮颜色
+        hover_color = (150, 150, 150)
+
+        return_text = font.render("Cancle", True, white)
+
 
         while True:
+            image_broad = pygame.image.load('data/images/broad.png')
+            image_broad = pygame.transform.scale(image_broad, (400,200))
+            screen.blit(image_broad, (input_box.x - 30, input_box.y - 30))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -765,6 +965,10 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if input_box.collidepoint(event.pos):
                         active = not active
+                    
+                    elif return_button_y <= mouse_y <= return_button_y + button_height:
+                        return 0
+                    
                     else:
                         active = False
                     color = color_active if active else color_inactive
@@ -780,11 +984,16 @@ class Game:
                         else:
                             text += event.unicode
 
+            
+
+            # 检测鼠标悬停
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if button_x <= mouse_x <= button_x + button_width and return_button_y <= mouse_y <= return_button_y + button_height:
+                        pygame.draw.rect(screen, hover_color, (button_x, return_button_y, button_width, button_height))
+                    
 
             width = 200
-            image_broad = pygame.image.load('data/images/broad.png')
-            image_broad = pygame.transform.scale(image_broad, (400,200))
-            screen.blit(image_broad, (input_box.x - 20, input_box.y - 20))
+            
 
             font1 = pygame.font.Font(None, 20)
             text_show = font1.render("Name of your file in 10 letters plz,press enter for confirm", True, (255,255,255))
@@ -796,14 +1005,15 @@ class Game:
             input_box.w = width
             screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
 
+            screen.blit(return_text, (button_x + 10, return_button_y + 10))
             pygame.display.flip()
-            clock.tick(10)
+
 
     
     
         
-    def sauvegarder_jeu(self):
-        nom_sauvegarde = self.demander_nom_sauvegarde()
+    def sauvegarder_jeu(self,nom_sauvegarde):
+        
         save_path = os.path.join('saves', f'{nom_sauvegarde}.pkl')
 
         # Ajoutez les coordonnées initiales des bobs à la liste initial_bob_positions
@@ -812,8 +1022,8 @@ class Game:
         save_data = {
             'tick_by_day': self.tick_by_day,
             'foodE': foodE,
-            'SCREEN_WIDTH': SCREEN_WIDTH,
-            'SCREEN_HEIGHT': SCREEN_HEIGHT,
+            # 'SCREEN_WIDTH': SCREEN_WIDTH,
+            # 'SCREEN_HEIGHT': SCREEN_HEIGHT,
             'N': N,
             'num_bobs': len(allBobs),  # Enregistrez le nombre total de bobs
             'initial_bob_positions': initial_bob_positions,  # Enregistrez uniquement les coordonnées initiales
@@ -836,8 +1046,8 @@ class Game:
             self.tick_by_day = load_data['tick_by_day']
             global foodE
             foodE = load_data['foodE']
-            SCREEN_WIDTH = load_data['SCREEN_WIDTH']
-            SCREEN_HEIGHT = load_data['SCREEN_HEIGHT']
+            # SCREEN_WIDTH = load_data['SCREEN_WIDTH']
+            # SCREEN_HEIGHT = load_data['SCREEN_HEIGHT']
             global N
             N = load_data['N']
 
@@ -853,7 +1063,8 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         self.action=Bob.previousAction
         # print(Bob.previousAction)
         self.energy=Bob.energy
-        self.taille=Bob.energy/800+0.2
+        if Bob.energy <= 600:
+            self.taille=abs(Bob.energy/800+0.2)
         self.gbob=Bob
         #self.sprites = []
         #self.sprites.append(pygame.image.load('data/images/0.png').convert())
@@ -892,7 +1103,7 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
 
 g=Game()
 
-
+for i in range(N*M) : g.random_case.append(randint(0,100))
 
 
 
@@ -936,7 +1147,9 @@ while running:
                     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
             elif event.key == pygame.K_o:
-                g.sauvegarder_jeu()
+                nom_sauvegarde = g.demander_nom_sauvegarde()
+                if not(nom_sauvegarde == 0):
+                    g.sauvegarder_jeu(nom_sauvegarde)
    
             elif event.key == pygame.K_l:
                 nom_sauvegarde = g.demander_nom_sauvegarde()
@@ -958,17 +1171,17 @@ while running:
                 g.dragging_offset_x, g.dragging_offset_y = g.image_broad_rect.x - event.pos[0], g.image_broad_rect.y - event.pos[1]
             elif event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                if 675 < mouse_x < 725 and 50 < mouse_y < 100:
+                if SCREEN_WIDTH-125 < mouse_x < SCREEN_WIDTH-75 and 50 < mouse_y < 100:
                     g.guid = not g.guid
                     if not g.is_paused : 
                         g.is_paused = not g.is_paused
-                if 605 < mouse_x < 655 and 50 < mouse_y < 100:
+                if SCREEN_WIDTH-195 < mouse_x < SCREEN_WIDTH-145 and 50 < mouse_y < 100:
                     if len (allBobs) == 0:
                         g.all_gameobject.empty()
                         for bob in allBobs:
                             bob.mourir()
                         for i in range(N-1):
-                            allBobs.append(Bob(coord = (randint(0,N-1),randint(0,M-1))))
+                            allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
                         for bob in allBobs:
                             g.all_gameobject.add(BOB_GameObject(bob))
                         frame_count = 0
@@ -983,7 +1196,18 @@ while running:
                     #g.setting_frame = 0
                     g.selected_index=-1
                     g.setting = not g.setting
-
+                
+                # if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
+                #     g.all_gameobject.empty()
+                #     for bob in allBobs:
+                #         bob.mourir()
+                #     for i in range(N-1):
+                #         allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+                #     for bob in allBobs:
+                #         g.all_gameobject.add(BOB_GameObject(bob))
+                #     frame_count_start=0
+                #     g.start_anime=False
+                #     g.game_running=False
             
             if int(g.selected_index) ==0:
                     if event.button == 4:  # Mouse wheel scroll up
@@ -1031,16 +1255,24 @@ while running:
             if int(g.selected_index) ==5:
                     if event.button == 4:  # Mouse wheel scroll up
                                     # Increase value of the selected line
-                        g.costum+=1
+                        g.costum=(g.costum+1)%8
 
                     elif event.button == 5:  # Mouse wheel scroll down
                                     # Decrease value of the selected line
-                        g.costum-=1
+                        g.costum=(g.costum-1)%8
+            
+            if int(g.selected_index) ==6:
+                    if event.button == 4:  # Mouse wheel scroll up
+                                    # Increase value of the selected line
+                        g.costum_case=(g.costum_case+1)%5
+
+                    elif event.button == 5:  # Mouse wheel scroll down
+                                    # Decrease value of the selected line
+                        g.costum_case=(g.costum_case-1)%5
                 
 
     if g.game_running:
-        g.draw(frame_count)    
-        
+        g.draw(frame_count)
 
 
             
@@ -1065,6 +1297,8 @@ while running:
                 for b in allBobs:
                     if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
                         b.bobDeplacement()
+                    
+                    
 
                 g.all_gameobject.empty()
 
