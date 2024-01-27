@@ -15,8 +15,8 @@ Un bob est defini par :
 
 """
 
-__date__ = "2024-01-10" #10/01/24 
-__version__= "2.0" 
+__date__ = "2024-01-27" #10/01/27
+__version__= "2.1" 
 
 from random import *
 from parametre import *
