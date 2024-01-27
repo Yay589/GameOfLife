@@ -9,7 +9,7 @@ with open(param_file_path, "r") as param_file:
     lines = param_file.readlines()
 
 for line in lines:
-    if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "chancesOfBeingBornEducated", "nourriturePref_quantite", "tribesON", "tribesRandom")):
+    if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "nourriturePref_quantite", "tribesON", "tribesRandom")):
         variable_name, value = line.split("=")
         globals()[variable_name.strip()] = value.strip() == "True"
 
@@ -46,7 +46,7 @@ def update_param_file():
 
     with open(param_file_path, "w") as param_file:
         for line in lines:
-            if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "chancesOfBeingBornEducated", "nourriturePref_quantite", "tribesON", "tribesRandom")):
+            if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "nourriturePref_quantite", "tribesON", "tribesRandom")):
                 variable_name, _ = line.split("=")
                 new_value = "True" if variable_name.strip() in active_buttons else "False"
                 line = f"{variable_name}= {new_value}\n"
@@ -58,9 +58,9 @@ button_positions = {
     "kindnessON": (window_size[0] // 4, window_size[1] // 2 - 50),
     "deseaseON": (window_size[0] // 4, window_size[1] // 2),
     "educationON": (window_size[0] // 4, window_size[1] // 2 + 50),
-    "nourriturePref_quantite": (window_size[0] // 2, window_size[1] // 2 - 100),
-    "tribesON": (3 * window_size[0] // 4, window_size[1] // 2 - 100),
-    "tribesRandom": (3 * window_size[0] // 4, window_size[1] // 2 - 50),
+    "nourriturePref_quantite": (3 * window_size[0] // 4, window_size[1] // 2 - 100),
+    "tribesON": (3 * window_size[0] // 4, window_size[1] // 2 - 50),
+    "tribesRandom": (3 * window_size[0] // 4, window_size[1] // 2),
     "default": (window_size[0] // 4, window_size[1] // 2 + 100),
     "confirm": (3 * window_size[0] // 4, window_size[1] // 2 + 100),
 }
@@ -75,7 +75,7 @@ while True:
             lines = param_file.readlines()
 
         for line in lines:
-            if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "chancesOfBeingBornEducated", "nourriturePref_quantite", "tribesON", "tribesRandom")):
+            if line.strip().startswith(("randomStartOn", "kindnessON", "deseaseON", "educationON", "nourriturePref_quantite", "tribesON", "tribesRandom")):
                 variable_name, value = line.split("=")
                 if value.strip() == "True":
                     active_buttons.add(variable_name.strip())

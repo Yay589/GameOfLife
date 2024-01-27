@@ -99,11 +99,11 @@ deseaseON = True
 chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
-tribesON = False
-tribesRandom = False
+tribesON = True
+tribesRandom = True
 #Education
 educationON = True
-chancesOfBeingBornEducated = False
+chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
