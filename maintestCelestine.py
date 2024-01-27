@@ -11,7 +11,11 @@ import time
 
 def allBobsSpeakM():
     for b in allBobs:
-         b.speakMass()
+        b.speakMass()
+
+def allBobsPrevious():
+    for b in allBobs:
+        b.speakPreviousAction()
 
 if __name__ == '__main__':
     for i in range(numberBob):
@@ -33,8 +37,8 @@ if __name__ == '__main__':
         time.sleep(0.05)
     
     """
-    for k in range(25):
-        for j in range(7):
+    for k in range(1):
+        for j in range(1):
             renouvellerNourriture()
             for i in range(20):
                 for b in allBobs:
@@ -43,8 +47,9 @@ if __name__ == '__main__':
                         b.partageEnergie()
                         if(not b.manger() and not b.attaque()):
                             b.bobDeplacement()
-                print("\033[H\033[J",end="")
+                #print("\033[H\033[J",end="")
                 afficheGrilleSimpleCouleur(N,M)
+                allBobsPrevious()
                 time.sleep(0.1)
     
     

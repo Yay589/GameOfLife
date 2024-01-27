@@ -168,6 +168,8 @@ def afficheGrilleSimpleCouleur(N,M):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
     print("Bob violet : caractéristique choisie < ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "bob bleu : caractéristique < ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))
     print("Bob vert : caractéristique < ",(parametreAffichageMin) + 3/4*(parametreAffichageMax-parametreAffichageMin), "bob jaune : caractéristique < ",parametreAffichageMax)
+    if(deseaseON):
+        print("Bob blanc : malade")
 
     for a in range(M // 2 * 3):
         print(" _", end="")

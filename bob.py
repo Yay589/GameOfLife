@@ -144,10 +144,11 @@ class Bob():
             #     self.energy -= 0.5 #Un bob peut rester sur une nourriture mais il perd 0,5 energie par tour
 
             self.previousCoordinates = self.coordinates #mise a jour des coord precedentes
+            self.previousAction = MANGER
+
             #calcul du gain d'energie et energie restante sur la case
             faim = bobMaxE - self.energy
             reste = self.case.qtite_nourriture - faim
-            
             if(deseaseON and randint(0,chancesOfFoodPoisoning) == 1):
                 self.sick = True
                 self.sickTicsLeft = nbSickTics
@@ -707,3 +708,7 @@ class Bob():
         
     def speakMass(self): #juste pour faire des tests
         print("(Bob) Je suis en : ",self.coordinates,"J'ai une masse de ",self.mass)
+    
+    def speakPreviousAction(self):
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai",self.energy,"energie","Ma dernière action était : ",self.previousAction)
+
