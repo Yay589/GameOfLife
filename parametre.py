@@ -99,7 +99,7 @@ chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = True
-tribesRandom = False 
+tribesRandom = True
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
