@@ -65,27 +65,40 @@ def afficheGrilleSimpleCouleur(tick, day):
         for j in range(M):
             if ((i, j) in grille):
                 if (grille[(i, j)].bobs != []):
+                    b = grille[(i, j)].bobs[0]
                     if(chosenCarateristic == VITESSE):
-                        caracteritique = grille[(i, j)].bobs[0].speed
+                        caracteritique = b.speed
                     elif(chosenCarateristic == MASSE):
-                        caracteritique = grille[(i, j)].bobs[0].mass
+                        caracteritique = b.mass
                     elif(chosenCarateristic == PERCEPTION):
-                        caracteritique = grille[(i, j)].bobs[0].perception
+                        caracteritique = b.perception
                     elif(chosenCarateristic == MEMOIRE):
-                        caracteritique = grille[(i, j)].bobs[0].memory
+                        caracteritique = b.memory
                     elif(chosenCarateristic == ENERGIE):
-                        caracteritique = grille[(i, j)].bobs[0].energy
+                        caracteritique = b.energy
+                        
+                    c = "○"
+                    if(tribesON):
+                        if(b.tribe == EAU):
+                            c = "✿"
+                        elif(b.tribe == GLACE):
+                            c = "❖"
+                        elif(b.tribe == FEU):
+                            c = "♣"
+                        elif(b.tribe == TERRE):
+                            c = "▲"
+                    
                     
                     if (deseaseON and grille[(i,j)].bobs[0].sick):
-                        print("\033[0;37m ○ \033[0;30m", end="") # blanc
+                        print("\033[0;37m", c ,"\033[0;30m", end="") # blanc
                     elif (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
-                        print("\033[0;35m ○ \033[0;30m", end="") #rose 35
+                        print("\033[0;35m", c ,"\033[0;30m", end="") #rose 35
                     elif ((caracteritique < (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique >= (parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin)))):
-                        print("\033[0;34m ○ \033[0;30m", end="") #bleu 34
+                        print("\033[0;34m", c ,"\033[0;30m", end="") #bleu 34
                     elif ((caracteritique < (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique>= (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin)))):
-                        print("\033[0;32m ○ \033[0;30m", end="")#vert 32
+                        print("\033[0;32m", c ,"\033[0;30m", end="")#vert 32
                     elif (caracteritique >= (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))):
-                        print("\033[0;33m ○ \033[0;30m", end="")#jaune 33
+                        print("\033[0;33m", c ,"\033[0;30m", end="")#jaune 33
                 else:
                     print("\033[0;31m  \033[0;30m", end="")
             else:

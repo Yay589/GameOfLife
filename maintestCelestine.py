@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 print("\033[H\033[J",end="")
                 afficheGrilleSimpleCouleur(tick, day)
                 time.sleep(0.1)
-                allBobsPreviousNotRandomMove()
+                #allBobsPreviousNotRandomMove()
 
             
     

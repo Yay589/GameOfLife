@@ -193,8 +193,8 @@ class Bob():
     def attaque(self):
         if(perceptionON and len(grille[self.coordinates].bobs)>= 2):
             for smallBob in (grille[self.coordinates].bobs) :
-                if(smallBob != self):
-                    if(self.mass > 1.5*smallBob.mass):
+                if((smallBob != self) and (not tribesON or self.tribe != smallBob.tribe)): #soit tribue desactivé soit pas la même tribue
+                    if((self.mass > 1.5*smallBob.mass)):
                         self.energy += 0.5*smallBob.energy*(1-smallBob.mass/self.mass)
                         smallBob.mourir()
                         return True
@@ -205,14 +205,21 @@ class Bob():
             for coord in self.coordAdjacentes(1):
                 if coord in grille :
                     for b in grille[coord].bobs:
+                        gentillesse = self.kindness
+                        if(tribesON):
+                            if(self.tribe == b.tribe):
+                                gentillesse = (gentillesse*2)%100
+                            else:
+                                gentillesse = gentillesse / 2
                         if ((b != self) 
                             and self.energy > b.energy
-                            and randint(0,101)<= self.kindness):
+                            and randint(0,101)<= gentillesse):
                             energieTransmise = self.energy - b.energy
                             if(self.kindness > 50):
                                 energieTransmise /= 2
                             else:
                                 energieTransmise /=4
+                            
                             self.energy -= energieTransmise
                             b.energy += energieTransmise
                             b.kindness += kidnessAdded
@@ -288,7 +295,7 @@ class Bob():
         self.sick = False
         self.sickTicsLeft = 0
         if(bobTribe == 0):
-            self.tribe = randint(1,5)
+            self.tribe = randint(1,4)
         else:
             self.tribe = bobTribe
 
@@ -593,7 +600,7 @@ class Bob():
         min_distance_proie = trunc(self.perception)
         for coord in self.bobsEnVue():
             for otherBob in grille[coord].bobs:
-                if(not (otherBob is self)):
+                if(not (otherBob is self) and (not tribesON or self.tribe != otherBob.tribe)):
                     distance = self.distance(otherBob.coordinates)
                     if (otherBob.mass > 3/2*self.mass):
                         bobEnDanger = True
