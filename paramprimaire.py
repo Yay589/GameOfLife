@@ -20,7 +20,7 @@ pygame.init()
 # Définir la taille de la fenêtre
 window_size = (800, 600)
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption("Configuration de la partie")
+pygame.display.set_caption("Activer/Desactiver des fonctionnalités primaires")
 
 # Ajouter le chemin de votre image d'arrière-plan
 background_image_path = os.path.join("data", "images", "background.jpg")

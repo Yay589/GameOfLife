@@ -48,15 +48,15 @@ numberBob = 20
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = False
+graphicalInterfaceON = True
 #True : ON 
 #False : OFF
 soloReproductionON = True
 duoReproductionON = True
-speedON = False
+speedON = True
 massON = True
 perceptionON = True
-memoryON = False
+memoryON = True
 
     #Valeurs des variables :
 numberFood = 60 #200 Number of food points par day
