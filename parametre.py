@@ -41,8 +41,8 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 15
-M = 50
+N = 20
+M = 40
 numberBob = 20
 
 ###########################################################
@@ -59,7 +59,7 @@ perceptionON = True
 memoryON = True
 
     #Valeurs des variables :
-numberFood = 20 #200 Number of food points par day
+numberFood = 60 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
@@ -79,7 +79,7 @@ MASSE = 3
 PERCEPTION = 4
 MEMOIRE = 5
 #modifiable :
-chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
+chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
@@ -97,9 +97,9 @@ kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 deseaseON = True
 chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
-
 #Tribues
 tribesON = True
+tribesRandom = False 
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
