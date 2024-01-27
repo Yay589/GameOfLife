@@ -52,7 +52,7 @@ class Game:
         self.all_gameobject=pygame.sprite.Group()
         self.listObjects = []
         self.linital_position = []
-        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+        self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
         self.random_case=[]
         
         #self.random_values_for_tree = random.sample(self.list_x_y, 6)
@@ -823,7 +823,7 @@ class Game:
                     ajouterNourritureGrille()
 
                     for i in range(N-1):
-                        x,y = randint(0,N-1),randint(0,N-1)
+                        x,y = randint(0,N-1),randint(0,M-1)
                         b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
                         b.coordinates = (x,y)
                         allBobs.append(b)
@@ -840,7 +840,7 @@ class Game:
                     nom_sauvegarde = self.draw_select_load()
                     if not(nom_sauvegarde == 0):
                         for i in range(N-1):
-                            x,y = randint(0,N-1),randint(0,N-1)
+                            x,y = randint(0,N-1),randint(0,M-1)
                             b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
                             b.coordinates = (x,y)
                             allBobs.append(b)
@@ -922,11 +922,11 @@ class Game:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.plat += 0.1
-            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
 
         if keys[pygame.K_s]:
             self.plat -= 0.1
-            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+            self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
     
     def demander_nom_sauvegarde(self):
         pygame.font.init()
@@ -1103,7 +1103,7 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
 
 g=Game()
 
-for i in range(N*N) : g.random_case.append(randint(0,100))
+for i in range(N*M) : g.random_case.append(randint(0,100))
 
 
 
@@ -1240,14 +1240,14 @@ while running:
                     if event.button == 4:  # Mouse wheel scroll up
                                     # Increase value of the selected line
                         N+=1   # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
                         # for co in grille:
                         #     co.supprimer()
 
                     elif event.button == 5:  # Mouse wheel scroll down
                                     # Decrease value of the selected line
                         N-=1  # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
+                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
                         # for co in grille:
                         #     co.supprimer()
                         # grille=g.list_x_y
