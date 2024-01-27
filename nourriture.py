@@ -7,7 +7,7 @@ def ajouterNourritureGrille(nombreNourriture = numberFood, energieNourriture = f
         ajouterNourritureCase(energieNourriture)
 
 def ajouterNourritureCase(energieNourriture = foodE):
-    coord = (randint(0,N-1),randint(0,N-1))
+    coord = (randint(0,N-1),randint(0,M-1))
     
     if(coord not in grille):
         case = Case(coord)

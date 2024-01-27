@@ -407,8 +407,8 @@ class Render:
         
         #mise à jour de la position des pommes chaque jour écoulé
     
-        # if walk_i % self.sombre == 0:
-        #     renouvellerNourriture()
+        if walk_i % self.sombre == 0:
+            renouvellerNourriture()
             
         for (x,y) in grille:
                 if (grille[(x,y)].qtite_nourriture != 0):

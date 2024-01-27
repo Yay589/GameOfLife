@@ -131,7 +131,7 @@ while running:
                         N -= 1  # Adjust this line based on your specific use case
                         g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
                 
-    
+
     if g.game_running:
         
         g.draw(frame_count)    
@@ -141,7 +141,6 @@ while running:
 
             frame_count += 1
             if frame_count % 15 == 0:
-                
                 if g.sombre == 200:
                     g.day_night=1
 
@@ -153,7 +152,6 @@ while running:
                 else:
                     g.sombre -= 1
 
-                renouvellerNourriture(5,10)
                 #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
                 for b in allBobs:
                     if(not b.reproduction()):
