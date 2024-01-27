@@ -1,6 +1,5 @@
 import pygame
 import sys
-import os
 
 # Charger les valeurs par défaut
 N = 100
@@ -28,7 +27,6 @@ font = pygame.font.Font(None, 36)
 def is_number(s):
     return s.isdigit() or (s.startswith('-') and s[1:].isdigit())
 
-
 # Fonction pour mettre à jour les valeurs dans le fichier parametre.py
 def update_param_file():
     param_file_path = "parametre.py"
@@ -40,15 +38,21 @@ def update_param_file():
         for line in lines:
             if line.strip().startswith(("N =", "M =", "numberBob =")):
                 variable_name, _ = line.split("=")
-                new_value = next(box['text'] for box in input_boxes if box['label'] == variable_name.strip())
-                line = f"{variable_name}= {new_value}\n"
+                new_value = next((box['text'] for box in input_boxes if box['label'] == "Longeur" and variable_name.strip() == "N"),
+                                None) if variable_name.strip() == "N" else \
+                            next((box['text'] for box in input_boxes if box['label'] == "Largeur" and variable_name.strip() == "M"),
+                                None) if variable_name.strip() == "M" else \
+                            next((box['text'] for box in input_boxes if box['label'] == variable_name.strip()), None)
+
+                if new_value is not None:
+                    line = f"{variable_name}= {new_value}\n"
             param_file.write(line)
 
 
 # Entrées de texte
 input_boxes = [
-    {"rect": pygame.Rect(50, 50, 200, 32), "text": str(N), "label": "N", "active": False},
-    {"rect": pygame.Rect(50, 100, 200, 32), "text": str(M), "label": "M", "active": False},
+    {"rect": pygame.Rect(50, 50, 200, 32), "text": str(N), "label": "Longeur", "active": False},
+    {"rect": pygame.Rect(50, 100, 200, 32), "text": str(M), "label": "Largeur", "active": False},
     {"rect": pygame.Rect(50, 150, 200, 32), "text": str(numberBob), "label": "numberBob", "active": False}
 ]
 
@@ -74,7 +78,7 @@ while True:
             # Gestion des clics sur les boutons
             if default_button.collidepoint(event.pos):
                 for box in input_boxes:
-                    box['text'] = str(N) if box['label'] == "N" else str(M) if box['label'] == "M" else str(numberBob)
+                    box['text'] = str(N) if box['label'] == "Longeur" else str(M) if box['label'] == "Largeur" else str(numberBob)
             elif confirm_button.collidepoint(event.pos):
                 update_param_file()
 
@@ -83,7 +87,7 @@ while True:
             if event.key == pygame.K_RETURN:
                 for box in input_boxes:
                     if box['active'] and not is_number(box['text']):
-                        box['text'] = str(N) if box['label'] == "N" else str(M) if box['label'] == "M" else str(numberBob)
+                        box['text'] = str(N) if box['label'] == "Longeur" else str(M) if box['label'] == "Largeur" else str(numberBob)
                     box['active'] = False  # Désactive toutes les boîtes après l'entrée
             else:
                 for box in input_boxes:
