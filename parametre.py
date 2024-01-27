@@ -98,7 +98,8 @@ chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
-nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
+nourriturePref_quantite = True
+#True Indique si la nourriture doit être favorisée 
 #par les bobs en fonction de la quantité (True) ou de la distance (False)
 #Fonctionnement normal -> quantité
 
