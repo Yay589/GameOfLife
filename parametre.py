@@ -97,6 +97,7 @@ maxRandomPerception = 6
 maxRandomMemory = 4
 #Gentillesse
 kindnessON = False
+kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 deseaseON = False
 chancesOfFoodPoisoning = 1000 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade

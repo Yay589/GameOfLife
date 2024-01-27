@@ -148,7 +148,7 @@ class Bob():
             faim = bobMaxE - self.energy
             reste = self.case.qtite_nourriture - faim
             
-            if(deseaseON and random()%chancesOfFoodPoisoning == 1):
+            if(deseaseON and randint(0,chancesOfFoodPoisoning) == 1):
                 self.sick = True
                 self.sickTicsLeft = nbSickTics
             if (reste <= 0) :
@@ -191,6 +191,29 @@ class Bob():
                         smallBob.mourir()
                         return True
         return False
+    
+    def partageEnegie(self):
+        if(kindnessON and self.kindness>0):
+            for coord in self.coordAdjacentes(1):
+                if coord in grille :
+                    for b in grille[coord].bobs:
+                        if ((b != self) 
+                            and self.energy > b.energy
+                            and randint(0,101)<= self.kindness):
+                            energieTransmise = self.energy - b.energy
+                            if(self.kindness > 50):
+                                energieTransmise /= 2
+                            else:
+                                energieTransmise /=4
+                            self.energy -= energieTransmise
+                            b.energy += energieTransmise
+                            b.kindness += kidnessAdded
+                            if(self.sick):
+                                b.sick = True
+                                b.sickTicsLeft = nbSickTics
+                            
+                            
+                            
 #########################################################################################
     
     #Fonctions internes à ce fichier 
@@ -374,12 +397,14 @@ class Bob():
         return 0
       
 #perception
-    def coordAdjacentes(self, coordonnee): #renvoie les case visibles depuis
+    def coordAdjacentes(self, coordonnee, perception =-1): #renvoie les case visibles depuis
+        if(perception == -1):
+            perception = self.perception
         x = coordonnee[0]
         y = coordonnee[1]
         coordonneeAdjacentes = [] #liste de tuples
-        for i in range(0,trunc(self.perception+2)):
-            for j in range(0, trunc(self.perception-i+1)):
+        for i in range(0,trunc(perception+2)):
+            for j in range(0, trunc(perception-i+1)):
                 if(i==0):
                     coordonneeAdjacentes.append((x,y+j))
                     coordonneeAdjacentes.append((x,y-j))
