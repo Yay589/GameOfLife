@@ -109,7 +109,7 @@ def afficheGrilleSimpleCouleur(tick, day):
         print(" _", end="")
     print("\n")
 
-def afficheGrilleSimpleCouleurBoolean(tick, day):
+def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d'autres booleean
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
