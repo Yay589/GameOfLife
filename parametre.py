@@ -73,11 +73,11 @@ bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
 
 #caracteristiques -> pas modifiable mais si c'est plus bas ça fait un bug :
-ENERGIE = 20
-VITESSE = 21
-MASSE = 22
-PERCEPTION = 23
-MEMOIRE = 24
+ENERGIE = 1
+VITESSE = 2
+MASSE = 3
+PERCEPTION = 4
+MEMOIRE = 5
 #modifiable :
 chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
@@ -93,14 +93,21 @@ maxRandomMemory = 4
 #Gentillesse
 kindnessON = True
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
+#Maladie
 deseaseON = True
 chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
+
+#Tribues
+tribesON = True
+
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
 nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
 #par les bobs en fonction de la quantité (True) ou de la distance (False)
 #Fonctionnement normal -> quantité
+
+
 
 ###########################################################
 #Variable qui ne doivent pas être modifiées par les joueurs :
@@ -129,6 +136,12 @@ CHERCHER_NOURRITURE = 6
 DEPLACEMENT_ALEATOIRE = 7
 MOURIR_ENERGIE = 8
 MOURIR_ATTAQUE = 9
+
+#Nom des tribues : 
+FEU = 1
+GLACE = 2
+TERRE = 3
+EAU = 4
 
 #Paramètre affichage graphique :
 SCREEN_WIDTH=800
