@@ -52,10 +52,10 @@ def afficheGrilleSimpleCouleur(tick, day):
         print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
     if(memoryON):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
-    print("Bob violet : caractéristique choisie < ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "bob bleu : caractéristique < ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))
-    print("Bob vert : caractéristique < ",(parametreAffichageMin) + 3/4*(parametreAffichageMax-parametreAffichageMin), "bob jaune : caractéristique < ",parametreAffichageMax)
+    print("Valeur de la caracteristique choisie en fonction de la couleur : ")
+    print("\033[0;35mviolet\033[0;30m < ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "\033[0;34mbleu\033[0;30m < ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin), "\033[0;32mvert\033[0;30m < ",(parametreAffichageMin) + 3/4*(parametreAffichageMax-parametreAffichageMin), "\033[0;33mjaune\033[0;30m < ",parametreAffichageMax)
     if(deseaseON):
-        print("Bob blanc : malade")
+        print("Bob \033[0;37mblanc\033[0;30m : malade")
 
     for a in range(M // 2 * 3):
         print(" _", end="")
