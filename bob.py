@@ -287,7 +287,10 @@ class Bob():
         bobIndexCase = grille[self.coordinates].bobs.index(self)
         grille[self.coordinates].bobs.pop(bobIndexCase)
         del(allBobs[bobIndex])
-        self.previousAction = MOURIR
+        if(self.energy <= 0):
+            self.previousAction = MOURIR_ENERGIE
+        else:
+            self.previousAction = MOURIR_ATTAQUE
 
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
