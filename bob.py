@@ -28,6 +28,13 @@ class Bob():
 #Fonction qui devraient être utilisées dans le reste du programme :
 #########################################################################################
     #Toutes les fonctions (sauf déplacement) renvoient False si elle ne font rien et True si elles font l'action correpondante
+    def avantUnTour(self):
+        if(deseaseON and self.sick):
+            self.sickTicsLeft -= 1
+            if(self.sickTicsLeft <= 0):
+                self.sick = False
+        self.age += 1
+    
     def dejaJoue(self):
         if(self.skipingTurn):
             self.skipingTurn = False
@@ -75,7 +82,7 @@ class Bob():
                  
             #creation du bebe
             allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
-            #perte d'energie et de poid
+            #perte d'energie
             self.energy -= bobLaborE
             self.previousAction = REPRODUCTION_SOLO
             return True
@@ -108,7 +115,7 @@ class Bob():
         
         #creation du bebe
         allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
-        #perte d'energie et de poid
+        #perte d'energie
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
         bob.skipingTurn = True
@@ -140,6 +147,10 @@ class Bob():
             #calcul du gain d'energie et energie restante sur la case
             faim = bobMaxE - self.energy
             reste = self.case.qtite_nourriture - faim
+            
+            if(deseaseON and random()%chancesOfFoodPoisoning == 1):
+                self.sick = True
+                self.sickTicsLeft = nbSickTics
             if (reste <= 0) :
                 self.energy += self.case.qtite_nourriture
                 self.case.qtite_nourriture = 0
@@ -199,6 +210,9 @@ class Bob():
         self.previousCoordinates = coord #pour l'instant on va dire ça s'il vient de pop
         self.previousAction = NAITRE
         
+        #pour les stat :
+        self.age = 0
+        
         #ajout du bob dans la grille
         if(coord not in grille):
             self.case = Case(coord)
@@ -236,6 +250,11 @@ class Bob():
         self.availableMemory = trunc(bobMemory) #pour l'instant aucune case mémoirisé donc memoire dispo = memoire totale
         self.rememberedFoods = {}
         self.rememberedSquares = []
+        
+        #caractéristique supplémentaire :
+        self.kindness = 0
+        self.sick = False
+        self.sickTicsLeft = 0
 
     def mourir(self):
         self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie
@@ -302,10 +321,23 @@ class Bob():
             grille[self.coordinates].ajouterBob(self) #on ajoute un bob a la liste de bob de la case de clé coord
         
     def perdreEnergieDeplacement(self):
-        #version normale
-        energyLoss = max(((self.speed)**2 * self.mass + 1/5*trunc(self.perception) + 1/5*trunc(self.memory)),0.5)
-
-        self.energy -= energyLoss #il faudra adapter ça pour les prochaines versions
+        eVitesse = 1
+        if(speedON):
+            eVitesse = (self.speed)**2
+        eMasse = 1
+        if(massON):
+            eMass = self.mass
+        ePerception = 0
+        if(perceptionON):
+            ePerception = 1/5*trunc(self.perception)
+        eMemoire = 0
+        if(memoryON):
+            eMemoire = 1/5*trunc(self.memory)
+        
+        energyLoss = max((eVitesse * eMasse + ePerception + eMemoire),0.5)
+        if(deseaseON and self.sick):
+            energyLoss *= 2
+        self.energy -= energyLoss
     
     #le bob se deplace aléatoirement
     def bouger(self):
