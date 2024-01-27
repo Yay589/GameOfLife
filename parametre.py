@@ -41,14 +41,9 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 5 #100 Length 
-M = 100 #100 width of the map
-numberBob = 50 #100 Number of Bobs at the begining 
-
-bobS = 1 #1 Speed before mutation
-bobM = 1 #1 Mass before mutation
-bobP = 1 #1 Perception before mutation
-bobMem = 0 #0 Memory before mutation
+N = 20 #100 Length 
+M = 20 #100 width of the map
+numberBob = 10 #100 Number of Bobs at the begining 
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
@@ -84,22 +79,22 @@ MASSE = 22
 PERCEPTION = 23
 MEMOIRE = 24
 #modifiable :
-chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
+chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
 #Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
 #Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = False
+randomStartOn = True
 maxRandomSpeed = 3
 maxRandomMass = 3
 maxRandomPerception = 6
 maxRandomMemory = 4
 #Gentillesse
-kindnessON = False
+kindnessON = True
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
-deseaseON = False
-chancesOfFoodPoisoning = 1000 #1000, 1 chance sur 1000 de tomber malade
+deseaseON = True
+chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
@@ -113,9 +108,14 @@ nourriturePref_quantite = True #True Indique si la nourriture doit être favoris
 #La grille     
 grille = defaultdict(Case)
 
+#caratéristiques de base
+bobS = 1 #1 Speed before mutation
+bobM = 1 #1 Mass before mutation
+bobP = 1 #1 Perception before mutation
+bobMem = 0 #0 Memory before mutation
+
 #Les listes de Bobs
 allBobs = []
-aliveBobs = []
 deadBobs = []
 
 #previous action

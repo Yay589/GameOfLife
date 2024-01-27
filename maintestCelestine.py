@@ -14,12 +14,12 @@ def allBobsSpeakM():
          b.speakMass()
 
 if __name__ == '__main__':
-    #for i in range(20):
-    #    allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
+    for i in range(numberBob):
+        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
     
-    allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
-    allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
-    allBobs.append(Bob(bobMass = 9, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    #allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    #allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    #allBobs.append(Bob(bobMass = 9, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
 
 
     """
@@ -44,8 +44,8 @@ if __name__ == '__main__':
                         if(not b.manger() and not b.attaque()):
                             b.bobDeplacement()
                 print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleur()
-                time.sleep(0.5)
+                afficheGrilleSimpleCouleur(N,M)
+                time.sleep(0.1)
     
     
     """
