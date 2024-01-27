@@ -51,6 +51,19 @@ def avgMass():
         return(-1)
     else:
         return(massSum/i)
+    
+def avgEnergy():
+    i = 0
+    energySum = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            energySum += b.energy
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(energySum/i)
 
 
 def nbBobs(): #c'est la même taille que len(allBobs) normalement
@@ -172,6 +185,34 @@ def minMemory():
     else:
         return(minMemory)
     
+def maxEnergy():
+    i = 0
+    maxEnergy = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.energy > maxEnergy):
+                maxEnergy = b.energy
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(maxEnergy)
+    
+def minEnergy():
+    i = 0
+    minEnergy = avgEnergy()
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.energy < minEnergy):
+                minEnergy = b.energy
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return(minEnergy)
+    
 def minChosenCaracteristic():
     if(chosenCarateristic == VITESSE):
         return minSpeed()
@@ -181,6 +222,8 @@ def minChosenCaracteristic():
         return minPerception()
     elif(chosenCarateristic == MEMOIRE):
         return minMemory()
+    elif(chosenCarateristic == ENERGIE):
+        return 0
     
 def maxChosenCaracteristic():
     if(chosenCarateristic == VITESSE):
@@ -191,6 +234,8 @@ def maxChosenCaracteristic():
         return maxPerception()
     elif(chosenCarateristic == MEMOIRE):
         return maxMemory()
+    elif(chosenCarateristic == ENERGIE):
+        return bobMaxE
     
 def avgChosenCaracteristic():
     if(chosenCarateristic == VITESSE):
@@ -201,4 +246,6 @@ def avgChosenCaracteristic():
         return avgPerception()
     elif(chosenCarateristic == MEMOIRE):
         return avgMemory()
+    elif(chosenCarateristic == ENERGIE):
+        return bobMaxE/2
     

@@ -134,7 +134,7 @@ def afficheGrilleCrochet():
 
 
 
-def afficheGrilleSimpleCouleur():
+def afficheGrilleSimpleCouleur(N,M):
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
@@ -147,19 +147,27 @@ def afficheGrilleSimpleCouleur():
     memoireMoy = avgMemory()
     memoireMax = maxMemory()
     memoireMin = minMemory()
+    energieMoy = avgEnergy()
+    energieMax = maxEnergy()
+    energieMin = minEnergy()
     
     
     parametreAffichageMoy = avgChosenCaracteristic()
     parametreAffichageMin = minChosenCaracteristic()
     parametreAffichageMax = maxChosenCaracteristic()
     
-    print("Nombre de bob",len(allBobs))
-    print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maimum : ",trunc(vitesseMax*1000)/1000)
-    print("Masse moyenne : ",trunc(masseMoy*1000)/1000,"Masse minimale : ", trunc(masseMin*1000)/1000, "Masse maimum : ",trunc(masseMax*1000)/1000)
-    print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maimum : ",trunc(perceptionMax*1000)/1000)
-    print("Perception moyenne : ",trunc(memoireMoy*1000)/1000,"Perception minimale : ", trunc(memoireMin*1000)/1000, "Perception maimum : ",trunc(memoireMax*1000)/1000)
-    print("Masse moyenne : ",trunc(parametreAffichageMoy*1000)/1000,"Masse minimale : ", trunc(parametreAffichageMin*1000)/1000, "Masse maimum : ",trunc(parametreAffichageMax*1000)/1000)
-    print("nombre : ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "autre nombre : ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))
+    print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
+    print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
+    if(speedON):
+        print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maximum : ",trunc(vitesseMax*1000)/1000)
+    if(massON):
+        print("Masse moyenne : ",trunc(masseMoy*1000)/1000,"Masse minimale : ", trunc(masseMin*1000)/1000, "Masse maximum : ",trunc(masseMax*1000)/1000)
+    if(perceptionON):
+        print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
+    if(memoryON):
+        print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
+    print("Bob violet : caractéristique choisie < ",(parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin), "bob bleu : caractéristique < ", parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))
+    print("Bob vert : caractéristique < ",(parametreAffichageMin) + 3/4*(parametreAffichageMax-parametreAffichageMin), "bob jaune : caractéristique < ",parametreAffichageMax)
 
     for a in range(M // 2 * 3):
         print(" _", end="")
@@ -174,11 +182,15 @@ def afficheGrilleSimpleCouleur():
                     elif(chosenCarateristic == MASSE):
                         caracteritique = grille[(i, j)].bobs[0].mass
                     elif(chosenCarateristic == PERCEPTION):
-                        caracteritique = grille[(i, j)].bob[0].perception
+                        caracteritique = grille[(i, j)].bobs[0].perception
                     elif(chosenCarateristic == MEMOIRE):
-                        caracteritique = grille[(i, j)].bob[0].memory
+                        caracteritique = grille[(i, j)].bobs[0].memory
+                    elif(chosenCarateristic == ENERGIE):
+                        caracteritique = grille[(i, j)].bobs[0].energy
                     
-                    if (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
+                    if (deseaseON and grille[(i,j)].bobs[0].sick):
+                        print("\033[0;37m ○ \033[0;30m", end="") # blanc
+                    elif (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
                         print("\033[0;35m ○ \033[0;30m", end="") #rose 35
                     elif ((caracteritique < (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique >= (parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin)))):
                         print("\033[0;34m ○ \033[0;30m", end="") #bleu 34

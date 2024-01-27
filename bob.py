@@ -192,7 +192,7 @@ class Bob():
                         return True
         return False
     
-    def partageEnegie(self):
+    def partageEnergie(self):
         if(kindnessON and self.kindness>0):
             for coord in self.coordAdjacentes(1):
                 if coord in grille :
