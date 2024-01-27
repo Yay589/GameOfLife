@@ -17,6 +17,12 @@ def allBobsPrevious():
     for b in allBobs:
         b.speakPreviousAction()
 
+def allBobsPreviousNotRandomMove():
+    for b in allBobs:
+        if(b.previousAction != DEPLACEMENT_ALEATOIRE):
+            b.speakPreviousAction()
+        
+
 if __name__ == '__main__':
     for i in range(numberBob):
         allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,N-1))))
@@ -37,20 +43,27 @@ if __name__ == '__main__':
         time.sleep(0.05)
     
     """
-    for k in range(1):
-        for j in range(1):
+    
+    day = 0
+    for k in range(10):
+        for j in range(3):
+            day += 1
+            tick = 0
             renouvellerNourriture()
             for i in range(20):
+                tick += 1
                 for b in allBobs:
                     b.avantUnTour()
                     if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
                         b.partageEnergie()
                         if(not b.manger() and not b.attaque()):
                             b.bobDeplacement()
-                #print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleur(N,M)
-                allBobsPrevious()
+                print("\033[H\033[J",end="")
+                afficheGrilleSimpleCouleur(tick, day)
                 time.sleep(0.1)
+                allBobsPreviousNotRandomMove()
+
+            
     
     
     """

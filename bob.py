@@ -710,5 +710,7 @@ class Bob():
         print("(Bob) Je suis en : ",self.coordinates,"J'ai une masse de ",self.mass)
     
     def speakPreviousAction(self):
-        print("(Bob) Je suis en : ",self.coordinates,"J'ai",self.energy,"energie","Ma dernière action était : ",self.previousAction)
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai",trunc(self.energy),"energie","Ma dernière action était : ",self.previousAction)
 
+    
+    

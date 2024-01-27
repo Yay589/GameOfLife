@@ -134,7 +134,7 @@ def afficheGrilleCrochet():
 
 
 
-def afficheGrilleSimpleCouleur(N,M):
+def afficheGrilleSimpleCouleur(tick, day):
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
@@ -156,6 +156,7 @@ def afficheGrilleSimpleCouleur(N,M):
     parametreAffichageMin = minChosenCaracteristic()
     parametreAffichageMax = maxChosenCaracteristic()
     
+    print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
     print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
     if(speedON):
