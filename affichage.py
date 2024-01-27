@@ -37,10 +37,13 @@ def afficheGrilleSimpleCouleur(tick, day):
     parametreAffichageMoy = avgChosenCaracteristic()
     parametreAffichageMin = minChosenCaracteristic()
     parametreAffichageMax = maxChosenCaracteristic()
+    nbmalade = nbBobs_malade()
+    longevityMoy = avgLongevity()
     
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
     print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
+    print("Nombre de Bob malade :", nbmalade, "Longévité de Bob :", longevityMoy)
     if(speedON):
         print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maximum : ",trunc(vitesseMax*1000)/1000)
     if(massON):
