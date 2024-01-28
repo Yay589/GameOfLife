@@ -11,7 +11,7 @@ def avgSpeed():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(speedSum/i)
+        return round((speedSum/i),5)
     
 def avgPerception():
     i = 0
@@ -24,7 +24,7 @@ def avgPerception():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(perceptionSum/i)
+        return round((perceptionSum/i),5)
     
 def avgMemory():
     i = 0
@@ -37,7 +37,7 @@ def avgMemory():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(memSum/i)
+        return round((memSum/i),5)
 
 def avgMass():
     i = 0
@@ -50,7 +50,7 @@ def avgMass():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(massSum/i)
+        return round((massSum/i),5)
     
 def avgEnergy():
     i = 0
@@ -63,7 +63,7 @@ def avgEnergy():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(energySum/i)
+        return round(energySum/i,5)
 
 
 def nbBobs(): #c'est la même taille que len(allBobs) normalement
@@ -96,7 +96,7 @@ def avgLongevity():
         i += bob.age
         j += 1
     if j > 0:
-        return i / j
+        return round(i / j,5)
     else:
         return 0
         
@@ -112,7 +112,7 @@ def maxSpeed():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(maxSpeed)
+        return round(maxSpeed,5)
     
 def minSpeed():
     i = 0
@@ -126,7 +126,7 @@ def minSpeed():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(minSpeed)
+        return round(minSpeed,5)
 
 def maxMass():
     i = 0
@@ -140,7 +140,7 @@ def maxMass():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(maxMass)
+        return round(maxMass,5)
     
 def minMass():
     i = 0
@@ -154,7 +154,7 @@ def minMass():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(minMass)
+        return round(minMass,5)
     
 def maxPerception():
     i = 0
@@ -168,7 +168,7 @@ def maxPerception():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(maxPerception)
+        return round(maxPerception,5)
     
 def minPerception():
     i = 0
@@ -182,7 +182,7 @@ def minPerception():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(minPerception)
+        return round(minPerception,5)
     
 def maxMemory():
     i = 0
@@ -196,7 +196,7 @@ def maxMemory():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(maxMemory)
+        return round(maxMemory,5)
     
 def minMemory():
     i = 0
@@ -210,7 +210,7 @@ def minMemory():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(minMemory)
+        return round(minMemory,5)
     
 def maxEnergy():
     i = 0
@@ -224,7 +224,7 @@ def maxEnergy():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(maxEnergy)
+        return round(maxEnergy,5)
     
 def minEnergy():
     i = 0
@@ -238,7 +238,7 @@ def minEnergy():
         print("Tout les bobs sont mort")
         return(-1)
     else:
-        return(minEnergy)
+        return round(minEnergy,5)
     
 def minChosenCaracteristic():
     if(chosenCarateristic == VITESSE):
