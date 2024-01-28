@@ -46,14 +46,13 @@ allBobs = []
 aliveBobs = []
 deadBobs = []
 
-
 #Paramètres simulation :
-N = 50 #100 Length or width of the map (grid of N*N)
+N = 10 #100 Length or width of the map (grid of N*N)
 numberBob = 100 #100 Number of Bobs at the begining 
-numberFood = 10 #200 Number of food points par day
-foodE = 50 #100 Quantity of energy per food point
+numberFood = 25 #200 Number of food points par day
+foodE = 100 #100 Quantity of energy per food point
 
-T = 100 #100 Number of ticks in a day
+#T = 100 #100 Number of ticks in a day
 
 bobMaxE = 200 #200 Max of energy of a bob
 bobSpawnE = 100 #100 Quantity of energy when spawning
@@ -63,7 +62,7 @@ bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproductio
 bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
 
-bobS = 1 #1 Speed before mutation
+bobS = 5 #1 Speed before mutation
 bobM = 1 #1 Mass before mutation
 bobP = 1 #1 Perception before mutation
 bobMem = 0 #0 Memory before mutation
