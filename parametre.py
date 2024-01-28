@@ -41,9 +41,9 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 100
-M = 100
-numberBob = 100
+N = 30
+M = 50
+numberBob = 50
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
