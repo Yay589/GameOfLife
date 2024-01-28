@@ -369,13 +369,13 @@ class Game:
 
                 font = pygame.font.Font(None, int(24*(SCREEN_HEIGHT/600)))
                 lines = [
-                    f"Tick for one day:{self.tick_by_day}",
-                    f"Energy for each food:{foodE}",
+                    f"Number of ticks in a day :{self.tick_by_day}",
+                    f"Quantity of energy each food contains :{foodE}",
                     f"SCREEN_WIDTH:{SCREEN_WIDTH}",
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
-                    f"Number of cases:{N}",
+                    f"Map size:{N}",
                     f"Bob custom:{self.costum}",
-                    f"case custom:{self.costum_case}"
+                    f"Case custom:{self.costum_case}"
                 ]
 
                 deplace=SCREEN_HEIGHT//8
