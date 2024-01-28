@@ -41,14 +41,14 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 30 #100 Length 
-M = 20 #100 width of the map
-numberBob = 10 #100 Number of Bobs at the begining 
+N = 30
+M = 50
+numberBob = 50
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = True #False : terminal, True : graphique
+graphicalInterfaceON = True
 #True : ON 
 #False : OFF
 soloReproductionON = True
@@ -59,7 +59,7 @@ perceptionON = True
 memoryON = True
 
     #Valeurs des variables :
-numberFood = 5 #200 Number of food points par day
+numberFood = 60 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
@@ -73,13 +73,13 @@ bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
 
 #caracteristiques -> pas modifiable mais si c'est plus bas ça fait un bug :
-ENERGIE = 20
-VITESSE = 21
-MASSE = 22
-PERCEPTION = 23
-MEMOIRE = 24
+ENERGIE = 1
+VITESSE = 2
+MASSE = 3
+PERCEPTION = 4
+MEMOIRE = 5
 #modifiable :
-chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
+chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
@@ -92,15 +92,27 @@ maxRandomPerception = 6
 maxRandomMemory = 4
 #Gentillesse
 kindnessON = True
+birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
+#Maladie
 deseaseON = True
-chancesOfFoodPoisoning = 10 #1000, 1 chance sur 1000 de tomber malade
+chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
+#Tribues
+tribesON = True
+tribesRandom = True
+#Education
+educationON = True
+chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
+
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
-nourriturePref_quantite = True #True Indique si la nourriture doit être favorisée 
+nourriturePref_quantite = True
+#True Indique si la nourriture doit être favorisée 
 #par les bobs en fonction de la quantité (True) ou de la distance (False)
 #Fonctionnement normal -> quantité
+
+
 
 ###########################################################
 #Variable qui ne doivent pas être modifiées par les joueurs :
@@ -127,7 +139,14 @@ FUIRE = 4
 CHASSER = 5
 CHERCHER_NOURRITURE = 6
 DEPLACEMENT_ALEATOIRE = 7
-MOURIR = 8
+MOURIR_ENERGIE = 8
+MOURIR_ATTAQUE = 9
+
+#Nom des tribues : 
+FEU = 1
+GLACE = 2
+TERRE = 3
+EAU = 4
 
 #Paramètre affichage graphique :
 SCREEN_WIDTH=800

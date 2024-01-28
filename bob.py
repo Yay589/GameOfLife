@@ -69,6 +69,7 @@ class Bob():
             perceptionBebe = bobP
             memoireBebe = bobMem
             massBebe = bobM
+            tribueBebe = -1 #si tribue désactivé -> TO DO : peut etre mettre à 1 et dire que si y'a pas de tribue c'est équivalent à en avoir une seule grande
             
             #calcul des données héreditaire (si caractéritique activée)
             if(speedON):
@@ -79,9 +80,11 @@ class Bob():
                 memoireBebe = max((self.memory + randint(-1,1)),0)
             if(massON):
                 massBebe = max((self.mass + random()), 0)
+            if(tribesON):
+                tribueBebe = self.tribe
                  
             #creation du bebe
-            allBobs.append(Bob(skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
+            allBobs.append(Bob(bobTribe = tribueBebe, skiping = True, bobEnergy = bobBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
             #perte d'energie
             self.energy -= bobLaborE
             self.previousAction = REPRODUCTION_SOLO
@@ -102,6 +105,8 @@ class Bob():
         perceptionBebe = bobP
         memoireBebe = bobMem
         massBebe = bobM
+        tribueBebe = -1 #si tribue désactivé -> TO DO : peut etre mettre à 1 et dire que si y'a pas de tribue c'est équivalent à en avoir une seule grande
+
             
         #calcul des données héreditaire (si caractéritique activée)
         if(speedON):
@@ -112,9 +117,11 @@ class Bob():
             memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
         if(massON):
             massBebe = max(((self.mass + bob.mass)/2 + random()), 0)
+        if(tribesON):
+            tribueBebe = self.tribe
         
         #creation du bebe
-        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, coord = self.coordinates))
+        allBobs.append(Bob(skiping = True, bobEnergy = bobSexBirthE, bobSpeed = vitesseBebe, bobPerception = perceptionBebe, bobMemory = memoireBebe, bobMass = massBebe, bobTribe= tribueBebe, coord = self.coordinates))
         #perte d'energie
         self.energy -= bobSexLaborE
         bob.energy -= bobSexLaborE
@@ -186,26 +193,35 @@ class Bob():
     def attaque(self):
         if(perceptionON and len(grille[self.coordinates].bobs)>= 2):
             for smallBob in (grille[self.coordinates].bobs) :
-                if(smallBob != self):
-                    if(self.mass > 1.5*smallBob.mass):
+                if((smallBob != self) and (not tribesON or self.tribe != smallBob.tribe)): #soit tribue desactivé soit pas la même tribue
+                    if((self.mass > 1.5*smallBob.mass)):
                         self.energy += 0.5*smallBob.energy*(1-smallBob.mass/self.mass)
                         smallBob.mourir()
                         return True
         return False
     
     def partageEnergie(self):
-        if(kindnessON and self.kindness>0):
-            for coord in self.coordAdjacentes(1):
+        if(educationON and self.educated and self.sick):
+            return False
+        elif(kindnessON and self.kindness>0):
+            for coord in self.coordAdjacentes(self.coordinates,1): 
                 if coord in grille :
                     for b in grille[coord].bobs:
+                        gentillesse = self.kindness
+                        if(tribesON):
+                            if(self.tribe == b.tribe):
+                                gentillesse = (gentillesse*2)%100
+                            else:
+                                gentillesse = gentillesse / 2
                         if ((b != self) 
                             and self.energy > b.energy
-                            and randint(0,101)<= self.kindness):
+                            and randint(0,101)<= gentillesse):
                             energieTransmise = self.energy - b.energy
                             if(self.kindness > 50):
                                 energieTransmise /= 2
                             else:
                                 energieTransmise /=4
+                            
                             self.energy -= energieTransmise
                             b.energy += energieTransmise
                             b.kindness += kidnessAdded
@@ -213,7 +229,16 @@ class Bob():
                                 b.sick = True
                                 b.sickTicsLeft = nbSickTics
                             
-                            
+    def eduquer(self):
+        if(educationON and self.educated):
+            for coord in self.coordAdjacentes(self.coordinates,1):
+                if coord in grille :
+                    for b in grille[coord].bobs:
+                        if(b.skipingTurn == False and b.educated == False):
+                            b.educated = True
+                            b.skipingTurn = True
+                            return True
+        return False
                             
 #########################################################################################
     
@@ -225,6 +250,7 @@ class Bob():
                  bobMass = bobM, 
                  bobPerception = bobP, 
                  bobMemory = bobMem,
+                 bobTribe = 0,
                  coord = (randint(0,N-1),randint(0,M-1)) ) :
         self.energy = bobEnergy
         #coordonnee
@@ -276,9 +302,27 @@ class Bob():
         self.rememberedSquares = []
         
         #caractéristique supplémentaire :
-        self.kindness = 0
+        self.kindness = birthKindness
         self.sick = False
         self.sickTicsLeft = 0
+        if(bobTribe == 0):
+            if(tribesRandom):
+                self.tribe = randint(1,4)
+            else:
+                if(self.coordinates[0]<= N/2 and self.coordinates[1]<= M/2):
+                    self.tribe = 1
+                elif(self.coordinates[0]<= N/2 and self.coordinates[1]> M/2):
+                    self.tribe = 2
+                elif(self.coordinates[0]> N/2 and self.coordinates[1]<= M/2):
+                    self.tribe = 3
+                elif(self.coordinates[0]> N/2 and self.coordinates[1]> M/2):
+                    self.tribe = 4
+        else:
+            self.tribe = bobTribe
+        self.educated = False
+        if(educationON and randint(1,chancesOfBeingBornEducated)==1):  
+            self.educated = True
+
 
     def mourir(self):
         self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie
@@ -287,7 +331,10 @@ class Bob():
         bobIndexCase = grille[self.coordinates].bobs.index(self)
         grille[self.coordinates].bobs.pop(bobIndexCase)
         del(allBobs[bobIndex])
-        self.previousAction = MOURIR
+        if(self.energy <= 0):
+            self.previousAction = MOURIR_ENERGIE
+        else:
+            self.previousAction = MOURIR_ATTAQUE
 
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
@@ -578,7 +625,7 @@ class Bob():
         min_distance_proie = trunc(self.perception)
         for coord in self.bobsEnVue():
             for otherBob in grille[coord].bobs:
-                if(not (otherBob is self)):
+                if(not (otherBob is self) and (not tribesON or self.tribe != otherBob.tribe)):
                     distance = self.distance(otherBob.coordinates)
                     if (otherBob.mass > 3/2*self.mass):
                         bobEnDanger = True
@@ -678,7 +725,8 @@ class Bob():
     def partenaireDisponible(self): #renvoie un bob pret à faire un bébé 
         for b in self.case.bobs:
             if((b.energy >= 150) and (not b.enDanger()) and (b != self)): #fonction enDanger à remplacer par la fonction de Huy correspondante
-                return b
+                if(not tribesON or b.tribe == self.tribe):
+                    return b
         return None
 
 #Attaquez vos semblables s'ils manquent de nourriture    
@@ -710,5 +758,7 @@ class Bob():
         print("(Bob) Je suis en : ",self.coordinates,"J'ai une masse de ",self.mass)
     
     def speakPreviousAction(self):
-        print("(Bob) Je suis en : ",self.coordinates,"J'ai",self.energy,"energie","Ma dernière action était : ",self.previousAction)
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai",trunc(self.energy),"energie","Ma dernière action était : ",self.previousAction)
 
+    
+    
