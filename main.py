@@ -17,7 +17,7 @@ def start():
         
         if x == "1":
             print("Chargement de l'interface graphique en cours..")
-            subprocess.run(["python3", "Gui.py"])
+            subprocess.run(["python3", "maintest.py"])
         elif x == "2":
             print("Chargement de l'interface console en cours..")
             subprocess.run(["python3", "maintesttapha.py"])

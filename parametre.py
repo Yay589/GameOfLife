@@ -41,22 +41,22 @@ class Case():
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 30
-M = 50
-numberBob = 50
+N = 100
+M = 100
+numberBob = 100
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = True
+graphicalInterfaceON = False
 #True : ON 
 #False : OFF
-soloReproductionON = True
-duoReproductionON = True
+soloReproductionON = False
+duoReproductionON = False
 speedON = True
-massON = True
-perceptionON = True
-memoryON = True
+massON = False
+perceptionON = False
+memoryON = False
 
     #Valeurs des variables :
 numberFood = 60 #200 Number of food points par day
