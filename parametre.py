@@ -1,60 +1,14 @@
 from collections import defaultdict
 
-class Case():
-    def __init__(self, coord, liste_bobs=None, qtite_nourriture=0):
-        self.coordonnee = coord
-        if (liste_bobs is None):
-            self.bobs = []
-        else:
-            self.bobs = liste_bobs
-        self.qtite_nourriture = qtite_nourriture
-        grille[coord] = self
-
-    def ajouterBob(self, bob):
-        self.bobs.append(bob)
-
-    def enleverBob(self, bob):
-        bobIndex = self.bobs.index(bob)
-        del (self.bobs[bobIndex])
-        # si il a plus rien on enleve la case du dictionnaire
-        self.supprimer() #a enlever si on enlevela liste de bob et qu'on a un dictionnaire temporaire plutôt
-    
-    def ajouterNourriture(self, qtite_nourriture = 100):
-        self.qtite_nourriture += qtite_nourriture
-
-    def viderNourriture(self):
-        self.qtite_nourriture = 0
-
-    def estVide(self):
-        return ((self.qtite_nourriture == 0) and ((self.bobs == []) or (self.bobs == None)))
-
-    def supprimer(self):
-        if (self.estVide()): #eventuellement faire le test avant d'appeller supprimer et là renvoyer une erreur si le test à pas validé
-            del grille[self.coordonnee] #on enleve de la grille
-            self = None #on oublie l'objet pour le supprimer de la mémoire
-
-    def speak(self):
-        print("(Case) Je suis en : ", self.coordonnee, ", je contiens : " \
-              , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
-
-
-########################################################################
+Relancer = True
+###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 10
-M = 10
+N = 100
+M = 100
+numberBob = 100
 
-numberBob = 50
-
-#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
-#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = False
-maxRandomSpeed = 3
-maxRandomMass = 3
-maxRandomPerception = 6
-maxRandomMemory = 4
-
-########################################################################
+###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
 graphicalInterfaceON = True
@@ -63,7 +17,7 @@ graphicalInterfaceON = True
 soloReproductionON = True
 duoReproductionON = True
 speedON = True
-massON = False #TODO
+massON = True
 perceptionON = True
 memoryON = True
 
@@ -92,19 +46,26 @@ chosenCarateristic = MASSE # Indique quelle caractéristique doit être represen
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = True
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
 #Gentillesse
-kindnessON = True #+++
+kindnessON = True
 birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
-deseaseON = True #+++
-chancesOfFoodPoisoning = 50 #+++ #1000, 1 chance sur 1000 de tomber malade
+deseaseON = True
+chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = True
-tribesRandom = False #+++
+tribesRandom = True
 #Education
-educationON = True #+++
+educationON = True
 chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 
 
@@ -115,12 +76,12 @@ nourriturePref_quantite = True
 #Fonctionnement normal -> quantité
 
 
-########################################################################
-########################################################################
+
+###########################################################
 #Variable qui ne doivent pas être modifiées par les joueurs :
 
 #La grille     
-grille = defaultdict(Case)
+grille = {}
 
 #caratéristiques de base
 bobS = 1 #1 Speed before mutation
@@ -156,8 +117,4 @@ SCREEN_HEIGHT=600
 
 #list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(N)]
 
-def N_diminuer():
-    N-=1
-def N_augment():
-    N+=1
 

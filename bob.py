@@ -309,13 +309,13 @@ class Bob():
             if(tribesRandom):
                 self.tribe = randint(1,4)
             else:
-                if(self.coordinates[0]< N/2 and self.coordinates[1]< M/2):
+                if(self.coordinates[0]<= N/2 and self.coordinates[1]<= M/2):
                     self.tribe = 1
-                elif(self.coordinates[0]< N/2 and self.coordinates[1]>= M/2):
+                elif(self.coordinates[0]<= N/2 and self.coordinates[1]> M/2):
                     self.tribe = 2
-                elif(self.coordinates[0]>= N/2 and self.coordinates[1]< M/2):
+                elif(self.coordinates[0]> N/2 and self.coordinates[1]<= M/2):
                     self.tribe = 3
-                elif(self.coordinates[0]>= N/2 and self.coordinates[1]>= M/2):
+                elif(self.coordinates[0]> N/2 and self.coordinates[1]> M/2):
                     self.tribe = 4
         else:
             self.tribe = bobTribe
