@@ -21,6 +21,11 @@ massON = True
 perceptionON = True
 memoryON = True
 
+mutSpeedON = True
+mutMassON = True
+mutPerceptionON = True
+mutMemoryON = True
+
     #Valeurs des variables :
 numberFood = 60 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point

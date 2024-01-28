@@ -72,13 +72,13 @@ class Bob():
             tribueBebe = -1 #si tribue désactivé -> TO DO : peut etre mettre à 1 et dire que si y'a pas de tribue c'est équivalent à en avoir une seule grande
             
             #calcul des données héreditaire (si caractéritique activée)
-            if(speedON):
+            if(speedON and mutSpeedON):
                 vitesseBebe = max((self.speed + random()%0.2 - 0.1),0)
-            if(perceptionON):    
+            if(perceptionON and mutPerceptionON):    
                 perceptionBebe = max((self.perception + randint(-1,1)),0)
-            if(memoryON):
+            if(memoryON and mutMemoryON):
                 memoireBebe = max((self.memory + randint(-1,1)),0)
-            if(massON):
+            if(massON and mutMassON):
                 massBebe = max((self.mass + random()), 0)
             if(tribesON):
                 tribueBebe = self.tribe
@@ -109,13 +109,13 @@ class Bob():
 
             
         #calcul des données héreditaire (si caractéritique activée)
-        if(speedON):
+        if(speedON and mutSpeedON):
             vitesseBebe = max(((self.speed + bob.speed)/2 + random()%0.2 - 0.1),0)
-        if(perceptionON):    
+        if(perceptionON and mutPerceptionON):    
             perceptionBebe = max(((self.perception + bob.perception)/2 + randint(-1,1)),0)
-        if(memoryON):
+        if(memoryON and mutMemoryON):
             memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
-        if(massON):
+        if(massON and mutMassON):
             massBebe = max(((self.mass + bob.mass)/2 + random()), 0)
         if(tribesON):
             tribueBebe = self.tribe
