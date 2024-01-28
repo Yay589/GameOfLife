@@ -781,7 +781,7 @@ class Game:
 
             font = pygame.font.Font(None, 40)
             font2 = pygame.font.Font(None, 20)
-            lines = ["START", "START WITH LOAD"]
+            lines = ["START NEW GAME", "LOAD PREVIOUS GAME"]
             deplace = SCREEN_HEIGHT//2
             keys = pygame.key.get_pressed()
 
