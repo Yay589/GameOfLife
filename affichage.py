@@ -14,9 +14,13 @@ from case import Case
 from bob import Bob
 from math import *
 from statistiques import *
+from keyboard import read_key
 
+def ecouteClavier():
+    touche = read_key()
 
 def afficheGrilleSimpleCouleur(tick, day):
+    
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
