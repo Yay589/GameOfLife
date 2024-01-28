@@ -15,8 +15,8 @@ from bob import Bob
 from math import *
 from statistiques import *
 
-
 def afficheGrilleSimpleCouleur(tick, day):
+    
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()

@@ -38,14 +38,23 @@ class Case():
               , len(self.bobs), " bobs. Et : ", self.qtite_nourriture, "point de nourriture \n")
 
 
-###########################################################
+########################################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 30
-M = 50
+N = 10
+M = 10
+
 numberBob = 50
 
-###########################################################
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = False
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
+
+########################################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
 graphicalInterfaceON = True
@@ -54,7 +63,7 @@ graphicalInterfaceON = True
 soloReproductionON = True
 duoReproductionON = True
 speedON = True
-massON = True
+massON = False #TODO
 perceptionON = True
 memoryON = True
 
@@ -83,26 +92,19 @@ chosenCarateristic = MASSE # Indique quelle caractéristique doit être represen
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
-#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
-#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = True
-maxRandomSpeed = 3
-maxRandomMass = 3
-maxRandomPerception = 6
-maxRandomMemory = 4
 #Gentillesse
-kindnessON = True
+kindnessON = True #+++
 birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
-deseaseON = True
-chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
+deseaseON = True #+++
+chancesOfFoodPoisoning = 50 #+++ #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = True
-tribesRandom = True
+tribesRandom = False #+++
 #Education
-educationON = True
+educationON = True #+++
 chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 
 
@@ -113,8 +115,8 @@ nourriturePref_quantite = True
 #Fonctionnement normal -> quantité
 
 
-
-###########################################################
+########################################################################
+########################################################################
 #Variable qui ne doivent pas être modifiées par les joueurs :
 
 #La grille     
