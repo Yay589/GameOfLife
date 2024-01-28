@@ -370,7 +370,7 @@ class Game:
                 font = pygame.font.Font(None, int(24*(SCREEN_HEIGHT/600)))
                 lines = [
                     f"Number of ticks in a day :{self.tick_by_day}",
-                    f"Quantity of energy each food contains :{foodE}",
+                    f"Energy contained in a cake slice :{foodE}",
                     f"SCREEN_WIDTH:{SCREEN_WIDTH}",
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
                     f"Map size:{N}",
