@@ -195,13 +195,14 @@ class Game:
         
 
         lines = [
-            f"avgSpeed():{avgSpeed()}",
-            f"avgPerception():{avgPerception()}",
-            f"avgMemory():{avgMemory()}",
-            f"avgMass():{avgMass()}",
-            f"avgEnergy():{avgEnergy()}",
-            f"nbBobs():{nbBobs()}",
-            f"maxSpeed():{maxSpeed()}"
+            f"Curent values : ",
+            f"Average velocity :{trunc(avgSpeed()*100)/100}",
+            f"Average perception :{trunc(avgPerception()*100)/100}",
+            f"Average memory :{trunc(avgMemory()*100)/100}",
+            f"Average mass :{trunc(avgMass()*100)/100}",
+            f"Average energy:{trunc(avgEnergy()*100)/100}",
+            f"Number of bobs :{nbBobs()}",
+            f"Maximum velocity :{trunc(maxSpeed()*100)/100}"
         ]
 
         
