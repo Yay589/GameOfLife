@@ -794,7 +794,7 @@ class Game:
                 if text_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
                     self.selected_index_start=i
 
-            notion="press m or click on the option you want , then press enter for enter game"
+            notion="select an option (or 'm') then press enter"
             text = font2.render(notion, True, (0,0,0))
             text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, deplace + 200))
             screen.blit(text, text_rect)
