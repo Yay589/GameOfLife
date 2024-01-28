@@ -9,6 +9,8 @@ from bob import Bob
 from affichage import *
 import collections
 import time
+import random
+from itertools import count
 
 #fonction pour avoir des infos globales sur notre grille
 def avgSpeed():
@@ -27,27 +29,26 @@ def avgSpeed():
 
 
 if __name__ == '__main__':
-    # for x in range(T):
-        for i in range(3):
-        
+        for i in range(numberBob):
             allBobs.append(Bob(coord=(randint(0,N-1),randint(0,N-1)),bobPerception=10))
-            # allBobs[i].speak()
         
-        for j in range(7):
+        afficheGrilleSimpleCouleur(0,0)
+        day = 0
+        for j in count():
             #os.system("clear")  
             print("Debut de journée")
-            renouvellerNourriture() 
-            for k in range(20):
-                print("\033[H\033[J",end="")
-                afficheGrilleSimple()
-                time.sleep(0.5)
+            renouvellerNourriture()
+            for k in range(T):
+                random.shuffle(allBobs) #Pour que ca ne soit pas toujours les memes bobs qui bougent en premier
                 for b in allBobs:
-                
-                    if(not b.dejaJoue() and not b.seProteger() and not b.manger() and not b.reproduction()):
-                        b.bobDeplacement()
-                        b.speak()
-       
-            afficheGrilleSimple()
+                    b.avantUnTour()
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
+                        b.partageEnergie()
+                        if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
+                            b.bobDeplacement()
+                print("\033[H\033[J",end="")
+                afficheGrilleSimpleCouleurEducation(k, j)
+                time.sleep(0.1)
         
         
         

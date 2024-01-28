@@ -8,107 +8,66 @@ from bob import Bob
 from affichage import *
 import collections
 import time
-#import os
-
-def avgSpeed():
-    i = 0
-    speedSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            speedSum += b.speed
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(speedSum/i)
-    
-def avgPerception():
-    i = 0
-    perceptionSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            perceptionSum += b.perception
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(perceptionSum/i)
-    
-def avgMemory():
-    i = 0
-    memSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            memSum += b.memory
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont mort")
-        return(-1)
-    else:
-        return(memSum/i)
-
-
-def nbBobs(): #c'est la même taille que len(allBobs) normalement
-    i = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            i += 1
-    return i
 
 def allBobsSpeakM():
     for b in allBobs:
-         b.speakMass()
+        b.speakMass()
+
+def allBobsPrevious():
+    for b in allBobs:
+        b.speakPreviousAction()
+
+def allBobsPreviousNotRandomMove():
+    for b in allBobs:
+        if(b.previousAction != DEPLACEMENT_ALEATOIRE):
+            b.speakPreviousAction()
+        
 
 if __name__ == '__main__':
+    for i in range(numberBob):
+        allBobs.append(Bob(bobPerception=6, coord=(randint(0,N-1),randint(0,M-1))))
     
-    # for i in range(numberBob):
-    #     allBobs.append(Bob())
-        
-    bob1 = Bob(bobEnergy=200,bobSpeed = 2, bobPerception = 6,bobMemory= 0,bobMass = 1, coord = (2,2))
-    bob2 = Bob(bobEnergy=200,bobSpeed = 1, bobPerception = 6,bobMass = 5, coord = (1,1))
-    allBobs.append(bob1)
-    allBobs.append(bob2)
-    
-    for i in range(15):
-        print(i) 
-        #os.system("clear") 
-        print("\033[H\033[J",end="")
-        
-        afficheGrilleSimple()
-        time.sleep(0.5)
-        for b in allBobs:
-            print(b.coordClosestPrey)
-            if(not b.dejaJoue() and not b.seProteger() and not b.manger()):
-                b.bobDeplacement()
-    """
-    for k in range(25):
-        #print("debut semaine")
-        for j in range(7):
-            renouvellerNourriture()
-            for i in range(T):
-                for b in allBobs:
-                    if(not b.dejaJoue() and not b.enDanger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
-                        b.bobDeplacement()
-        #print("fin semaine")
-        #afficheGrilleSimple()
-        print("Semaine ",k)
-        print("nombre de bob en vie : ", nbBobs())
-        if(nbBobs() == 0):
-            print("Tout les bobs sont morts")
-        else:
-            print("Vitesse moyenne des bobs : ",avgSpeed())
-            print("Perception moyenne : ",avgPerception())
-            print("Memoire moyenne : ",avgMemory())
-        #allBobsSpeak()
+    #allBobs.append(Bob(bobMass = 1, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    #allBobs.append(Bob(bobMass = 3, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+    #allBobs.append(Bob(bobMass = 9, bobPerception=0, coord=(randint(0,N-1),randint(0,N-1))))
+ 
 
     """
-    # ajouterNourritureCase((4,4))
-    # ajouterNourritureCase((4,3))
-    # ajouterNourritureCase((3,4))
-    # ajouterNourritureCase((1,0))
-    # ajouterNourritureCase((0,0))
+    while (len(allBobs)>1):
+        #renouvellerNourriture()
+        for b in allBobs:
+            if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger() and not b.attaque()):
+                b.bobDeplacement()
+        #print("\033[H\033[J",end="")
+        afficheGrilleSimpleCouleur()
+        time.sleep(0.05)
+    
+    """
+    afficheGrilleSimpleCouleur(0,0)
+    time.sleep(1)
+
+    day = 0
+    for k in range(10):
+        for j in range(3):
+            day += 1
+            tick = 0
+            renouvellerNourriture()
+            
+            for i in range(20):
+                tick += 1
+                for b in allBobs:
+                    b.avantUnTour()
+                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
+                        b.partageEnergie()
+                        if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
+                            b.bobDeplacement()
+                print("\033[H\033[J",end="")
+                afficheGrilleSimpleCouleur(tick, day)
+                time.sleep(0.1)
+                #allBobsPreviousNotRandomMove()
+
+            
+    
     
     """
     
