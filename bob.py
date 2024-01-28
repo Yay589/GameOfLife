@@ -325,7 +325,7 @@ class Bob():
 
 
     def mourir(self):
-        self.dead = 1 #jsp si on doit verifier si le bob à plus d'énergie
+        self.dead = 1
         deadBobs.append(self)
         bobIndex = allBobs.index(self)
         bobIndexCase = grille[self.coordinates].bobs.index(self)
@@ -409,6 +409,10 @@ class Bob():
         if(deseaseON and self.sick):
             energyLoss *= 2
         self.energy -= energyLoss
+        
+        if(self.energy <= 0):
+            self.mourir()
+            return -1
     
     #le bob se deplace aléatoirement
     def bouger(self):
@@ -424,15 +428,13 @@ class Bob():
         Gestion des erreurs :
         Si le bob est mort ou vient de naître la fonction renvoie -1
         """
-        if(self.dead == 1):
+        if(self.dead):
             print("Attention ce bob est mort")
             return -1
         
         #pour diminuer son niveau d'énergie
         self.perdreEnergieDeplacement()
-
-        if(self.energy <= 0):
-            self.mourir()
+        if(self.dead):
             return -1
         
         self.case.enleverBob(self)
@@ -544,14 +546,17 @@ class Bob():
         if(self.coordinates == coordCible):
             #print("Erreur, le bob est déjà sur cette case")
             return -1
-        self.case.enleverBob(self)
+        
         x = coordCible[0] - self.coordinates[0] 
         y = coordCible[1] - self.coordinates[1]
         
         uneCase = 1
         nbCase = self.calculNbCasesDeplacement()*uneCase
         
-        self.perdreEnergieDeplacement()
+        if(self.perdreEnergieDeplacement()==-1):
+            return 0 #le bob est mort
+        
+        self.case.enleverBob(self)
         
         if(nbCase >= self.distance(coordCible)):
             self.coordinates = coordCible
@@ -648,7 +653,8 @@ class Bob():
         nbCase = self.calculNbCasesDeplacement()
         
         if(nbCase):
-            self.perdreEnergieDeplacement()
+            if(self.perdreEnergieDeplacement()==-1):
+                return-1 #le bob est mort
             self.case.enleverBob(self)
 
             for i in range(nbCase):
