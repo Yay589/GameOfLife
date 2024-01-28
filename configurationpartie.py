@@ -14,6 +14,11 @@ window_size = (400, 400)
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption("Configuration de la partie")
 
+# Charger l'image d'arrière-plan
+background_image_path = "data/images/background.jpg"
+background_image = pygame.image.load(background_image_path)
+background_image = pygame.transform.scale(background_image, window_size)  # Redimensionner l'image
+
 # Couleurs
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -48,7 +53,6 @@ def update_param_file():
                     line = f"{variable_name}= {new_value}\n"
             param_file.write(line)
 
-
 # Entrées de texte
 input_boxes = [
     {"rect": pygame.Rect(50, 50, 200, 32), "text": str(N), "label": "Longeur", "active": False},
@@ -81,6 +85,8 @@ while True:
                     box['text'] = str(N) if box['label'] == "Longeur" else str(M) if box['label'] == "Largeur" else str(numberBob)
             elif confirm_button.collidepoint(event.pos):
                 update_param_file()
+                pygame.quit()
+                sys.exit()
 
         # Gestion des événements du clavier
         if event.type == pygame.KEYDOWN:
@@ -97,8 +103,8 @@ while True:
                         else:
                             box['text'] += event.unicode
 
-    # Effacer l'écran
-    screen.fill(white)
+    # Afficher l'image de fond
+    screen.blit(background_image, (0, 0))
 
     # Dessiner les boîtes de texte et les labels
     for box in input_boxes:

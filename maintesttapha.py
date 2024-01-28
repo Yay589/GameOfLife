@@ -1,5 +1,5 @@
-import curses
-import pickle
+# import curses
+# import pickle
 from random import *
 from parametre import *
 from math import trunc

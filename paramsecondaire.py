@@ -94,6 +94,8 @@ while True:
                         active_buttons = set(button_positions.keys()) - {"default"}
                     elif button == "confirm":
                         update_param_file()
+                        pygame.quit()
+                        sys.exit()
                     elif button in active_buttons:
                         active_buttons.remove(button)
                     else:

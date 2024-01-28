@@ -6,11 +6,14 @@ import parametre
 from case import *
 from bob import Bob
 import pickle
+import subprocess
 import os
 import sys
 from affichage import *
 from statistiques import *
 import cProfile
+# import time
+
 pygame.init()
 
 
@@ -338,11 +341,11 @@ class Game:
 
             font = pygame.font.Font(None, 20)
 
-            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
+            text_show = font.render(f"Energy: {self.show_energy}", True, (0, 0, 0))
 
             screen.blit(text_show, self.image_broad_rect.move(15, 15))
 
-            text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+            text_render = font.render(f"Mass: {len(allBobs)}", True, (0, 0, 0))
 
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
 
@@ -960,10 +963,10 @@ class Game:
             
             if int(self.selected_index_start) == 0:
                 if keys[pygame.K_RETURN]:
-
+                    
                     ajouterNourritureGrille()
-
-                    for i in range(N-1):
+                    
+                    for i in range(numberBob):
                         x,y = randint(0,N-1),randint(0,M-1)
                         b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
                         b.coordinates = (x,y)
@@ -980,7 +983,7 @@ class Game:
                     
                     nom_sauvegarde = self.draw_select_load()
                     if not(nom_sauvegarde == 0):
-                        for i in range(N-1):
+                        for i in range(numberBob-1):
                             x,y = randint(0,N-1),randint(0,M-1)
                             b = Bob(bobMemory = 3, bobPerception=5, coord = (x,y))
                             b.coordinates = (x,y)
@@ -1264,11 +1267,21 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
     
 
 
+# def read_config_file(filename):
+#     config = {}
+#     with open(filename, 'r') as file:
+#         for line in file:
+#             line = line.strip()
+#             if line and not line.startswith('#'):
+#                 key, value = line.split('=')
+#                 config[key.strip()] = eval(value.strip())  # 使用 eval 将字符串转换为相应的类型
+#     return config
+
+
 
 g=Game()
 
 for i in range(N*M) : g.random_case.append(randint(0,100))
-
 
 
 
@@ -1361,18 +1374,36 @@ while running:
                     g.selected_index=-1
                     g.setting = not g.setting
                 
-                # if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
-                #     g.all_gameobject.empty()
-                #     for bob in allBobs:
-                #         bob.mourir()
-                #     for i in range(N-1):
-                #         allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
-                #     for bob in allBobs:
-                #         g.all_gameobject.add(BOB_GameObject(bob))
-                #     frame_count_start=0
-                #     g.start_anime=False
-                #     g.game_running=False
-            
+                if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
+                    key_to_modify="Relancer"
+                    new_value=True
+                    with open("parametre.py", 'r') as file:
+                        lines = file.readlines()
+
+                    with open("parametre.py", 'w') as file:
+                        for line in lines:
+                            if line.startswith(key_to_modify):
+                                line = f"{key_to_modify} = {new_value}\n"
+                            file.write(line)
+                            
+                    pygame.quit()
+                    sys.exit()
+                    #subprocess.run(["C:/Users/Administrator/AppData/Local/Programs/Python/Python311/python.exe", "d:/python/GameOfLife/configurationpartie.py"])
+                    #
+                    #config_data = read_config_file("parametre.py")
+                    # N=config_data.get("N")
+                    # M=config_data.get("M")
+                    # g.all_gameobject.empty()
+                    # g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
+                    # for bob in allBobs:
+                    #     bob.mourir()
+                    # for i in range(N-1):
+                    #     allBobs.append(Bob(coord = (randint(0,N-1),randint(0,N-1))))
+                    # for bob in allBobs:
+                    #     g.all_gameobject.add(BOB_GameObject(bob))
+                    
+                    
+                                
             if int(g.selected_index) ==0:
                     if event.button == 4:  # Mouse wheel scroll up
                                     # Increase value of the selected line
