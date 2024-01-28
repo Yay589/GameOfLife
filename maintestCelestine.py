@@ -8,6 +8,8 @@ from bob import Bob
 from affichage import *
 import collections
 import time
+from keyboard import *
+
 
 def allBobsSpeakM():
     for b in allBobs:
@@ -54,6 +56,10 @@ if __name__ == '__main__':
             renouvellerNourriture()
             
             for i in range(20):
+                touche = read_key()
+                if(touche == 'q'):
+                    break
+                
                 tick += 1
                 for b in allBobs:
                     b.avantUnTour()
