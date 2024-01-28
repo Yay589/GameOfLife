@@ -9,6 +9,8 @@ from bob import Bob
 from affichage import *
 
 pygame.init()
+
+
 pygame.font.init()
 
 # Define the screen dimensions
@@ -22,8 +24,8 @@ class Render:
         self.setting_frame=0
         self.selected_index = -1
         self.start_anime=False
-        self.tick=60
-        self.tick_by_day= 180
+        self.tick=30
+        self.tick_by_day= 15
         self.ball_x=0
         self.ball_y=0
         self.angle=0
@@ -53,25 +55,7 @@ class Render:
         #     random_point = random.choice(available_points)
         #     self.selected_points.append(random_point)
         #     available_points.remove(random_point)
-        
-        
-        
-        
-        self.image_under = pygame.image.load('data/images/underground.png')
-        
-        self.list_image_setting_a = []
-        self.list_image_ground =[]
-        for i in range(41):
-            if i<6 :
-                image_setting_a = pygame.image.load(f'data/images/setting/setting{i}.png')
-                image_setting_a = pygame.transform.scale(image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
-                self.list_image_setting_a.append(image_setting_a)
-                
-            image_ground = pygame.image.load(f'data/images/background/background{i}.png')
-            image_ground = pygame.transform.scale(image_ground, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            image_ground.set_alpha(self.sombre)
-            self.list_image_ground.append(image_ground)
-        
+
         self.image_setting = pygame.image.load('data/images/setting.png')
         self.image_setting.set_colorkey((255, 255, 255))
         self.image_setting = pygame.transform.scale(self.image_setting, (50, 50))
@@ -102,7 +86,6 @@ class Render:
         
         self.image = pygame.image.load('data/images/grass.png').convert()
         self.image.set_colorkey((0, 0, 0))
-        
         for i in self.list_x_y:
             self.rect = self.image.get_rect()
             self.rect.center = i
@@ -165,7 +148,7 @@ class Render:
         self.draw_background(walk_i)
 
         # Dessiner le soleil
-        self.draw_sun(walk_i)
+        self.draw_sun()
 
         # Dessiner l'île flottante
         self.draw_Floating_Island_Cliff()
@@ -198,6 +181,7 @@ class Render:
 
         # Afficher l'image de pause si le jeu est en pause
         if self.is_paused:
+
             screen.blit(self.image_pause, (535, 50))
         
         self.draw_setting()
@@ -230,13 +214,16 @@ class Render:
 
 
     def draw_background(self, frame):
-        screen.blit(self.list_image_ground[frame%41], (0, 0))
+        image_ground = pygame.image.load(f'data/images/background/background{frame%41}.png')
+        image_ground = pygame.transform.scale(image_ground, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        image_ground.set_alpha(self.sombre)
+        screen.blit(image_ground, (0, 0))
     
-    def draw_sun(self,frame):
+    def draw_sun(self):
         
         ball_rect = self.image_ball.get_rect()
         if not self.is_paused:
-            self.angle += math.radians((frame%self.tick_by_day)/360)
+            self.angle += 0.02
             self.ball_x = 400 + 400 * math.cos(self.angle)
             self.ball_y = 250 + 200 * math.sin(self.angle)
         for event in pygame.event.get():
@@ -245,16 +232,15 @@ class Render:
                 if self.ball_x < mouse_x < self.ball_x + 100 and self.ball_y < mouse_y < self.ball_y + 100:
                     self.image_ball = pygame.transform.scale(self.image_ball, (100*self.zoom_scale, 100*self.zoom_scale))
                 
-                
         screen.blit(self.image_ball, (self.ball_x - ball_rect.width // 2,self.ball_y - ball_rect.height // 2))
 
     def draw_Floating_Island_Cliff(self):
         lenth_under=2*N * 10 * self.zoom_scale
-        
-        self.image_under = pygame.transform.scale(self.image_under, (lenth_under,0.7*lenth_under ))
+        image_under = pygame.image.load('data/images/underground.png')
+        image_under = pygame.transform.scale(image_under, (lenth_under,0.7*lenth_under ))
         x_under=150 - N * 10+ N*0.5-self.rect.width/2
         y_under=100 + N/2 * self.plat + N/2 *self.plat
-        screen.blit(self.image_under,  [(x_under-self.offset.x)*self.zoom_scale,(y_under-self.offset.y)* self.zoom_scale])
+        screen.blit(image_under,  [(x_under-self.offset.x)*self.zoom_scale,(y_under-self.offset.y)* self.zoom_scale])
 
     def show_value(self,mouse_x, mouse_y,real_location_x,real_location_y):
         for obj in self.all_gameobject:
@@ -266,7 +252,9 @@ class Render:
             
             obj.width= pygame.Surface.get_width(obj.image)
             obj.height=pygame.Surface.get_height(obj.image)
-
+            
+            
+                
                     # Check if the mouse click is within the bounds of the obj
             if (
                 real_location_x < mouse_x < real_location_x + obj.width * self.zoom_scale
@@ -281,10 +269,15 @@ class Render:
         if self.showbroad :
 
             screen.blit(self.image_broad, self.image_broad_rect)
+
             font = pygame.font.Font(None, 20)
+
             text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
+
             screen.blit(text_show, self.image_broad_rect.move(15, 15))
+
             text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
 
     def draw_info(self):        
@@ -296,19 +289,29 @@ class Render:
 
         screen.blit(self.image_skip, (SCREEN_WIDTH-125, 50))
         
+ 
+
+
     def draw_restart(self):        
 
         screen.blit(self.image_restart, (605, 50))
     
+
     def draw_setting(self):        
+
+        
         screen.blit(self.image_setting, (SCREEN_WIDTH-100, SCREEN_HEIGHT-100))
 
         if self.setting :
             if self.setting_frame < 5:
                 self.setting_frame+=1
-                screen.blit(self.list_image_setting_a[self.setting_frame], (SCREEN_WIDTH/6, 0))
+                self.image_setting_a = pygame.image.load(f'data/images/setting/setting{self.setting_frame}.png')
+                self.image_setting_a = pygame.transform.scale(self.image_setting_a, (2*SCREEN_WIDTH/3,SCREEN_HEIGHT))
+                screen.blit(self.image_setting_a, (SCREEN_WIDTH/6, 0))
             else:
-                screen.blit(self.list_image_setting_a[-1], (SCREEN_WIDTH/6, 0))
+                self.image_setting_a = pygame.image.load('data/images/setting/setting5.png')
+                self.image_setting_a = pygame.transform.scale(self.image_setting_a, (2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT))
+                screen.blit(self.image_setting_a, (SCREEN_WIDTH/6, 0))
 
                 font = pygame.font.Font(None, 24)
                 lines = [
@@ -342,6 +345,11 @@ class Render:
                         pygame.draw.rect(screen, (169, 169, 169), text_rect, 2)  # Highlight with a gray rectangle
                     
                     deplace += 30  # Move to the next line
+                
+                    
+
+
+                
 
 
     def draw_cases(self):
@@ -396,9 +404,11 @@ class Render:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     self.show=True
                     self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
-                    
         
         #mise à jour de la position des pommes chaque jour écoulé
+    
+        if walk_i % self.sombre == 0:
+            renouvellerNourriture()
             
         for (x,y) in grille:
                 if (grille[(x,y)].qtite_nourriture != 0):
@@ -407,6 +417,7 @@ class Render:
         
     def draw_start(self,frame):
 
+        
         screen.fill((0,0,0))
         # Dessiner l'arrière-plan
         self.draw_background(frame)
@@ -424,8 +435,6 @@ class Render:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     if button_x < mouse_x < button_x + button_width and button_y < mouse_y < button_y + button_height:
                         self.start_anime = True
-                    
-                
 
         else:
             # Contrôle du clavier pour déplacer l'écran
@@ -433,7 +442,7 @@ class Render:
             # Contrôle du clavier pour effectuer un zoom
             self.zoom_keyboard_control()
             # Dessiner le soleil
-            self.draw_sun(frame)
+            self.draw_sun()
             self.draw_Floating_Island_Cliff()
             self.draw_cases()
             self.draw_skip()

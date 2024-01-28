@@ -17,10 +17,11 @@ def start():
         
         if x == "1":
             print("Chargement de l'interface graphique en cours..")
-            subprocess.run(["python3", "Gui.py"])
+            
+            subprocess.run(["C:/Users/Administrator/AppData/Local/Programs/Python/Python311/python.exe", "d:/python/GameOfLife/maintest.py"])
         elif x == "2":
             print("Chargement de l'interface console en cours..")
-            subprocess.run(["python3", "maintesttapha.py"])
+            subprocess.run(["C:/Users/Administrator/AppData/Local/Programs/Python/Python311/python.exe", "maintesttapha.py"])
         elif x == "3":
             print("Au revoir")
             break

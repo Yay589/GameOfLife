@@ -15,8 +15,8 @@ from bob import Bob
 from math import *
 from statistiques import *
 
+
 def afficheGrilleSimpleCouleur(tick, day):
-    
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()
     vitesseMin = minSpeed()
@@ -52,23 +52,10 @@ def afficheGrilleSimpleCouleur(tick, day):
         print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
     if(memoryON):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
-    if(chosenCarateristic == MASSE):
-        character = "la masse"
-    elif(chosenCarateristic == VITESSE):
-        character = "la vitesse"
-    elif(chosenCarateristic == PERCEPTION):
-        character = "la perception"
-    elif(chosenCarateristic == MEMOIRE):
-        character = "la mémoire"
-    elif(chosenCarateristic == ENERGIE):
-        character = "l'énergie"
-    
-    
-    print("Valeur de",character,"choisie en fonction de la couleur : ")
+    print("Valeur de la caracteristique choisie en fonction de la couleur : ")
     print("\033[0;35mviolet\033[0;30m < ",trunc((parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;34mbleu\033[0;30m < ", trunc((parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;32mvert\033[0;30m < ",trunc((parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;33mjaune\033[0;30m < ",trunc(parametreAffichageMax*1000)/1000)
     if(deseaseON):
         print("Bob \033[0;37mblanc\033[0;30m : malade")
-
 
     for a in range(M // 2 * 3):
         print(" _", end="")

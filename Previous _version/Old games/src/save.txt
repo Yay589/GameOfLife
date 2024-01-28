@@ -1,0 +1,3 @@
+[190, 190],[<GameObject Sprite(in 0 groups)>]
+[90, 310],[<GameObject Sprite(in 0 groups)>]
+[60, 345],[<GameObject Sprite(in 0 groups)>]

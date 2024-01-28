@@ -10,6 +10,7 @@ pygame.font.init()
 
 
 g=Render()
+
 ajouterNourritureGrille()
 
 for i in range(N-1):
@@ -17,9 +18,12 @@ for i in range(N-1):
     b = Bob(bobMemory = 3, coord = (x,y))
     b.coordinates = (x,y)
     allBobs.append(b)
+    grille[(x,y)].bobs.append(b)
 
 for bob in allBobs:
     g.all_gameobject.add(BobSprite(bob))
+
+
 
 
 running = True
@@ -34,9 +38,8 @@ clock = pygame.time.Clock()
 
 
 while running:
-        
+
     for event in pygame.event.get():
-        
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
@@ -55,16 +58,13 @@ while running:
                     SCREEN_HEIGHT=600
                     SCREEN_HEIGHT=SCREEN_HEIGHT_FULL
                     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-                    
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 g.dragging = False
-                
         elif event.type == pygame.MOUSEMOTION:
             if g.dragging:
                 g.image_broad_rect.x = event.pos[0] + g.dragging_offset_x
                 g.image_broad_rect.y = event.pos[1] + g.dragging_offset_y
-                
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if g.image_broad_rect.collidepoint(event.pos):
                 g.dragging = True
@@ -135,10 +135,12 @@ while running:
     if g.game_running:
         
         g.draw(frame_count)    
-        if  not g.is_paused: 
+
+
+        if  not g.is_paused:
 
             frame_count += 1
-            if frame_count % g.tick_by_day == 0:
+            if frame_count % 15 == 0:
                 if g.sombre == 200:
                     g.day_night=1
 
@@ -150,7 +152,7 @@ while running:
                 else:
                     g.sombre -= 1
 
-                renouvellerNourriture()
+                #allFoods = [Nourriture(coord = (randint(0,N-1),randint(0,N-1))) for i in range(N*2)]
                 for b in allBobs:
                     if(not b.reproduction()):
                         if(not b.manger()):
@@ -158,18 +160,27 @@ while running:
 
                 g.all_gameobject.empty()
 
+                
+
                 for bob in allBobs:
                     g.all_gameobject.add(BobSprite(bob))
+
+
                     for j in g.all_gameobject:
                         j.update_position()
                 
             # for j in g.all_gameobject:
             #     j.update_animation(frame_count)
+                        
+            
+
+
 
     else:
         if g.start_anime:
             frame_count_start += 1
-        g.draw_start(frame_count_start)        
+        g.draw_start(frame_count_start)
+        
 
     clock.tick(g.tick)
     
