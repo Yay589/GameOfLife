@@ -300,11 +300,11 @@ class Game:
 
             font = pygame.font.Font(None, 20)
 
-            text_show = font.render(f"Bob tu veux : {self.show_energy}", True, (0, 0, 0))
+            text_show = font.render(f"Selected bob's energy : {self.show_energy}", True, (0, 0, 0))
 
             screen.blit(text_show, self.image_broad_rect.move(15, 15))
 
-            text_render = font.render(f"The number of our residents: {len(allBobs)}", True, (0, 0, 0))
+            text_render = font.render(f"Number of bobs alive : {len(allBobs)}", True, (0, 0, 0))
 
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
 
