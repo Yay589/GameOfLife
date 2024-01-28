@@ -72,6 +72,8 @@ tribesRandom = True
 #Education
 educationON = True
 chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
+energyLossEducation = 20 #energy it costs to become educated
+energyMinToBeEducated = 100 #minimum energy you need to receive education from an other bob 
 
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
