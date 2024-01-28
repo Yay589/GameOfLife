@@ -39,10 +39,7 @@ if __name__ == '__main__':
             print("Debut de journée")
             renouvellerNourriture()
             for k in range(T):
-                
-                print("\033[H\033[J",end="")
                 random.shuffle(allBobs) #Pour que ca ne soit pas toujours les memes bobs qui bougent en premier
-                time.sleep(0.5)
                 for b in allBobs:
                     b.avantUnTour()
                     if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):

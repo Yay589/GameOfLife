@@ -62,7 +62,7 @@ if __name__ == '__main__':
                         if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                             b.bobDeplacement()
                 print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleurEducation(tick, day)
+                afficheGrilleSimpleCouleur(tick, day)
                 time.sleep(0.1)
                 #allBobsPreviousNotRandomMove()
 
