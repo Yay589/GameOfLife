@@ -1,6 +1,9 @@
 from collections import defaultdict
 
-Relancer = True
+
+Relancer = False
+
+
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
@@ -11,7 +14,7 @@ numberBob = 100
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = True
+graphicalInterfaceON = False
 #True : ON 
 #False : OFF
 soloReproductionON = True

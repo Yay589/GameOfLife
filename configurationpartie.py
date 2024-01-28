@@ -10,7 +10,7 @@ numberBob = 100
 pygame.init()
 
 # Définir la taille de la fenêtre
-window_size = (400, 400)
+window_size = (800, 600)
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption("Configuration de la partie")
 
@@ -53,16 +53,23 @@ def update_param_file():
                     line = f"{variable_name}= {new_value}\n"
             param_file.write(line)
 
+# Calculer la position centrale pour les boîtes de texte et les boutons
+box_width = 200
+box_height = 32
+margin = 10
+center_x = window_size[0] // 2 - box_width // 2
+start_y = 50
+
 # Entrées de texte
 input_boxes = [
-    {"rect": pygame.Rect(50, 50, 200, 32), "text": str(N), "label": "Longeur", "active": False},
-    {"rect": pygame.Rect(50, 100, 200, 32), "text": str(M), "label": "Largeur", "active": False},
-    {"rect": pygame.Rect(50, 150, 200, 32), "text": str(numberBob), "label": "numberBob", "active": False}
+    {"rect": pygame.Rect(center_x, start_y, box_width, box_height), "text": str(N), "label": "Longeur", "active": False},
+    {"rect": pygame.Rect(center_x, start_y + 50, box_width, box_height), "text": str(M), "label": "Largeur", "active": False},
+    {"rect": pygame.Rect(center_x, start_y + 100, box_width, box_height), "text": str(numberBob), "label": "numberBob", "active": False}
 ]
 
 # Boutons
-default_button = pygame.Rect(50, 250, 100, 50)
-confirm_button = pygame.Rect(200, 250, 150, 50)
+default_button = pygame.Rect(center_x, start_y + 200, 100, 50)
+confirm_button = pygame.Rect(center_x + 150, start_y + 200, 150, 50)
 
 # Boucle principale
 while True:
