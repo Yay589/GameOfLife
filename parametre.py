@@ -22,7 +22,7 @@ perceptionON = True
 memoryON = True
 
     #Valeurs des variables :
-numberFood = 60 #200 Number of food points par day
+numberFood = 5 #200 Number of food points par day
 foodE = 50 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
