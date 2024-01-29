@@ -1,58 +1,48 @@
-# import curses
-# import pickle
-from random import *
-from parametre import *
-from math import trunc
-from nourriture import *
-from case import Case
-from bob import Bob
-from affichage import *
-import collections
-import time
-import random
-from itertools import count
+import subprocess
+from parametre import Relancer, graphicalInterfaceON
 
-#fonction pour avoir des infos globales sur notre grille
-def avgSpeed():
-    i = 0
-    speedSum = 0
-    for c in grille:
-        for b in grille[c].bobs :
-            speedSum += b.speed
-            i += 1
-    if(i==0):
-        print("Tout les bobs sont morts")
-        return(-1)
+PYTHON_EXECUTABLE = "python3"
+
+
+def modify_parametre_file(key_to_modify, new_value):
+    with open("parametre.py", 'r') as file:
+        lines = file.readlines()
+
+    with open("parametre.py", 'w') as file:
+        for line in lines:
+            if line.startswith(key_to_modify):
+                line = f"{key_to_modify} = {new_value}\n"
+            file.write(line)
+
+def run_subprocess(script_path):
+    subprocess.run([PYTHON_EXECUTABLE, script_path])
+
+def start():
+    run_subprocess("configurationpartie.py")
+    run_subprocess("paramprimaire.py")
+    run_subprocess("paramsecondaire.py")
+
+    if graphicalInterfaceON:
+        modify_parametre_file("Relancer", False)
+        run_subprocess("maintest.py")
     else:
-        return speedSum/i
+        run_subprocess("maintesttapha.py")
 
+    while Relancer:
+        run_subprocess("configurationpartie.py")
+        run_subprocess("paramprimaire.py")
+        run_subprocess("paramsecondaire.py")
 
+        if graphicalInterfaceON:
+            modify_parametre_file("Relancer", False)
+            run_subprocess("maintest.py")
+        else:
+            run_subprocess("maintesttapha.py")
 
-if __name__ == '__main__':
-        for i in range(numberBob):
-            allBobs.append(Bob(coord=(randint(0,N-1),randint(0,N-1)),bobPerception=10))
-        
-        afficheGrilleSimpleCouleur(0,0)
-        day = 0
-        for j in count():
-            #os.system("clear")  
-            print("Debut de journée")
-            renouvellerNourriture()
-            for k in range(T):
-                
-                print("\033[H\033[J",end="")
-                random.shuffle(allBobs) #Pour que ca ne soit pas toujours les memes bobs qui bougent en premier
-                time.sleep(0.5)
-                for b in allBobs:
-                    b.avantUnTour()
-                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
-                        b.partageEnergie()
-                        if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
-                            b.bobDeplacement()
-                print("\033[H\033[J",end="")
-                afficheGrilleSimpleCouleurEducation(k, j)
-                time.sleep(0.1)
-        
+if __name__ == "__main__":
+    start()
+
+    
         
         
             
