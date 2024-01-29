@@ -27,16 +27,16 @@ def start():
     else:
         run_subprocess("d:/python/GameOfLife/maintesttapha.py")
 
-    while Relancer:
-        run_subprocess("d:/python/GameOfLife/configurationpartie.py")
-        run_subprocess("d:/python/GameOfLife/paramprimaire.py")
-        run_subprocess("d:/python/GameOfLife/paramsecondaire.py")
+    # while Relancer:
+    #     run_subprocess("d:/python/GameOfLife/configurationpartie.py")
+    #     run_subprocess("d:/python/GameOfLife/paramprimaire.py")
+    #     run_subprocess("d:/python/GameOfLife/paramsecondaire.py")
 
-        if graphicalInterfaceON:
-            modify_parametre_file("Relancer", False)
-            run_subprocess("d:/python/GameOfLife/maintest.py")
-        else:
-            run_subprocess("d:/python/GameOfLife/maintesttapha.py")
+    #     if graphicalInterfaceON:
+    #         modify_parametre_file("Relancer", False)
+    #         run_subprocess("d:/python/GameOfLife/maintest.py")
+    #     else:
+    #         run_subprocess("d:/python/GameOfLife/maintesttapha.py")
 
 if __name__ == "__main__":
     start()
