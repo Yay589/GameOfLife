@@ -958,7 +958,7 @@ class Game:
                 if text_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
                     self.selected_index_start=i
 
-            notion="press m or click on the option you want , then press enter for enter game"
+            notion="select an option (click or 'm'), then press enter"
             text = font2.render(notion, True, (0,0,0))
             text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, deplace + 200))
             screen.blit(text, text_rect)
@@ -1125,7 +1125,7 @@ class Game:
         # 定义按钮颜色
         hover_color = (150, 150, 150)
 
-        return_text = font.render("Cancle", True, white)
+        return_text = font.render("Cancel", True, white)
 
 
         while True:
@@ -1183,7 +1183,7 @@ class Game:
             
 
             font1 = pygame.font.Font(None, 20)
-            text_show = font1.render("Name of your file in 10 letters plz,press enter for confirm", True, (255,255,255))
+            text_show = font1.render("Name of your file (max 10 char.),press enter for confirm", True, (255,255,255))
             screen.blit(text_show, (300 , 200 + 40))
 
             pygame.draw.rect(screen, color, input_box, 2)
