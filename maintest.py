@@ -801,7 +801,7 @@ class Game:
             text_positions.append((text, text_rect))
             pygame.draw.rect(screen, (169, 169, 169), text_rect, 5)
 
-        text_n = font.render("Your laod files, click for select:", True, (200, 200, 200))
+        text_n = font.render("Your load files, click to select one:", True, (200, 200, 200))
         text_rect_n = text.get_rect(topleft=(100, 30))
     
 
@@ -827,7 +827,7 @@ class Game:
         # 定义按钮标签
         load_text = font.render("Load", True, white)
         delete_text = font.render("Delete", True, white)
-        return_text = font.render("Return", True, white)
+        return_text = font.render("Return to menu", True, white)
 
         image_setting = pygame.image.load('data/images/menu.png')
 
@@ -924,7 +924,7 @@ class Game:
     def delete_file(self,file_path):
         try:
             os.remove(file_path)
-            print(f"The file {file_path} has been successfully deleted.")
+            print(f"The file {file_path} has successfully been deleted.")
         except OSError as e:
             print(f"An error occurred while deleting the file {file_path}: {e}")
 
@@ -945,7 +945,7 @@ class Game:
 
             font = pygame.font.Font(None, 40)
             font2 = pygame.font.Font(None, 20)
-            lines = ["START", "START WITH LOAD"]
+            lines = ["START NEW GAME", "LOAD PREVIOUS GAME"]
             deplace = SCREEN_HEIGHT//2
             keys = pygame.key.get_pressed()
 
