@@ -328,14 +328,15 @@ class Bob():
     def mourir(self):
         self.dead = 1
         deadBobs.append(self)
-        bobIndex = allBobs.index(self)
-        bobIndexCase = grille[self.coordinates].bobs.index(self)
-        grille[self.coordinates].bobs.pop(bobIndexCase)
-        del(allBobs[bobIndex])
-        if(self.energy <= 0):
-            self.previousAction = MOURIR_ENERGIE
-        else:
-            self.previousAction = MOURIR_ATTAQUE
+        if(self in allBobs):
+            bobIndex = allBobs.index(self)
+            bobIndexCase = grille[self.coordinates].bobs.index(self)
+            grille[self.coordinates].bobs.pop(bobIndexCase)
+            del(allBobs[bobIndex])
+            if(self.energy <= 0):
+                self.previousAction = MOURIR_ENERGIE
+            else:
+                self.previousAction = MOURIR_ATTAQUE
 
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
@@ -659,6 +660,7 @@ class Bob():
         if(nbCase):
             if(self.perdreEnergieDeplacement()==-1):
                 return-1 #le bob est mort
+            
             self.case.enleverBob(self)
 
             for i in range(nbCase):

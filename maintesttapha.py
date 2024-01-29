@@ -46,7 +46,5 @@ if __name__ == '__main__':
                     b.partageEnergie()
                     if (not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                         b.bobDeplacement()
-            print("\033[H\033[J", end="")
             afficheGrilleSimpleCouleur(k, j)
-            time.sleep(0.1)
             

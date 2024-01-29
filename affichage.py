@@ -14,6 +14,7 @@ from case import Case
 from bob import Bob
 from math import *
 from statistiques import *
+from time import * 
 
 
 def afficheGrilleSimpleCouleur(tick, day):
@@ -40,6 +41,8 @@ def afficheGrilleSimpleCouleur(tick, day):
     nbmalade = nbBobs_malade()
     longevityMoy = avgLongevity()
     
+    print("\033[H\033[J", end="")
+
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
     print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
@@ -108,6 +111,8 @@ def afficheGrilleSimpleCouleur(tick, day):
     for a in range(M // 2 * 3):
         print(" _", end="")
     print("\n")
+    
+    sleep(sleepTime)
 
 def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d'autres booleean
     vitesseMoy = avgSpeed()
@@ -129,6 +134,8 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     nbmalade = nbBobs_malade()
     longevityMoy = avgLongevity()
     
+    print("\033[H\033[J", end="")
+
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
     print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
@@ -179,6 +186,8 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     for a in range(M // 2 * 3):
         print(" _", end="")
     print("\n")
+    sleep(sleepTime)
+
 
 # version d'affichage avec des contours, pour une petite grille
 def afficheGrille():
