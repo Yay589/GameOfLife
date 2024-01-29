@@ -282,10 +282,10 @@ class Bob():
             self.perception = random() % maxRandomPerception + 1
             self.memory = random() % maxRandomMemory + 1
         else:
-            self.speed = bobSpeed
-            self.mass = bobMass
-            self.perception = bobPerception
-            self.memory = bobMemory
+            self.speed = bobS
+            self.mass = bobM
+            self.perception = bobP
+            self.memory = bobMem
         
         #vitesse
         self.speedBuffer = 0
