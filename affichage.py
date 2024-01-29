@@ -33,6 +33,9 @@ def afficheGrilleSimpleCouleur(tick, day):
     energieMoy = avgEnergy()
     energieMax = maxEnergy()
     energieMin = minEnergy()
+    kindnessMoy = avgKindness()
+    kindnessMax = maxKindness()
+    kindnessMin = minKindness()
     
     
     parametreAffichageMoy = avgChosenCaracteristic()
@@ -55,10 +58,25 @@ def afficheGrilleSimpleCouleur(tick, day):
         print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
     if(memoryON):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
-    print("Valeur de la caracteristique choisie en fonction de la couleur : ")
+    if(kindnessON):
+        print("Gentillesse moyenne : ",trunc(kindnessMoy*1000)/1000,"Gentillesse minimale : ", trunc(kindnessMin*1000)/1000, "Gentillesse maximum : ",trunc(kindnessMax*1000)/1000)
+    
+    if(chosenCarateristic == VITESSE):
+        car = "la vitesse"
+    elif(chosenCarateristic == MASSE):
+        car= "la masse"
+    elif(chosenCarateristic == PERCEPTION):
+        car="la perception"
+    elif(chosenCarateristic == MEMOIRE):
+        car= "la mémoire"
+    elif(chosenCarateristic == ENERGIE):
+        car="l'énergie"
+    
+    print("Couleur en fonction de la valeur de",car," : ")
     print("\033[0;35mviolet\033[0;30m < ",trunc((parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;34mbleu\033[0;30m < ", trunc((parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;32mvert\033[0;30m < ",trunc((parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;33mjaune\033[0;30m < ",trunc(parametreAffichageMax*1000)/1000)
     if(deseaseON):
         print("Bob \033[0;37mblanc\033[0;30m : malade")
+    
 
     for a in range(M // 2 * 3):
         print(" _", end="")
@@ -130,6 +148,9 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     energieMoy = avgEnergy()
     energieMax = maxEnergy()
     energieMin = minEnergy()
+    kindnessMoy = avgKindness()
+    kindnessMax = maxKindness()
+    kindnessMin = minKindness()
     
     nbmalade = nbBobs_malade()
     longevityMoy = avgLongevity()
@@ -148,6 +169,9 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
         print("Perception moyenne : ",trunc(perceptionMoy*1000)/1000,"Perception minimale : ", trunc(perceptionMin*1000)/1000, "Perception maximum : ",trunc(perceptionMax*1000)/1000)
     if(memoryON):
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
+    if(kindnessON):
+        print("Gentillesse moyenne : ",trunc(kindnessMoy*1000)/1000,"Mémoire minimale : ", trunc(kindnessMin*1000)/1000, "Mémoire maximum : ",trunc(kindnessMax*1000)/1000)
+
 
     for a in range(M // 2 * 3):
         print(" _", end="")

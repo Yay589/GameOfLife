@@ -64,6 +64,19 @@ def avgEnergy():
         return(-1)
     else:
         return round(energySum/i,5)
+    
+def avgKindness():
+    i = 0
+    kindnessSum = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            kindnessSum += b.kindness
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return round(kindnessSum/i,5)
 
 
 def nbBobs(): #c'est la même taille que len(allBobs) normalement
@@ -127,6 +140,34 @@ def minSpeed():
         return(-1)
     else:
         return round(minSpeed,5)
+
+def maxKindness():
+    i = 0
+    maxKindness = 0
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.speed > maxKindness):
+                maxKindness = b.kindness
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return round(maxKindness,5)
+    
+def minKindness():
+    i = 0
+    minKindness = avgKindness()
+    for c in grille:
+        for b in grille[c].bobs :
+            if(b.speed < minKindness):
+                minKindness = b.kindness
+            i += 1
+    if(i==0):
+        print("Tout les bobs sont mort")
+        return(-1)
+    else:
+        return round(minKindness,5)
 
 def maxMass():
     i = 0

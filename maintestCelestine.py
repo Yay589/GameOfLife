@@ -43,8 +43,6 @@ if __name__ == '__main__':
         time.sleep(0.05)
     
     """
-    afficheGrilleSimpleCouleur(0,0)
-    time.sleep(1)
 
     day = 0
     for k in range(10):
