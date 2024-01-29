@@ -146,7 +146,7 @@ def maxKindness():
     maxKindness = 0
     for c in grille:
         for b in grille[c].bobs :
-            if(b.speed > maxKindness):
+            if(b.kindness > maxKindness):
                 maxKindness = b.kindness
             i += 1
     if(i==0):
@@ -160,7 +160,7 @@ def minKindness():
     minKindness = avgKindness()
     for c in grille:
         for b in grille[c].bobs :
-            if(b.speed < minKindness):
+            if(b.kindness < minKindness):
                 minKindness = b.kindness
             i += 1
     if(i==0):

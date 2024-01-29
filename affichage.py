@@ -37,8 +37,6 @@ def afficheGrilleSimpleCouleur(tick, day):
     kindnessMax = maxKindness()
     kindnessMin = minKindness()
     
-    
-    parametreAffichageMoy = avgChosenCaracteristic()
     parametreAffichageMin = minChosenCaracteristic()
     parametreAffichageMax = maxChosenCaracteristic()
     nbmalade = nbBobs_malade()
@@ -48,8 +46,9 @@ def afficheGrilleSimpleCouleur(tick, day):
 
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
+    print("Nombre de Bob malade :", nbmalade, "Age moyen :", longevityMoy, "Nombre de bob éduqués : ",nbBobs_educated())
     print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
-    print("Nombre de Bob malade :", nbmalade, "Longévité de Bob :", longevityMoy)
+
     if(speedON):
         print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maximum : ",trunc(vitesseMax*1000)/1000)
     if(massON):
@@ -159,8 +158,8 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
 
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
-    print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
     print("Nombre de Bob malade :", nbmalade, "Age moyen :", longevityMoy, "Nombre de bob éduqués : ",nbBobs_educated())
+    print("Energie moyenne : ",trunc(energieMoy*1000)/1000,"Energie minimale : ", trunc(energieMin*1000)/1000, "Energie maximum : ",trunc(energieMax*1000)/1000)
     if(speedON):
         print("Vitesse moyenne : ",trunc(vitesseMoy*1000)/1000,"Vitesse minimale : ", trunc(vitesseMin*1000)/1000, "Vitesse maximum : ",trunc(vitesseMax*1000)/1000)
     if(massON):
@@ -210,7 +209,7 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     for a in range(M // 2 * 3):
         print(" _", end="")
     print("\n")
-    sleep(sleepTime)
+    sleep(0.20)
 
 
 # version d'affichage avec des contours, pour une petite grille

@@ -33,7 +33,7 @@ if __name__ == '__main__':
         tick = 0
         renouvellerNourriture()
             
-        for i in range(20):
+        for i in range(5):
             tick += 1
             for b in allBobs:
                 b.avantUnTour()
@@ -42,32 +42,5 @@ if __name__ == '__main__':
                     if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                         b.bobDeplacement()
             print("\033[H\033[J",end="")
-            afficheGrilleSimpleCouleur(tick, day)
-            time.sleep(0.1)
-            #allBobsPreviousNotRandomMove()
-
+            afficheGrilleSimpleCouleurEducation(tick, day)
             
-    
-    
-    """
-    
-    afficheGrilleSimple()
-    for i in range(20):
-        if(not bob1.reproduction()):
-            if(not bob1.manger()):
-                bob1.bobDeplacement()
-        print("cases memorisées : ",bob1.casesMemorisee)
-        print("nourriture memorisées : ",bob1.nourritureMemorisee)
-        afficheGrilleSimple()
-    
-    allBobsSpeak()
-    
-         
-    afficheGrilleSimple()
-    
-    """
-    
-    #print(bob1.seul())
-    #print(bob1.choisirUnBob())
-    
-    #bob1.bouger()

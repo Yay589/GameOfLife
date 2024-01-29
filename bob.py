@@ -146,10 +146,9 @@ class Bob():
         
         
         if(self.case.qtite_nourriture != 0):
-            #Enfaite un bob reste jamais sur une case avec de la nourriture puisque s'il en reste c'est qu'il à full energie et donc il peut faire un bébé
-            # if(self.coordinates == self.previousCoordinates):
-            #     self.energy -= 0.5 #Un bob peut rester sur une nourriture mais il perd 0,5 energie par tour
-
+            if(not soloReproductionON):
+                self.energy -=0.5 #si la reproduction solo est désactivé un bob full en energy risque de rester bloquer sur une nourriture
+            
             self.previousCoordinates = self.coordinates #mise a jour des coord precedentes
             self.previousAction = MANGER
 

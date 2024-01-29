@@ -27,8 +27,8 @@ mutPerceptionON = True
 mutMemoryON = True
 
     #Valeurs des variables :
-numberFood = 60 #200 Number of food points par day
-foodE = 50 #100 Quantity of energy per food point
+numberFood = 20 #200 Number of food points par day
+foodE = 100 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
 
@@ -47,7 +47,7 @@ MASSE = 3
 PERCEPTION = 4
 MEMOIRE = 5
 #modifiable :
-chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
+chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
     #modes spéciaux
@@ -64,10 +64,10 @@ birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
 deseaseON = True
-chancesOfFoodPoisoning = 50 #1000, 1 chance sur 1000 de tomber malade
+chancesOfFoodPoisoning = 25 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
-tribesON = True
+tribesON = False
 tribesRandom = True
 #Education
 educationON = True
@@ -86,6 +86,8 @@ nourriturePref_quantite = True
 
 ###########################################################
 #Variable qui ne doivent pas être modifiées par les joueurs :
+
+sleepTime = 0.5
 
 #La grille     
 grille = {}
