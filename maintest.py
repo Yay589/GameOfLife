@@ -12,6 +12,8 @@ import sys
 from affichage import *
 from statistiques import *
 import cProfile
+
+
 # import time
 
 pygame.init()
@@ -25,8 +27,35 @@ fullscreen = False
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('BOB_LAND')
 
+class Button_text:
+    def __init__(self, x, y, width, height, text=''):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.text = text
+        self.image_back = pygame.image.load('data/images/background/background1.png')
+        self.image_back = pygame.transform.scale(self.image_back, (self.width, self.height))
+
+    def draw(self, win):
+        pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height))
+        screen.blit(self.image_back, (self.x,self.y))
+        
+        
+        font = pygame.font.SysFont('comicsans', 30)
+        text = font.render(self.text, 1, (255, 255, 255))
+        win.blit(text, (self.x + round(self.width/2) - round(text.get_width()/2), 
+                        self.y + round(self.height/2) - round(text.get_height()/2)))
+
+    def is_over(self, pos):
+        if pos[0] > self.x and pos[0] < self.x + self.width:
+            if pos[1] > self.y and pos[1] < self.y + self.height:
+                return True
+        return False
+
 class Game:
     def __init__(self) :
+        self.action_button = Button_text(25, 100, 200, 60, 'Version console')
         self.setting_frame=0
         self.selected_index = -1
         self.selected_index_start=-1
@@ -186,6 +215,8 @@ class Game:
 
         self.draw_restart()
 
+        self.action_button.draw(screen)
+        
         self.draw_menu()
         
         self.draw_summary_graph(walk_i)
@@ -217,46 +248,7 @@ class Game:
         pygame.display.flip()
     
 
-    def draw_statistics(self):
 
-        #font_color = (0, 128, 255)
-        font_size = 18
-        font = pygame.font.Font(None, font_size)
-        # scroll_speed = 20
-        # scroll_position = 0
-        
-        # height=100
-        lines = [
-            f"avgSpeed():{avgSpeed()}",
-            f"avgPerception():{avgPerception()}",
-            f"avgMemory():{avgMemory()}",
-            f"avgMass():{avgMass()}",
-            f"avgEnergy():{avgEnergy()}",
-            f"nbBobs():{nbBobs()}",
-            f"maxSpeed():{maxSpeed()}"
-        ]
-
-        # for event in pygame.event.get():
-        #     if event.type == pygame.MOUSEBUTTONDOWN:
-        #         if event.button == 4:  # 滚轮向上
-        #             scroll_position += scroll_speed
-        #         elif event.button == 5:  # 滚轮向下
-        #             scroll_position -= scroll_speed
-
-        #绘制多行文本框
-        text_y = SCREEN_HEIGHT - (font_size + 5) * len(lines) - 10
-        for line in lines:
-            text_surface = font.render(line, True, (0,0,0))
-            text_rect = text_surface.get_rect(bottomleft=(10, text_y))
-            screen.blit(text_surface, text_rect)
-            text_y += font_size + 5
-
-        # text_y = height - (font_size + 5) * len(lines) + scroll_position
-        # for line in lines:
-        #     text_surface = font.render(line, True, (0,0,0))
-        #     text_rect = text_surface.get_rect(bottomleft=(10, text_y))
-        #     screen.blit(text_surface, text_rect)
-        #     text_y += font_size + 5
 
     def draw_guid(self):
 
@@ -1245,6 +1237,8 @@ class Game:
             initial_bob_positions = load_data['initial_bob_positions']
             for bob, position in zip(allBobs, initial_bob_positions):
                 bob.coordinates = position
+    
+        
 
         
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
@@ -1367,7 +1361,14 @@ while running:
                 g.image_broad_rect.x = event.pos[0] + g.dragging_offset_x
                 g.image_broad_rect.y = event.pos[1] + g.dragging_offset_y
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if g.image_broad_rect.collidepoint(event.pos):
+            if g.action_button.is_over(pygame.mouse.get_pos()):
+                # Lancer un nouveau script Python et quitter le jeu actuel
+                subprocess.Popen([sys.executable, "maintesttapha.py"])
+                pygame.quit()
+                sys.exit()
+                print("hey")  # Ce message ne sera pas affiché car le script se termine juste avant
+
+            elif g.image_broad_rect.collidepoint(event.pos):
                 g.dragging = True
                 g.dragging_offset_x, g.dragging_offset_y = g.image_broad_rect.x - event.pos[0], g.image_broad_rect.y - event.pos[1]
             elif event.button == 1:
@@ -1543,6 +1544,7 @@ while running:
     else:
         if g.start_anime:
             frame_count_start += 1
+
         g.draw_start(frame_count_start)
         
         
