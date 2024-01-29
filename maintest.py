@@ -415,13 +415,14 @@ class Game:
                     f"Educated :{nbBobs_educated()}"
                 ]
                 lines = [
-                    f"Tick for one day:{self.tick_by_day}",
-                    f"Energy for each food:{foodE}",
-                    f"SCREEN_WIDTH:{SCREEN_WIDTH}",
-                    f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
-                    f"Number of cases:{N}",
+                    f"Number of ticks in a day:{self.tick_by_day}",
+                    f"Energy contained in a cake:{foodE}",
+                    f"Width:{N}",
+                    f"Length:{M}",
                     f"Bob custom:{self.costum}",
                     f"Case custom:{self.costum_case}"
+                    f"SCREEN_WIDTH:{SCREEN_WIDTH}",
+                    f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
                 ]
 
                 deplace=SCREEN_HEIGHT//8
