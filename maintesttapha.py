@@ -34,12 +34,12 @@ if __name__ == '__main__':
     afficheGrilleSimpleCouleur(0, 0)
     day = 0
     for j in count():
-        print("Debut de journée")
+        day += 1
+        tick = 0
         renouvellerNourriture()
         for k in range(T):
-            print("\033[H\033[J", end="")
+            tick += 1
             random.shuffle(allBobs)
-            time.sleep(0.5)
             for b in allBobs:
                 b.avantUnTour()
                 if (not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
@@ -47,7 +47,6 @@ if __name__ == '__main__':
                     if (not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                         b.bobDeplacement()
             print("\033[H\033[J", end="")
-            afficheGrilleSimpleCouleurEducation(k, j)
+            afficheGrilleSimpleCouleur(k, j)
             time.sleep(0.1)
-
             

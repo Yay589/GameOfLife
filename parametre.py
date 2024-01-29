@@ -4,9 +4,9 @@ Relancer = True
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 100
-M = 100
-numberBob = 100
+N = 10
+M = 10
+numberBob = 10
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
