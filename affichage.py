@@ -42,7 +42,6 @@ def afficheGrilleSimpleCouleur(tick, day):
     nbmalade = nbBobs_malade()
     longevityMoy = avgLongevity()
     
-    print("\033[H\033[J", end="")
 
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
@@ -129,8 +128,80 @@ def afficheGrilleSimpleCouleur(tick, day):
         print(" _", end="")
     print("\n")
     
-    sleep(sleepTime)
+    
+def afficheCouleur(tick, day):
+    parametreAffichageMin = minChosenCaracteristic()
+    parametreAffichageMax = maxChosenCaracteristic()
 
+    
+
+    print("Jour : ",day,"Tic : ",tick)
+    if(chosenCarateristic == VITESSE):
+        car = "la vitesse"
+    elif(chosenCarateristic == MASSE):
+        car= "la masse"
+    elif(chosenCarateristic == PERCEPTION):
+        car="la perception"
+    elif(chosenCarateristic == MEMOIRE):
+        car= "la mémoire"
+    elif(chosenCarateristic == ENERGIE):
+        car="l'énergie"
+    print("Couleur en fonction de la valeur de",car," : ")
+    print("\033[0;35mviolet\033[0;30m < ",trunc((parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;34mbleu\033[0;30m < ", trunc((parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;32mvert\033[0;30m < ",trunc((parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;33mjaune\033[0;30m < ",trunc(parametreAffichageMax*1000)/1000)
+    
+
+    for a in range(M // 2 * 3):
+        print(" _", end="")
+    print("")
+    for i in range(N):
+        print("|", end="")
+        for j in range(M):
+            if ((i, j) in grille):
+                if (grille[(i, j)].bobs != []):
+                    b = grille[(i, j)].bobs[0]
+                    if(chosenCarateristic == VITESSE):
+                        caracteritique = b.speed
+                    elif(chosenCarateristic == MASSE):
+                        caracteritique = b.mass
+                    elif(chosenCarateristic == PERCEPTION):
+                        caracteritique = b.perception
+                    elif(chosenCarateristic == MEMOIRE):
+                        caracteritique = b.memory
+                    elif(chosenCarateristic == ENERGIE):
+                        caracteritique = b.energy
+                        
+                    c = "○"
+                    if(tribesON):
+                        if(b.tribe == EAU):
+                            c = "✿"
+                        elif(b.tribe == GLACE):
+                            c = "❖"
+                        elif(b.tribe == FEU):
+                            c = "♣"
+                        elif(b.tribe == TERRE):
+                            c = "▲"
+                    
+                    
+                    if (deseaseON and grille[(i,j)].bobs[0].sick):
+                        print("\033[0;37m", c ,"\033[0;30m", end="") # blanc
+                    elif (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
+                        print("\033[0;35m", c ,"\033[0;30m", end="") #rose 35
+                    elif ((caracteritique < (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique >= (parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin)))):
+                        print("\033[0;34m", c ,"\033[0;30m", end="") #bleu 34
+                    elif ((caracteritique < (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))) and (caracteritique>= (parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin)))):
+                        print("\033[0;32m", c ,"\033[0;30m", end="")#vert 32
+                    elif (caracteritique >= (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))):
+                        print("\033[0;33m", c ,"\033[0;30m", end="")#jaune 33
+                else:
+                    print("\033[0;31m ♥ \033[0;30m", end="")
+            else:
+                print("   ", end="")
+        print("|", end="")
+        print("")
+    for a in range(M // 2 * 3):
+        print(" _", end="")
+    print("\n")
+    
 def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d'autres booleean
     vitesseMoy = avgSpeed()
     vitesseMax = maxSpeed()

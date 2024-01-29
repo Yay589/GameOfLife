@@ -1,42 +1,9 @@
 from collections import defaultdict
 
-#Gentillesse
-kindnessON = False
-birthKindness = 30 #Point de gentillesse à la naissance (pas génétique)
-kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
-#Maladie
-deseaseON = False
-chancesOfFoodPoisoning = 25 #1000, 1 chance sur 1000 de tomber malade
-nbSickTics = 20 #nombre de jour où le bob reste malade
-#Tribues
-tribesON = False
-tribesRandom = True
-#Education
+
 educationON = True
-chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
-energyLossEducation = 20 #energy it costs to become educated
-energyMinToBeEducated = 100 #minimum energy you need to receive education from an other bob 
-
-#caracteristiques -> pas modifiable mais si c'est plus bas ça fait un bug :
-ENERGIE = 1
-VITESSE = 2
-MASSE = 3
-PERCEPTION = 4
-MEMOIRE = 5
-#modifiable :
-chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
-#ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
 
-
-    #modes spéciaux
-#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
-#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
-randomStartOn = False
-maxRandomSpeed = 3
-maxRandomMass = 3
-maxRandomPerception = 6
-maxRandomMemory = 4
 
 
 
@@ -46,14 +13,14 @@ Relancer = True
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 20
-M = 20
+N = 10
+M = 10
 numberBob = 10
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
     #Paramètre ON/OFF :
-graphicalInterfaceON = True
+graphicalInterfaceON = False
 #True : ON 
 #False : OFF
 soloReproductionON = True
@@ -69,7 +36,7 @@ mutPerceptionON = True
 mutMemoryON = True
 
     #Valeurs des variables :
-numberFood = 0 #200 Number of food points par day
+numberFood = 20 #200 Number of food points par day
 foodE = 100 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day
@@ -81,6 +48,42 @@ bobLaborE = 150 #150 Quantity of energy lost when giving birth
 bobMinSexE = 150 #150 Minimal quanity of energy requiered for sexual reproduction
 bobSexBirthE = 100 #100 Quantity of energy for babies with sexual reproduction
 bobSexLaborE = 100 #100 Quantity of energy lost when giving birth with sexual reproduction
+
+#caracteristiques -> pas modifiable mais si c'est plus bas ça fait un bug :
+ENERGIE = 1
+VITESSE = 2
+MASSE = 3
+PERCEPTION = 4
+MEMOIRE = 5
+#modifiable :
+chosenCarateristic = ENERGIE # Indique quelle caractéristique doit être representée par la couleur des bobs
+#ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
+
+    #modes spéciaux
+#Aléatoire start : Pour pouvoir commencer avec des caractéritiques aléatoire
+#Pour l'instant ça va fonctionner que si toutes les caractéritique sont activées : 
+randomStartOn = True
+maxRandomSpeed = 3
+maxRandomMass = 3
+maxRandomPerception = 6
+maxRandomMemory = 4
+#Gentillesse
+kindnessON = True
+birthKindness = 20 #Point de gentillesse à la naissance (pas génétique)
+kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
+#Maladie
+deseaseON = True
+chancesOfFoodPoisoning = 25 #1000, 1 chance sur 1000 de tomber malade
+nbSickTics = 20 #nombre de jour où le bob reste malade
+#Tribues
+tribesON = False
+tribesRandom = False
+#Education
+
+chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
+energyLossEducation = 20 #energy it costs to become educated
+energyMinToBeEducated = 100 #minimum energy you need to receive education from an other bob 
+
 
 #Est ce que les bobs prefere les nourriture proches ou grosses
 nourriturePref_quantite = True

@@ -22,6 +22,7 @@ from random import *
 from parametre import *
 from case import Case
 from math import trunc
+from time import *
 
 
 class Bob():
@@ -69,7 +70,7 @@ class Bob():
             perceptionBebe = bobP
             memoireBebe = bobMem
             massBebe = bobM
-            tribueBebe = -1 #si tribue désactivé -> TO DO : peut etre mettre à 1 et dire que si y'a pas de tribue c'est équivalent à en avoir une seule grande
+            tribueBebe = -1 #si tribue désactivé
             
             #calcul des données héreditaire (si caractéritique activée)
             if(speedON and mutSpeedON):
@@ -141,8 +142,8 @@ class Bob():
         Valeur de retour : cette fonction renvoie True si le bob à mangé,
         False s'il n'y avait rien a manger dans la case
         """
-        # if(self.dead == 1):
-        #     return -1
+        if(self.dead == 1):
+             return True
         
         
         if(self.case.qtite_nourriture != 0):
@@ -172,7 +173,7 @@ class Bob():
     #permet de deplacer un bob, soit pour chercher de la nourriture, soit aléatoirement  
     def bobDeplacement(self):
         self.previousCoordinates = self.coordinates
-        if(not self.chercherNouriture()):
+        if((not self.chercherNouriture()) and (not self.dead) ):
             self.bouger()
             self.previousAction = DEPLACEMENT_ALEATOIRE
         if(memoryON):
@@ -195,6 +196,8 @@ class Bob():
                 if((smallBob != self) and (not tribesON or self.tribe != smallBob.tribe)): #soit tribue desactivé soit pas la même tribue
                     if((self.mass > 1.5*smallBob.mass)):
                         self.energy += 0.5*smallBob.energy*(1-smallBob.mass/self.mass)
+                        self.energy = min(self.energy,200)
+                        smallBob.case.enleverBob(smallBob)
                         smallBob.mourir()
                         return True
         return False
@@ -282,10 +285,10 @@ class Bob():
             self.perception = random() % maxRandomPerception + 1
             self.memory = random() % maxRandomMemory + 1
         else:
-            self.speed = bobS
-            self.mass = bobM
-            self.perception = bobP
-            self.memory = bobMem
+            self.speed = bobSpeed
+            self.mass = bobMass
+            self.perception = bobPerception
+            self.memory = bobMemory
         
         #vitesse
         self.speedBuffer = 0
@@ -329,13 +332,17 @@ class Bob():
         deadBobs.append(self)
         if(self in allBobs):
             bobIndex = allBobs.index(self)
-            bobIndexCase = grille[self.coordinates].bobs.index(self)
-            grille[self.coordinates].bobs.pop(bobIndexCase)
             del(allBobs[bobIndex])
-            if(self.energy <= 0):
-                self.previousAction = MOURIR_ENERGIE
-            else:
-                self.previousAction = MOURIR_ATTAQUE
+        
+        #bobIndexCase = grille[self.coordinates].bobs.index(self)
+        #grille[self.coordinates].bobs.pop(bobIndexCase)
+        #if(grille[self.coordinates].estVide()):
+        #    grille[self.coordinates].supprimer()
+            
+        if(self.energy <= 0):
+            self.previousAction = MOURIR_ENERGIE
+        else:
+            self.previousAction = MOURIR_ATTAQUE
 
 #deplacement :
     #gere le buffer de vitesse et renvoie le nombre de case que devra parcourir le bob
@@ -351,13 +358,13 @@ class Bob():
     
     #modifie les coordonnée d'un bob pour le deplacer aléatoirement du bon nombre de case    
     def calculNouvellesCoordonneeDeplacement(self):
-        i = 0 #compteur pour pas se retrouver bloqué 
-        x = self.coordinates[0]
-        xBefore = x
-        y = self.coordinates[1]
-        yBefore = y
         #self.previousCoordinates = self.coordinates #on enregiste les coordonnees precentes avant des les modifier
         for i in range(self.calculNbCasesDeplacement()): #une itération par case à bouger
+            i = 0 #compteur pour pas se retrouver bloqué 
+            x = self.coordinates[0]
+            xBefore = x
+            y = self.coordinates[1]
+            yBefore = y
             boucle = True #permet de faire un équivalent de do(changer de coord) while (nouvelles coordonnées pas dans la grille)
             while boucle :
                 i += 1
@@ -416,6 +423,7 @@ class Bob():
         
         if(self.energy <= 0):
             self.mourir()
+            #self.case.enleverBob(self)
             return -1
     
     #le bob se deplace aléatoirement
@@ -436,12 +444,13 @@ class Bob():
             print("Attention ce bob est mort")
             return -1
         
-        #pour diminuer son niveau d'énergie
-        self.perdreEnergieDeplacement()
-        if(self.dead):
-            return -1
-        
         self.case.enleverBob(self)
+        
+        #pour diminuer son niveau d'énergie
+        if(self.perdreEnergieDeplacement()==-1):
+            return -1 #le bob est mort
+        
+        
         
         # pour faire bouger le bob d'autant de cases que nécessaire
         self.calculNouvellesCoordonneeDeplacement()
@@ -557,10 +566,12 @@ class Bob():
         uneCase = 1
         nbCase = self.calculNbCasesDeplacement()*uneCase
         
+        self.case.enleverBob(self)
+        
         if(self.perdreEnergieDeplacement()==-1):
             return 0 #le bob est mort
         
-        self.case.enleverBob(self)
+        
         
         if(nbCase >= self.distance(coordCible)):
             self.coordinates = coordCible
@@ -603,6 +614,8 @@ class Bob():
                 else:
                     self.setNourriturePrefereeDistance()
                 self.beeline(self.coordFavouriteFood)
+                if(self.dead):
+                    return True
                 self.previousAction = CHERCHER_NOURRITURE
                 return True
             elif(self.coordClosestPrey):
@@ -650,19 +663,24 @@ class Bob():
         self.coordClosestPrey = coordProieLaPlusProche
         return bobEnDanger
             
-    def fuire(self,coordCible): #déplacement en zigzag pour fuir une cible        
-        x = coordCible[0] - self.coordinates[0] 
-        y = coordCible[1] - self.coordinates[1]
+    def fuire(self,coordCible): #déplacement en zigzag pour fuir une cible
+              
+        
                 
         nbCase = self.calculNbCasesDeplacement()
         
         if(nbCase):
+            if(self in self.case.bobs):
+                self.case.enleverBob(self)
             if(self.perdreEnergieDeplacement()==-1):
                 return-1 #le bob est mort
             
-            self.case.enleverBob(self)
+            
 
             for i in range(nbCase):
+                x = coordCible[0] - self.coordinates[0] 
+                y = coordCible[1] - self.coordinates[1]
+                
                 deplacementFait = False     
                     
                 if(not deplacementFait): #on s'eloigne de la cible
@@ -678,7 +696,7 @@ class Bob():
                     else:
                         if(y>0 and self.coordinates[1]-1>=0):
                             self.coordinates = (self.coordinates[0],self.coordinates[1]-1)
-                        elif(self.coordinates[0]+1<N-1):
+                        elif(self.coordinates[1]+1<M-1):
                             self.coordinates = (self.coordinates[0],self.coordinates[1]+1)
                         else:
                             deplacementFait = False
@@ -766,7 +784,7 @@ class Bob():
         print("(Bob) Je suis en : ",self.coordinates,"J'ai une vitesse de ",self.speed, "J'ai une preception de ",self.perception, "J'ai",self.energy,"energie")
         
     def speakMass(self): #juste pour faire des tests
-        print("(Bob) Je suis en : ",self.coordinates,"J'ai une masse de ",self.mass)
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai une masse de ",self.mass, "J'ai",self.energy,"energie")
     
     def speakPreviousAction(self):
         print("(Bob) Je suis en : ",self.coordinates,"J'ai",trunc(self.energy),"energie","Ma dernière action était : ",self.previousAction)
