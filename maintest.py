@@ -257,12 +257,13 @@ class Game:
         font = pygame.font.Font(None, 24)
         lines = [
             "Welcome to the guidance interface.",
-            "You can navigate Bob Land by using the arrow keys: up, down, left, and right.",
-            "Press 'c' to zoom in, and 'x' to zoom out.",
-            "Press the space bar to pause the game.",
-            "Press 'b' to bring up the information board (you can drag it with the mouse).",
-            "Click on a specific Bob to learn more about him;",
-            "Click on this icon again to exit the guidance."
+            "Exit guidance menu : same bouton (i)"
+            "Naviaguate though the map : arrow keys",
+            "Zoom in : 'c' - Zoom out 'x'"
+            "Adjust map's orientation 'w' - 's' "
+            "Pause the game : space bar",
+            "Infomation board for a specific bob : Press 'b' then select a bob ",
+            "Move the information board : drag it with the mouse"
         ]
 
         y_position = SCREEN_HEIGHT // 4  
@@ -402,15 +403,16 @@ class Game:
 
                 font = pygame.font.Font(None, int(24*(SCREEN_HEIGHT/600)))
                 lines2 = [
-                    f"Valeurs moyennes : ",
-                    f"Vitesse :{avgSpeed()}",
+                    f"Avergage Values : ",
+                    f"Speed :{avgSpeed()}",
                     f"Perception :{avgPerception()}",
-                    f"Mémoire :{avgMemory()}",
-                    f"Masse :{avgMass()}",
-                    f"Energie:{avgEnergy()}",
-                    f"Nombre de bobs:",
+                    f"Memmory :{avgMemory()}",
+                    f"Mass :{avgMass()}",
+                    f"Energy:{avgEnergy()}",
+                    f"Number of bobs:",
                     f"Total :{nbBobs()}",
-                    f"Malades :{maxSpeed()}"
+                    f"Sick :{nbBobs_malade()}",
+                    f"Educated :{nbBobs_educated()}"
                 ]
                 lines = [
                     f"Tick for one day:{self.tick_by_day}",
