@@ -30,6 +30,10 @@ class Bob():
 #########################################################################################
     #Toutes les fonctions (sauf déplacement) renvoient False si elle ne font rien et True si elles font l'action correpondante
     def avantUnTour(self):
+        self.seenFoods = self.nourritureEnVue(self.coordinates)
+        if(memoryON):
+            self.setNourritureMemorisee()
+            self.setCaseMemorisee()
         if(deseaseON and self.sick):
             self.sickTicsLeft -= 1
             if(self.sickTicsLeft <= 0):
@@ -176,9 +180,7 @@ class Bob():
         if((not self.chercherNouriture()) and (not self.dead) ):
             self.bouger()
             self.previousAction = DEPLACEMENT_ALEATOIRE
-        if(memoryON):
-            self.setNourritureMemorisee()
-            self.setCaseMemorisee()
+        
 
     #def attack(self):
         for bob in allBobs:
@@ -460,9 +462,8 @@ class Bob():
         return 0
       
 #perception
-    def coordAdjacentes(self, coordonnee, perception =-1): #renvoie les case visibles depuis
-        if(perception == -1):
-            perception = self.perception
+    def coordAdjacentes(self, coordonnee, perception): #renvoie les case visibles depuis
+        #print("perception",perception)
         x = coordonnee[0]
         y = coordonnee[1]
         coordonneeAdjacentes = [] #liste de tuples
@@ -494,7 +495,7 @@ class Bob():
         #mise à jour de la liste de nourriture
         nourritureEnVue = [] #on vide la liste de tuple
         
-        for coord in self.coordAdjacentes(coordonnee) :
+        for coord in self.coordAdjacentes(coordonnee,self.perception) :
             if (coord in grille):
                 if (grille[coord].qtite_nourriture != 0):
                     nourritureEnVue.append(coord)
@@ -629,7 +630,7 @@ class Bob():
     
     def bobsEnVue(self):
         bobsEnVue = []
-        coordAdj = self.coordAdjacentes(self.coordinates)
+        coordAdj = self.coordAdjacentes(self.coordinates,self.perception)
         #coordAdj.remove(self.coordinates)
         for coord in coordAdj:
             if (coord in grille) and (len(grille[coord].bobs)!=0) :
@@ -757,18 +758,6 @@ class Bob():
                 if(not tribesON or b.tribe == self.tribe):
                     return b
         return None
-
-#Attaquez vos semblables s'ils manquent de nourriture    
-    def cannibal(self):
-        if not self.chercherNouriture():
-            if self.enDanger() and self.coordClosestPrey:
-                self.fuire(self.coordClosestPrey)
-                return True
-            elif self.coordClosestPrey:
-                bob_predateur = grille[self.coordClosestPrey].bobs[0]
-                self.attack(bob_predateur)
-                return True
-        return False
         
 #fonction de communication
     #le bob printf ses coordonnee et son energie

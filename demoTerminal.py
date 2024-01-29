@@ -30,10 +30,10 @@ def allBobsPreviousNotRandomMove():
 
 if __name__ == '__main__':
     allBobs = []
-    allBobs.append(Bob(bobPerception=7,bobEnergy=199,bobSpeed=1,bobMass=2, coord=(3,3)))
-    allBobs.append(Bob(bobPerception=7,bobEnergy=199 , bobSpeed=2,bobMass=1, coord=(3,4)))
+    allBobs.append(Bob(bobPerception=0,bobMemory=2, bobEnergy=199,bobSpeed=2,bobMass=2, coord=(2,3)))
+    allBobs.append(Bob(bobPerception=4,bobMemory=2,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(1,3)))
     
-    #ajouterNourritureCaseSpecifique((6,15))
+    ajouterNourritureCaseSpecifique((1,1))
 
     print("\033[H\033[J",end="")
     print("On met deux bobs à distance égale d'une nourriture avec un perception très grande \n pour qu'ils aillent chercher la nourriture")
@@ -51,12 +51,14 @@ if __name__ == '__main__':
             tick += 1
             for b in allBobs:
                 b.avantUnTour()
+                
                 if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
                     b.partageEnergie()
                     if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
                         b.bobDeplacement()
-            print("\033[H\033[J",end="")
             afficheCouleur(tick, day)
             allBobsSpeakM()
             sleep(0.5)
+            print("\033[H\033[J",end="")
+
             
