@@ -101,7 +101,7 @@ def afficheGrilleSimpleCouleur(tick, day):
                     elif (caracteritique >= (parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))):
                         print("\033[0;33m", c ,"\033[0;30m", end="")#jaune 33
                 else:
-                    print("\033[0;31m  \033[0;30m", end="")
+                    print("\033[0;31m ♥ \033[0;30m", end="")
             else:
                 print("   ", end="")
         print("|", end="")

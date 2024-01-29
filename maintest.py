@@ -1284,6 +1284,9 @@ g=Game()
 for i in range(N*M) : g.random_case.append(randint(0,100))
 
 
+def run_subprocess(script_path):
+    PYTHON_EXECUTABLE = "python3"
+    subprocess.run([PYTHON_EXECUTABLE, script_path])
 
 
 
@@ -1375,16 +1378,16 @@ while running:
                     g.setting = not g.setting
                 
                 if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
-                    key_to_modify="Relancer"
-                    new_value=True
-                    with open("parametre.py", 'r') as file:
-                        lines = file.readlines()
+                    
+                    run_subprocess("configurationpartie.py")
+                    run_subprocess("paramprimaire.py")
+                    run_subprocess("paramsecondaire.py")
+                    if graphicalInterfaceON:
+                        run_subprocess("maintest.py")
+                    else:
+                        run_subprocess("maintesttapha.py")
 
-                    with open("parametre.py", 'w') as file:
-                        for line in lines:
-                            if line.startswith(key_to_modify):
-                                line = f"{key_to_modify} = {new_value}\n"
-                            file.write(line)
+                    
                             
                     pygame.quit()
                     sys.exit()
