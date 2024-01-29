@@ -402,13 +402,15 @@ class Game:
 
                 font = pygame.font.Font(None, int(24*(SCREEN_HEIGHT/600)))
                 lines2 = [
-                    f"avgSpeed():{avgSpeed()}",
-                    f"avgPerception():{avgPerception()}",
-                    f"avgMemory():{avgMemory()}",
-                    f"avgMass():{avgMass()}",
-                    f"avgEnergy():{avgEnergy()}",
-                    f"nbBobs():{nbBobs()}",
-                    f"maxSpeed():{maxSpeed()}"
+                    f"Valeurs moyennes : ",
+                    f"Vitesse :{avgSpeed()}",
+                    f"Perception :{avgPerception()}",
+                    f"Mémoire :{avgMemory()}",
+                    f"Masse :{avgMass()}",
+                    f"Energie:{avgEnergy()}",
+                    f"Nombre de bobs:",
+                    f"Total :{nbBobs()}",
+                    f"Malades :{maxSpeed()}"
                 ]
                 lines = [
                     f"Tick for one day:{self.tick_by_day}",
@@ -417,7 +419,7 @@ class Game:
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
                     f"Number of cases:{N}",
                     f"Bob custom:{self.costum}",
-                    f"case custom:{self.costum_case}"
+                    f"Case custom:{self.costum_case}"
                 ]
 
                 deplace=SCREEN_HEIGHT//8

@@ -180,7 +180,7 @@ class Bob():
             self.setNourritureMemorisee()
             self.setCaseMemorisee()
 
-    def attack(self):
+    #def attack(self):
         for bob in allBobs:
             if(self.coordinates == bob.coordinates and self != bob):
                 if(self.mass > 1.5*bob.mass):
@@ -234,9 +234,10 @@ class Bob():
             for coord in self.coordAdjacentes(self.coordinates,1):
                 if coord in grille :
                     for b in grille[coord].bobs:
-                        if(b.skipingTurn == False and b.educated == False):
+                        if(b.skipingTurn == False and b.educated == False and b.energy > energyMinToBeEducated):
                             b.educated = True
                             b.skipingTurn = True
+                            b.energy -= energyLossEducation
                             return True
         return False
                             
@@ -404,8 +405,11 @@ class Bob():
         eMemoire = 0
         if(memoryON):
             eMemoire = 1/5*trunc(self.memory)
+        eEducation = 0
+        #if(educationON and self.educated): #TODO voire si je garde ça ou pas
+        #    eEducation = 1/10
         
-        energyLoss = max((eVitesse * eMasse + ePerception + eMemoire),0.5)
+        energyLoss = max((eVitesse * eMasse),0.5) + ePerception + eMemoire + eEducation
         if(deseaseON and self.sick):
             energyLoss *= 2
         self.energy -= energyLoss
