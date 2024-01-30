@@ -225,7 +225,7 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     nbmalade = nbBobs_malade()
     longevityMoy = avgLongevity()
     
-    print("\033[H\033[J", end="")
+    #print("\033[H\033[J", end="")
 
     print("Jour : ",day,"Tic : ",tick)
     print("Nombre de bob vivant : ",len(allBobs),"  Nombre de bobs morts : ",len(deadBobs))
@@ -241,6 +241,8 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
         print("Mémoire moyenne : ",trunc(memoireMoy*1000)/1000,"Mémoire minimale : ", trunc(memoireMin*1000)/1000, "Mémoire maximum : ",trunc(memoireMax*1000)/1000)
     if(kindnessON):
         print("Gentillesse moyenne : ",trunc(kindnessMoy*1000)/1000,"Mémoire minimale : ", trunc(kindnessMin*1000)/1000, "Mémoire maximum : ",trunc(kindnessMax*1000)/1000)
+    
+    print("Bob \033[0;35mRose\033[0;30m : éduqué, Bob \033[0;34mBleu\033[0;30m : pas éduqué")
 
 
     for a in range(M // 2 * 3):
@@ -280,7 +282,6 @@ def afficheGrilleSimpleCouleurEducation(tick, day): #pourrait être adapté à d
     for a in range(M // 2 * 3):
         print(" _", end="")
     print("\n")
-    sleep(0.20)
 
 
 # version d'affichage avec des contours, pour une petite grille

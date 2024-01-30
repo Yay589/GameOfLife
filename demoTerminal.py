@@ -30,8 +30,8 @@ def allBobsPreviousNotRandomMove():
 
 if __name__ == '__main__':
     allBobs = []
-    allBobs.append(Bob(bobPerception=0,bobMemory=2, bobEnergy=199,bobSpeed=2,bobMass=2, coord=(2,3)))
-    allBobs.append(Bob(bobPerception=4,bobMemory=2,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(1,3)))
+    allBobs.append(Bob(bobPerception=0,bobMemory=2, bobEnergy=199,bobSpeed=2,bobMass=2, coord=(1,3)))
+    allBobs.append(Bob(bobPerception=1,bobMemory=2,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(2,3)))
     
     ajouterNourritureCaseSpecifique((1,1))
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     sleep(0.5)
     #print("\033[H\033[J",end="")
 
-    
+
 
     day = 0
     for k in range(10):
@@ -60,5 +60,25 @@ if __name__ == '__main__':
             allBobsSpeakM()
             sleep(0.5)
             print("\033[H\033[J",end="")
+    
+"""
+    day = 0
+    for k in range(10):
+        day += 1
+        tick = 0            
+        for i in range(5):
+            tick += 1
+            for b in allBobs:
+                b.avantUnTour()
+                
+                if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
+                    b.partageEnergie()
+                    if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
+                        b.bobDeplacement()
+            afficheCouleur(tick, day)
+            allBobsSpeakM()
+            sleep(0.5)
+            print("\033[H\033[J",end="")
+            """
 
             

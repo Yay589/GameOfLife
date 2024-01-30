@@ -160,7 +160,7 @@ class Bob():
             #calcul du gain d'energie et energie restante sur la case
             faim = bobMaxE - self.energy
             reste = self.case.qtite_nourriture - faim
-            if(deseaseON and randint(0,chancesOfFoodPoisoning) == 1):
+            if(deseaseON and randint(0,chancesOfFoodPoisoning) == 0):
                 self.sick = True
                 self.sickTicsLeft = nbSickTics
             if (reste <= 0) :
@@ -206,6 +206,8 @@ class Bob():
     
     def partageEnergie(self):
         if(educationON and self.educated and self.sick):
+            print("test")
+            sleep(0.1)
             return False
         elif(kindnessON and self.kindness>0):
             for coord in self.coordAdjacentes(self.coordinates,1): 
@@ -229,6 +231,7 @@ class Bob():
                             self.energy -= energieTransmise
                             b.energy += energieTransmise
                             b.kindness += kidnessAdded
+                            b.kindness = min(self.kindness,100)
                             if(self.sick):
                                 b.sick = True
                                 b.sickTicsLeft = nbSickTics
@@ -256,6 +259,8 @@ class Bob():
                  bobPerception = bobP, 
                  bobMemory = bobMem,
                  bobTribe = 0,
+                 bobKindness = birthKindness,
+                 bobEducation = -1,
                  coord = (randint(0,N-1),randint(0,M-1)) ) :
         self.energy = bobEnergy
         #coordonnee
@@ -307,7 +312,7 @@ class Bob():
         self.rememberedSquares = []
         
         #caractéristique supplémentaire :
-        self.kindness = birthKindness
+        self.kindness = bobKindness
         self.sick = False
         self.sickTicsLeft = 0
         if(bobTribe == 0):
@@ -324,9 +329,13 @@ class Bob():
                     self.tribe = 4
         else:
             self.tribe = bobTribe
-        self.educated = False
-        if(educationON and randint(1,chancesOfBeingBornEducated)==1):  
-            self.educated = True
+        
+        if(bobEducation == -1):    
+            self.educated = False
+            if(educationON and randint(1,chancesOfBeingBornEducated)==1):  
+                self.educated = True
+        else:
+            self.educated = bobEducation
 
 
     def mourir(self):
@@ -778,5 +787,19 @@ class Bob():
     def speakPreviousAction(self):
         print("(Bob) Je suis en : ",self.coordinates,"J'ai",trunc(self.energy),"energie","Ma dernière action était : ",self.previousAction)
 
+    def speakEducation(self): #juste pour faire des tests
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai",self.energy,"energie",end="")
+        if(self.educated):
+            print(" Je suis éduqué")
+        else:
+            print(" Je ne suis pas éduqué")
+    
+    def speakEducationKindness(self): #juste pour faire des tests
+        print("(Bob) Je suis en : ",self.coordinates,"J'ai",self.energy,"energie","Je suis gentil à",self.kindness,"pourcent de gentillesse",end="")
+        if(self.educated):
+            print(" Je suis éduqué")
+        else:
+            print(" Je ne suis pas éduqué")
+    
     
     

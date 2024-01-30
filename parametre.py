@@ -1,12 +1,12 @@
 from collections import defaultdict
 
 #Gentillesse
-kindnessON = False
-birthKindness = 30 #Point de gentillesse à la naissance (pas génétique)
+kindnessON = True
+birthKindness = 100 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
-deseaseON = False
-chancesOfFoodPoisoning = 25 #1000, 1 chance sur 1000 de tomber malade
+deseaseON = True
+chancesOfFoodPoisoning = 1 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = False
@@ -46,9 +46,9 @@ Relancer = True
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 20
-M = 20
-numberBob = 10
+N = 3
+M = 3
+numberBob = 2
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
@@ -56,12 +56,12 @@ numberBob = 10
 graphicalInterfaceON = True
 #True : ON 
 #False : OFF
-soloReproductionON = True
-duoReproductionON = True
-speedON = True
-massON = True
+soloReproductionON = False
+duoReproductionON = False
+speedON = False
+massON = False
 perceptionON = True
-memoryON = True
+memoryON = False
 
 mutSpeedON = True
 mutMassON = True
