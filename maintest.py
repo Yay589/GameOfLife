@@ -12,8 +12,7 @@ import sys
 from affichage import *
 from statistiques import *
 import cProfile
-
-
+import maintestCelestine
 # import time
 
 pygame.init()
@@ -27,35 +26,8 @@ fullscreen = False
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('BOB_LAND')
 
-class Button_text:
-    def __init__(self, x, y, width, height, text=''):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.text = text
-        self.image_back = pygame.image.load('data/images/background/background1.png')
-        self.image_back = pygame.transform.scale(self.image_back, (self.width, self.height))
-
-    def draw(self, win):
-        pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height))
-        screen.blit(self.image_back, (self.x,self.y))
-        
-        
-        font = pygame.font.SysFont('comicsans', 30)
-        text = font.render(self.text, 1, (255, 255, 255))
-        win.blit(text, (self.x + round(self.width/2) - round(text.get_width()/2), 
-                        self.y + round(self.height/2) - round(text.get_height()/2)))
-
-    def is_over(self, pos):
-        if pos[0] > self.x and pos[0] < self.x + self.width:
-            if pos[1] > self.y and pos[1] < self.y + self.height:
-                return True
-        return False
-
 class Game:
     def __init__(self) :
-        self.action_button = Button_text(25, 100, 200, 60, 'Version console')
         self.setting_frame=0
         self.selected_index = -1
         self.selected_index_start=-1
@@ -66,12 +38,20 @@ class Game:
         self.costum_number=8
         self.ball_x=0
         self.ball_y=0
+        self.ajouter=0
         self.angle=0
         self.day_night=0
         self.sombre=200
+        self.stat=0
         self.plat=5
         self.costum=0
         self.costum_case=0
+        self.show_mass=0
+        self.show_energy=0
+        self.show_age=0
+        self.show_perception=0
+        self.show_speed=0
+        self.filter=0
         self.active=False
         self.show = False
         self.dragging = False
@@ -138,7 +118,7 @@ class Game:
 
         self.line_width = 5
         self.line_padding = 40
-        self.max_data_points = 20  # 最大数据点数
+        self.max_data_points = 40  # 最大数据点数
 
         self.data = []
             
@@ -191,7 +171,7 @@ class Game:
         self.draw_background(walk_i)
 
         # Dessiner le soleil
-        self.draw_sun()
+        #self.draw_sun()
 
     # Dessiner l'île flottante
     #self.draw_Floating_Island_Cliff()
@@ -215,11 +195,13 @@ class Game:
 
         self.draw_restart()
 
-        self.action_button.draw(screen)
-        
         self.draw_menu()
+
+        self.draw_skip_day()
         
         self.draw_summary_graph(walk_i)
+
+        self.draw_statistics()
         
         # for i in self.random_values_for_tree:
         #     image_tree = pygame.image.load('data/images/05.png')
@@ -243,12 +225,65 @@ class Game:
             screen.blit(image_pause, (SCREEN_WIDTH-265, 50))
         
         self.draw_setting()
-        
 
         pygame.display.flip()
     
 
+    def draw_statistics(self):
 
+        #font_color = (0, 128, 255)
+        font_size = 18
+        font = pygame.font.Font(None, font_size)
+        # scroll_speed = 20
+        # scroll_position = 0
+        
+        # height=100
+
+        
+        None_bob="Nope"
+
+        lines = [
+            f"avgSpeed:{avgSpeed()}",
+            f"avgPerception:{avgPerception()}",
+            f"avgMemory:{avgMemory()}",
+            f"avgMass:{avgMass()}",
+            f"avgEnergy:{avgEnergy()}",
+            f"nbBobs:{nbBobs()}",
+            f"maxSpeed:{maxSpeed()}"
+        ]
+
+        if nbBobs()==0:
+            lines = [
+                f"avgSpeed:{None_bob}",
+                f"avgPerception:{None_bob}",
+                f"avgMemory:{None_bob}",
+                f"avgMass:{None_bob}",
+                f"avgEnergy:{None_bob}",
+                f"nbBobs:{nbBobs()}",
+                f"maxSpeed:{None_bob}"
+            ]
+
+        # for event in pygame.event.get():
+        #     if event.type == pygame.MOUSEBUTTONDOWN:
+        #         if event.button == 4:  # 滚轮向上
+        #             scroll_position += scroll_speed
+        #         elif event.button == 5:  # 滚轮向下
+        #             scroll_position -= scroll_speed
+
+        #绘制多行文本框
+        text_y = SCREEN_HEIGHT - (font_size + 5) * len(lines) - 10
+        for line in lines:
+            text_surface = font.render(line, True, (0,0,0))
+            text_rect = text_surface.get_rect(bottomleft=(10, text_y))
+            screen.blit(text_surface, text_rect)
+            text_y += font_size + 5
+
+        # text_y = height - (font_size + 5) * len(lines) + scroll_position
+        # for line in lines:
+        #     text_surface = font.render(line, True, (0,0,0))
+        #     text_rect = text_surface.get_rect(bottomleft=(10, text_y))
+        #     screen.blit(text_surface, text_rect)
+        #     text_y += font_size + 5
 
     def draw_guid(self):
 
@@ -257,13 +292,12 @@ class Game:
         font = pygame.font.Font(None, 24)
         lines = [
             "Welcome to the guidance interface.",
-            "Exit guidance menu : same bouton (i)"
-            "Naviaguate though the map : arrow keys",
-            "Zoom in : 'c' - Zoom out 'x'"
-            "Adjust map's orientation 'w' - 's' "
-            "Pause the game : space bar",
-            "Infomation board for a specific bob : Press 'b' then select a bob ",
-            "Move the information board : drag it with the mouse"
+            "You can navigate Bob Land by using the arrow keys: up, down, left, and right.",
+            "Press 'c' to zoom in, and 'x' to zoom out.",
+            "Press the space bar to pause the game.",
+            "Press 'b' to bring up the information board (you can drag it with the mouse).",
+            "Click on a specific Bob to learn more about him;",
+            "Click on this icon again to exit the guidance."
         ]
 
         y_position = SCREEN_HEIGHT // 4  
@@ -304,13 +338,13 @@ class Game:
         y_under=100 + N/2 * self.plat + N/2 *self.plat
         screen.blit(image_under,  [(x_under-self.offset.x)*self.zoom_scale,(y_under-self.offset.y)* self.zoom_scale])
 
-    def show_value(self,mouse_x, mouse_y,real_location_x,real_location_y):
-        for obj in self.all_gameobject:
-            vect_list_obj = [x * self.zoom_scale*obj.taille for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
-            location=()
-            location=obj.rect.center
-            real_location_x=(150 + location[0] * 10 - location[1] * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2
-            real_location_y=(100 + location[0] * self.plat + location[1] * self.plat-self.offset.y)*self.zoom_scale-vect_list_obj[1]/2
+    def show_value(self,mouse_x, mouse_y,real_location_x,real_location_y,vect_list_obj,obj):
+        # for obj in self.all_gameobject:
+            # vect_list_obj = [x * self.zoom_scale*obj.taille for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
+            # location=()
+            # location=obj.rect.center
+            # real_location_x=(150 + location[0] * 10 - location[1] * 10-self.offset.x)*self.zoom_scale-vect_list_obj[0]/2
+            # real_location_y=(100 + location[0] * self.plat + location[1] * self.plat-self.offset.y)*self.zoom_scale-vect_list_obj[1]/2
             
             obj.width= pygame.Surface.get_width(obj.image)
             obj.height=pygame.Surface.get_height(obj.image)
@@ -319,11 +353,14 @@ class Game:
                 
                     # Check if the mouse click is within the bounds of the obj
             if (
-                real_location_x < mouse_x < real_location_x + obj.width * self.zoom_scale
-                and real_location_y < mouse_y < real_location_y + obj.height * self.zoom_scale
+                real_location_x < mouse_x < real_location_x + vect_list_obj[0]
+                and real_location_y < mouse_y < real_location_y + vect_list_obj[1]
             ):
-                self.show_energy=obj.energy
-            
+                self.show_mass=obj.gbob.mass
+                self.show_energy=obj.gbob.energy
+                self.show_age=obj.gbob.age
+                self.show_perception=obj.gbob.perception
+                self.show_speed=obj.gbob.speed
 
 
     def show_broad(self):
@@ -334,13 +371,25 @@ class Game:
 
             font = pygame.font.Font(None, 20)
 
-            text_show = font.render(f"Energy: {self.show_energy}", True, (0, 0, 0))
+            text_show = font.render(f"Energy: {self.show_energy}", True, (255,255,255))
 
             screen.blit(text_show, self.image_broad_rect.move(15, 15))
 
-            text_render = font.render(f"Mass: {len(allBobs)}", True, (0, 0, 0))
+            text_render = font.render(f"Mass: {self.show_mass}", True, (255,255,255))
+
+            screen.blit(text_render, self.image_broad_rect.move(15, 30))
+
+            text_render = font.render(f"Age: {self.show_age}", True, (255,255,255))
 
             screen.blit(text_render, self.image_broad_rect.move(15, 45))
+
+            text_render = font.render(f"Perception: {self.show_perception}", True, (255,255,255))
+
+            screen.blit(text_render, self.image_broad_rect.move(15, 60))
+
+            text_render = font.render(f"Speed: {self.show_speed}", True, (255,255,255))
+
+            screen.blit(text_render, self.image_broad_rect.move(15, 75))
 
 
     def draw_info(self):        
@@ -364,7 +413,12 @@ class Game:
 
         screen.blit(image_skip, (SCREEN_WIDTH-125, 50))
         
- 
+    def draw_skip_day(self):
+        image_skip = pygame.image.load('data/images/skip.png')
+
+        image_skip = pygame.transform.scale(image_skip, (50, 50))
+
+        screen.blit(image_skip, (SCREEN_WIDTH-240, SCREEN_HEIGHT-98))
 
 
     def draw_restart(self):        
@@ -402,27 +456,53 @@ class Game:
                 screen.blit(image_setting_a, ((SCREEN_WIDTH - 8 * SCREEN_HEIGHT // 9) // 2, 0))
 
                 font = pygame.font.Font(None, int(24*(SCREEN_HEIGHT/600)))
-                lines2 = [
-                    f"Avergage Values : ",
-                    f"Speed :{avgSpeed()}",
-                    f"Perception :{avgPerception()}",
-                    f"Memmory :{avgMemory()}",
-                    f"Mass :{avgMass()}",
-                    f"Energy:{avgEnergy()}",
-                    f"Number of bobs:",
-                    f"Total :{nbBobs()}",
-                    f"Sick :{nbBobs_malade()}",
-                    f"Educated :{nbBobs_educated()}"
-                ]
+                # lines2 = [
+                #     f"avgSpeed():{avgSpeed()}",
+                #     f"avgPerception():{avgPerception()}",
+                #     f"avgMemory():{avgMemory()}",
+                #     f"avgMass():{avgMass()}",
+                #     f"avgEnergy():{avgEnergy()}",
+                #     f"nbBobs():{nbBobs()}",
+                #     f"maxSpeed():{maxSpeed()}"
+                # ]
+
+                Message=""
+                if self.stat==0:
+                    Message="average_Energy"
+                if self.stat==1:
+                    Message="Number of Bob"
+                if self.stat==2:
+                    Message="average_Speed"
+                if self.stat==3:
+                    Message="average_Mass"
+                if self.stat==4:
+                    Message="average_Longevity"
+                if self.stat==5:
+                    Message="average_Perception"
+                
+                Message_f=""
+                if self.filter==0:
+                    Message_f="OFF"
+                if self.filter==1:
+                    Message_f="Speed"
+                if self.filter==2:
+                    Message_f="Mass"
+                if self.filter==3:
+                    Message_f="Kindness"
+                if self.filter==4:
+                    Message_f="Sick"
+
+
+
                 lines = [
-                    f"Number of ticks in a day:{self.tick_by_day}",
-                    f"Energy contained in a cake:{foodE}",
-                    f"Width:{N}",
-                    f"Length:{M}",
-                    f"Bob custom:{self.costum}",
-                    f"Case custom:{self.costum_case}"
+                    f"Speed of Game:{round(15/self.tick_by_day, 2)}",
+                    f"Energy for each food:{foodE}",
                     f"SCREEN_WIDTH:{SCREEN_WIDTH}",
                     f"SCREEN_HEIGHT:{SCREEN_HEIGHT}",
+                    f"graph:{Message}",
+                    f"Bob custom:{self.costum}",
+                    f"case custom:{self.costum_case}",
+                    f"fliter for:{Message_f}"
                 ]
 
                 deplace=SCREEN_HEIGHT//8
@@ -434,7 +514,7 @@ class Game:
                 keys = pygame.key.get_pressed()
                 
                 if keys[pygame.K_n]:
-                    if self.selected_index < 7 :
+                    if self.selected_index < 9 :
                         self.selected_index += 0.5
                     else:
                         self.selected_index=-1
@@ -454,18 +534,18 @@ class Game:
                     
                     deplace += 20*(SCREEN_HEIGHT/600)  # Move to the next line
                     
-                for i, line in enumerate(lines2):
-                    text = font.render(line, True, (255, 255, 255))  # Set text color to white
-                    text_rect = text.get_rect(topleft=((SCREEN_WIDTH - 8 * SCREEN_HEIGHT // 9) // 2+150*SCREEN_HEIGHT/600, 140+deplace))
-                    screen.blit(text, text_rect.topleft)
-                    if text_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
-                        self.selected_index=i
+                # for i, line in enumerate(lines2):
+                #     text = font.render(line, True, (255, 255, 255))  # Set text color to white
+                #     text_rect = text.get_rect(topleft=((SCREEN_WIDTH - 8 * SCREEN_HEIGHT // 9) // 2+150*SCREEN_HEIGHT/600, 140+deplace))
+                #     screen.blit(text, text_rect.topleft)
+                #     if text_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
+                #         self.selected_index=i
 
-                    # Check if the line is selected, and draw a gray rectangle behind it
-                    if int(self.selected_index) == i:
-                        pygame.draw.rect(screen, (169, 169, 169), text_rect, 2)  # Highlight with a gray rectangle
+                #     # Check if the line is selected, and draw a gray rectangle behind it
+                #     if int(self.selected_index) == i:
+                #         pygame.draw.rect(screen, (169, 169, 169), text_rect, 2)  # Highlight with a gray rectangle
                     
-                    deplace += 20*(SCREEN_HEIGHT/600)  # Move to the next line
+                #     deplace += 20*(SCREEN_HEIGHT/600)  # Move to the next line
                 
                 #self.draw_statistics()
             
@@ -480,16 +560,33 @@ class Game:
 
 
     def draw_summary_graph(self,frame):
-        if frame%self.tick_by_day==0:
-            new_data_point = avgEnergy()
+        if frame%self.tick_by_day==0 and (not self.is_paused):
+            if self.stat==0:
+                new_data_point = avgEnergy()
+            if self.stat==1:
+                new_data_point = nbBobs()
+                
+            if self.stat==2:
+                new_data_point = avgSpeed()
+                
+            if self.stat==3:
+                new_data_point = avgMass()
+               
+            if self.stat==4:
+                new_data_point = avgLongevity()
+                
+            if self.stat==5:
+                new_data_point = avgPerception()
+                
+            
             self.data.append(new_data_point)
 
             # 保持数据点数量不超过最大值
             if len(self.data) > self.max_data_points:
                 self.data.pop(0)
 
-        width=400
-        height=300
+        width=SCREEN_WIDTH//2
+        height=SCREEN_HEIGHT//2
         # 绘制折线图
         for i in range(len(self.data) - 1):
             x1 = self.line_padding + i * (width - 2 * self.line_padding) // (self.max_data_points - 1)
@@ -502,66 +599,54 @@ class Game:
             pygame.draw.line(screen, self.line_color, (x1, y1), (x2, y2), self.line_width)
     
     def draw_lignes(self):
-        # i = 0
-        # j = 0
-        # x_y_1 = [0,0]
-        # x_y_2 = [150 - (N-1) * 10, 100 + (N-1) * 5]
-        # x_y_3 = [150 + (N-1) * 10 , 100 + (N-1) * 5 ]
-        # x_y_4 = [150 + (N-1) * 10 - (N-1) * 10, 100 + (N-1) * 5 + (N-1) * 5]
-
-        # case_location1 = [(x_y_1[0] - self.offset.x - self.rect.width/2) * self.zoom_scale,
-        #                 (x_y_1[1] - self.offset.y) * self.zoom_scale]
-
-        # case_location2 = [(x_y_2[0] - self.offset.x - self.rect.width/2) * self.zoom_scale,
-        #                 (x_y_2[1] - self.offset.y) * self.zoom_scale]
-
-        # case_location3 = [(x_y_3[0] - self.offset.x - self.rect.width/2) * self.zoom_scale,
-        #                 (x_y_3[1] - self.offset.y) * self.zoom_scale]
-
-        # case_location4 = [(x_y_4[0] - self.offset.x - self.rect.width/2) * self.zoom_scale,
-        #                 (x_y_4[1] - self.offset.y) * self.zoom_scale]
-
-        # diamond_points = [
-        #     (case_location3[0], case_location3[1] ),
-        #     (case_location1[0], case_location1[1] ),
-        #     (case_location2[0], case_location2[1] ),
-        #     (case_location4[0], case_location4[1] )
-        # ]
 
         #pygame.draw.polygon(screen, (0, 0, 255), diamond_points)
-        for i in range(1,M+1):
-            x_y_1=[145 - i * 10, 95 + i * 5]
-            x_y_2=[145 + (N) * 10 - i * 10, 95 + (N) * 5 + i * 5]
-            case_locattion1=[(x_y_1[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
-                                ,(x_y_1[1]-self.offset.y)* self.zoom_scale]
-            case_locattion2=[(x_y_2[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
-                                ,(x_y_2[1]-self.offset.y)* self.zoom_scale]
-            pygame.draw.line(screen, self.line_color, (case_locattion1[0]+12,case_locattion1[1]), (case_locattion2[0]+12, case_locattion2[1]), 2)
-        for j in range(1,N+1):
-            x_y_1=[145 + j * 10 , 95 + j * 5 ]
-            x_y_2=[145 + j * 10 - (M) * 10, 95 + j * 5 + (M) * 5]
-            case_locattion1=[(x_y_1[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
-                                ,(x_y_1[1]-self.offset.y)* self.zoom_scale]
-            case_locattion2=[(x_y_2[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
-                                ,(x_y_2[1]-self.offset.y)* self.zoom_scale]
-            pygame.draw.line(screen, self.line_color, (case_locattion1[0]+12,case_locattion1[1]), (case_locattion2[0]+12, case_locattion2[1]), 2)
+        for i in range(0,M+1):
+            x_y_a=[150 - 5*(3/self.zoom_scale) - (i) * 10+10, (100+5- 5*(3/self.zoom_scale)*(self.plat/5) + (i) * 5*(self.plat/5))]
+            x_y_b=[150- 5*(3/self.zoom_scale) + (N+1) * 10 - i * 10, (100- 5*(3/self.zoom_scale)*(self.plat/5) + (N+1) * 5*(self.plat/5) + i * 5*(self.plat/5))]
+            case_locattiona=[(x_y_a[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+                                ,(x_y_a[1]-self.offset.y)* self.zoom_scale]
+            case_locattionb=[(x_y_b[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+                                ,(x_y_b[1]-self.offset.y)* self.zoom_scale]
+            pygame.draw.line(screen, self.line_color, (case_locattiona[0]+12,case_locattiona[1]), (case_locattionb[0]+12, case_locattionb[1]), 2)
+        for j in range(1,N+2):
+            x_y_c=[150- 5*(3/self.zoom_scale) + j * 10 , (100- 5*(3/self.zoom_scale)*(self.plat/5) + j * 5*(self.plat/5)) ]
+            x_y_d=[150- 5*(3/self.zoom_scale) + j * 10 - (M) * 10, (100- 5*(3/self.zoom_scale)*(self.plat/5) + j * 5*(self.plat/5) + (M) * 5*(self.plat/5))]
+            case_locattionc=[(x_y_c[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+                                ,(x_y_c[1]-self.offset.y)* self.zoom_scale]
+            case_locattiond=[(x_y_d[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+                                ,(x_y_d[1]-self.offset.y)* self.zoom_scale]
+            pygame.draw.line(screen, self.line_color, (case_locattionc[0]+12,case_locattionc[1]), (case_locattiond[0]+12, case_locattiond[1]), 2)
         
 
+    # def draw_cases(self):
+    #     if self.change:
+    #         self.vect_list = [(x * self.zoom_scale) for x in (24 ,12*(self.plat/5))]
+    #         self.image = pygame.image.load(f'data/images/grass{self.costum_case}.png')
+    #         self.image=pygame.transform.scale(self.image, self.vect_list)
+    #         self.change=False
+    #     for value , j in zip(self.list_x_y, self.random_case):
+    #         # diamond_points = [(case_locattion [0], case_locattion [0]+24), (case_locattion [1], case_locattion [1]+12), (200, 350), (50, 200)]
+    #         # pygame.draw.polygon(screen, (0, 0, 255), diamond_points)
+    #         #self.image.set_alpha(j+180) 
+    #         case_locattion=[(value[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+    #                             ,(value[1]-self.offset.y)* self.zoom_scale*(self.plat/5)]
+    #         if -40*(self.zoom_scale/1.5)< case_locattion [0] and case_locattion [0] < SCREEN_WIDTH and -40*(self.zoom_scale/1.5) < case_locattion [1] and case_locattion [1] <SCREEN_HEIGHT:   
+    #             screen.blit(self.image, case_locattion)
+
     def draw_cases(self):
-        if self.change:
-            self.vect_list.clear()
-            self.vect_list = [(x * self.zoom_scale) for x in (24 ,12*(self.plat/5))]
-            self.image = pygame.image.load(f'data/images/grass{self.costum_case}.png')
-            self.image=pygame.transform.scale(self.image, self.vect_list)
-            self.change=False
-        for value , j in zip(self.list_x_y, self.random_case):
-            # diamond_points = [(case_locattion [0], case_locattion [0]+24), (case_locattion [1], case_locattion [1]+12), (200, 350), (50, 200)]
-            # pygame.draw.polygon(screen, (0, 0, 255), diamond_points)
-            #self.image.set_alpha(j+180) 
-            case_locattion=[(value[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
-                                ,(value[1]-self.offset.y)* self.zoom_scale]
-            if -40*(self.zoom_scale/1.5)< case_locattion [0] and case_locattion [0] < SCREEN_WIDTH and -40*(self.zoom_scale/1.5) < case_locattion [1] and case_locattion [1] <SCREEN_HEIGHT:   
-                screen.blit(self.image, case_locattion)
+        #self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
+        self.image = pygame.image.load(f'data/images/grass{self.costum_case}.png')
+        vect_list = [x * self.zoom_scale for x in (self.rect.width ,self.rect.height*(self.plat/5))]
+        for i , j in zip(self.list_x_y, self.random_case):
+            #screen.blit(self.image, i)
+            
+            image=pygame.transform.scale(self.image, vect_list)
+            self.image.set_alpha(j+180) 
+            case_locattion=[(i[0]-self.offset.x-self.rect.width/2)*self.zoom_scale
+                                ,(i[1]-self.offset.y)* self.zoom_scale]
+            if -100< case_locattion [0] and case_locattion [0] < SCREEN_WIDTH and -100 < case_locattion [1] and case_locattion [1] <SCREEN_HEIGHT:   
+                screen.blit(image, case_locattion)
         
     
     def draw_objects(self,walk_i):
@@ -593,103 +678,113 @@ class Game:
             vect_list_obj = [x * self.zoom_scale*obj.taille*0.4 for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]      
             vect_list_obj_searching = [x * self.zoom_scale*0.08 for x in (pygame.Surface.get_width(obj.image),pygame.Surface.get_height(obj.image))]
 
-            # if self.costum%self.costum_number == 1:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking20/walking20{walk_i%10+1}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking21/walking21{walk_i%10+1}.png')      
-            #     vect_list_obj[0]*=0.7
+            if not tribesON:
+                if self.costum%self.costum_number == 0:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                        #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking20/walking20{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking21/walking21{walk_i%10+1}.png')     
 
-            # if self.costum%self.costum_number == 2:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking30/walking30{walk_i%10+1}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking31/walking30{walk_i%10+1}.png')      
-            #     vect_list_obj[0]*=0.8
+                if self.costum%self.costum_number == 1:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking20/walking20{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking21/walking21{walk_i%10+1}.png')      
+                    
 
-            # if self.costum%self.costum_number == 3:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking40/walking40{walk_i%10+1}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking41/walking40{walk_i%10+1}.png')      
-            #     vect_list_obj[0]*=0.9
+                if self.costum%self.costum_number == 2:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking30/walking30{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking31/walking30{walk_i%10+1}.png')      
+                    
 
-            # if self.costum%self.costum_number == 4:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking50/walking50{walk_i%10}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking51/walking50{walk_i%10}.png')      
-            #     vect_list_obj[0]*=0.9
+                if self.costum%self.costum_number == 3:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking40/walking40{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking41/walking40{walk_i%10+1}.png')      
+                    
 
-            # if self.costum%self.costum_number == 5:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking60/walking60{walk_i%10}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking61/walking60{walk_i%10}.png')      
+                if self.costum%self.costum_number == 4:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking50/walking50{walk_i%10}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking51/walking50{walk_i%10}.png')      
+                    
 
-            # if self.costum%self.costum_number == 6:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking70/walking70_{walk_i%10+1}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking71/walking70_{walk_i%10+1}.png')      
-            #     vect_list_obj[0]*=0.7
-            #     vect_list_obj[1]*=0.7
+                if self.costum%self.costum_number == 5:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking60/walking60{walk_i%10}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking61/walking60{walk_i%10}.png')      
 
-            # if self.costum%self.costum_number == 7:
-            #     if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-            #     #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking80/walking80_{walk_i%10+1}.png') 
-            #     else:
-            #         #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-            #         obj.image = pygame.image.load(f'data/images/walking81/walking80_{walk_i%10+1}.png')      
-            #     vect_list_obj[0]*=0.7
+                if self.costum%self.costum_number == 6:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking70/walking70_{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking71/walking70_{walk_i%10+1}.png')      
+                    
 
-            if obj.gbob.tribe == 1:
-                if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-                #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking20/walking20{walk_i%10+1}.png') 
-                else:
-                    #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking21/walking21{walk_i%10+1}.png')      
-    
+                if self.costum%self.costum_number == 7:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking80/walking80_{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking81/walking80_{walk_i%10+1}.png')      
+                    
 
-            if obj.gbob.tribe == 2:
-                if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-                #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking30/walking30{walk_i%10+1}.png') 
-                else:
-                    #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking31/walking30{walk_i%10+1}.png')      
+            if tribesON:
 
-            if obj.gbob.tribe == 3:
-                if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-                #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking40/walking40{walk_i%10+1}.png') 
-                else:
-                    #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking41/walking40{walk_i%10+1}.png')      
+                if obj.gbob.tribe == 1:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking20/walking20{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking21/walking21{walk_i%10+1}.png')      
+        
 
-            if obj.gbob.tribe == 4:
-                if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
-                #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking50/walking50{walk_i%10}.png') 
-                else:
-                    #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
-                    obj.image = pygame.image.load(f'data/images/walking51/walking50{walk_i%10}.png')      
-            
-            
+                if obj.gbob.tribe == 2:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking30/walking30{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking31/walking30{walk_i%10+1}.png')      
+
+                if obj.gbob.tribe == 3:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking40/walking40{walk_i%10+1}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking41/walking40{walk_i%10+1}.png')      
+
+                if obj.gbob.tribe == 4:
+                    if (obj.gbob.previousCoordinates[1]- obj.gbob.coordinates[1])>0 or (obj.gbob.previousCoordinates[0]- obj.gbob.coordinates[0])<0:
+                    #image_red = pygame.image.load(f'data/images/walking_blue/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking50/walking50{walk_i%10}.png') 
+                    else:
+                        #image_red = pygame.image.load(f'data/images/walking_blue1/walking{walk_i%10+1}.png')
+                        obj.image = pygame.image.load(f'data/images/walking51/walking50{walk_i%10}.png')      
+                
+                
 
             # if obj.action== MANGER :
             #     obj.image = pygame.image.load(f'data/images/eating/eating{(walk_i%self.tick_by_day)%10+1}.png')
@@ -728,10 +823,32 @@ class Game:
             if -100< real_location [0] and real_location [0] < SCREEN_WIDTH and -100 < real_location [1] and real_location [1] <SCREEN_HEIGHT:
 
                 
+                if self.filter==1:
+                    image_red = pygame.image.load(f'data/images/red.png')
+                    image_red=pygame.transform.scale(image_red, vect_list_obj)
+                    image_red.set_alpha(obj.gbob.speed*100)
                 
-                # image_red=pygame.transform.scale(image_red, vect_list_obj)
+                if self.filter==2:
+                    image_red = pygame.image.load(f'data/images/blue.png')
+                    image_red=pygame.transform.scale(image_red, vect_list_obj)
+                    image_red.set_alpha(obj.gbob.mass*100)
+                
+                if self.filter==3:
+                    image_red = pygame.image.load(f'data/images/yellow.png')
+                    image_red=pygame.transform.scale(image_red, vect_list_obj)
+                    image_red.set_alpha(obj.gbob.kindness*2)
+                
+                if self.filter==4 :
+                    image_red = pygame.image.load(f'data/images/green.png')
+                    image_red=pygame.transform.scale(image_red, vect_list_obj)
+                    if obj.gbob.sick :
+                        image_red.set_alpha(255)
+                    else:
+                        image_red.set_alpha(0)
 
-                # image_red.set_alpha(obj.energy)  # Set alpha value based on energy
+                    
+                
+
                 if obj.action== CHERCHER_NOURRITURE :
                     searching_image= pygame.image.load(f'data/images/searching/3342_37{walk_i%6}.png')
                     searching_image=pygame.transform.scale(searching_image,vect_list_obj_searching )
@@ -740,7 +857,8 @@ class Game:
                 #pygame.draw.rect(screen, (gbob.), (bar_x, bar_y, bar_width, bar_height))
 
                 screen.blit(image_obj, real_location)
-                #screen.blit(image_red, real_location)
+                if self.filter != 0:
+                    screen.blit(image_red, real_location)
             #screen.blit(image_obj, real_location_1)
             
             
@@ -749,7 +867,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     self.show=True
-                    self.show_value(mouse_x, mouse_y,real_location_x,real_location_y)
+                    self.show_value(mouse_x, mouse_y,real_location_x,real_location_y,vect_list_obj,obj)
         
     def draw_food(self):
     
@@ -801,7 +919,7 @@ class Game:
             text_positions.append((text, text_rect))
             pygame.draw.rect(screen, (169, 169, 169), text_rect, 5)
 
-        text_n = font.render("Your load files, click to select one:", True, (200, 200, 200))
+        text_n = font.render("Your laod files, click for select:", True, (200, 200, 200))
         text_rect_n = text.get_rect(topleft=(100, 30))
     
 
@@ -827,7 +945,7 @@ class Game:
         # 定义按钮标签
         load_text = font.render("Load", True, white)
         delete_text = font.render("Delete", True, white)
-        return_text = font.render("Return to menu", True, white)
+        return_text = font.render("Return", True, white)
 
         image_setting = pygame.image.load('data/images/menu.png')
 
@@ -924,7 +1042,7 @@ class Game:
     def delete_file(self,file_path):
         try:
             os.remove(file_path)
-            print(f"The file {file_path} has successfully been deleted.")
+            print(f"The file {file_path} has been successfully deleted.")
         except OSError as e:
             print(f"An error occurred while deleting the file {file_path}: {e}")
 
@@ -945,7 +1063,7 @@ class Game:
 
             font = pygame.font.Font(None, 40)
             font2 = pygame.font.Font(None, 20)
-            lines = ["START NEW GAME", "LOAD PREVIOUS GAME"]
+            lines = ["START", "START WITH LOAD"]
             deplace = SCREEN_HEIGHT//2
             keys = pygame.key.get_pressed()
 
@@ -958,7 +1076,7 @@ class Game:
                 if text_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
                     self.selected_index_start=i
 
-            notion="select an option (click or 'm'), then press enter"
+            notion="press m or click on the option you want , then press enter for enter game"
             text = font2.render(notion, True, (0,0,0))
             text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, deplace + 200))
             screen.blit(text, text_rect)
@@ -1095,12 +1213,12 @@ class Game:
             if keys[pygame.K_w]:
                 self.change=True
                 self.plat += 0.1
-                self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+                self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
         if self.plat >= 2 :
             if keys[pygame.K_s]:
                 self.change=True
                 self.plat -= 0.1
-                self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(N)]
+                self.list_x_y = [[150 + x * 10 - y * 10, 100 + x * self.plat + y *self.plat] for x in range(N) for y in range(M)]
     
     def demander_nom_sauvegarde(self):
         pygame.font.init()
@@ -1125,7 +1243,7 @@ class Game:
         # 定义按钮颜色
         hover_color = (150, 150, 150)
 
-        return_text = font.render("Cancel", True, white)
+        return_text = font.render("Cancle", True, white)
 
 
         while True:
@@ -1183,7 +1301,7 @@ class Game:
             
 
             font1 = pygame.font.Font(None, 20)
-            text_show = font1.render("Name of your file (max 10 char.),press enter for confirm", True, (255,255,255))
+            text_show = font1.render("Name of your file in 10 letters plz,press enter for confirm", True, (255,255,255))
             screen.blit(text_show, (300 , 200 + 40))
 
             pygame.draw.rect(screen, color, input_box, 2)
@@ -1242,8 +1360,6 @@ class Game:
             initial_bob_positions = load_data['initial_bob_positions']
             for bob, position in zip(allBobs, initial_bob_positions):
                 bob.coordinates = position
-    
-        
 
         
 class BOB_GameObject(pygame.sprite.Sprite,Bob):
@@ -1253,7 +1369,7 @@ class BOB_GameObject(pygame.sprite.Sprite,Bob):
         # print(Bob.previousAction)
         self.energy=Bob.energy
         if Bob.energy <= 600:
-            self.taille=abs(Bob.energy/800+0.2)
+            self.taille=abs(Bob.mass/10+0.2)
         self.gbob=Bob
         #self.sprites = []
         #self.sprites.append(pygame.image.load('data/images/0.png').convert())
@@ -1366,14 +1482,7 @@ while running:
                 g.image_broad_rect.x = event.pos[0] + g.dragging_offset_x
                 g.image_broad_rect.y = event.pos[1] + g.dragging_offset_y
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if g.action_button.is_over(pygame.mouse.get_pos()):
-                # Lancer un nouveau script Python et quitter le jeu actuel
-                subprocess.Popen([sys.executable, "maintesttapha.py"])
-                pygame.quit()
-                sys.exit()
-                print("hey")  # Ce message ne sera pas affiché car le script se termine juste avant
-
-            elif g.image_broad_rect.collidepoint(event.pos):
+            if g.image_broad_rect.collidepoint(event.pos):
                 g.dragging = True
                 g.dragging_offset_x, g.dragging_offset_y = g.image_broad_rect.x - event.pos[0], g.image_broad_rect.y - event.pos[1]
             elif event.button == 1:
@@ -1404,6 +1513,11 @@ while running:
                     g.selected_index=-1
                     g.setting = not g.setting
                 
+
+                if SCREEN_WIDTH-240 < mouse_x < SCREEN_WIDTH - 190 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
+                    g.ajouter+=1
+                    frame_count=g.tick_by_day-1
+
                 if SCREEN_WIDTH-170 < mouse_x < SCREEN_WIDTH - 120 and SCREEN_HEIGHT-100 < mouse_y < SCREEN_HEIGHT-50:
                     key_to_modify="Relancer"
                     new_value=True
@@ -1464,15 +1578,13 @@ while running:
             if int(g.selected_index) ==4:
                     if event.button == 4:  # Mouse wheel scroll up
                                     # Increase value of the selected line
-                        N+=1   # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
+                        g.stat=(g.stat+1)%6
                         # for co in grille:
                         #     co.supprimer()
 
                     elif event.button == 5:  # Mouse wheel scroll down
                                     # Decrease value of the selected line
-                        N-=1  # Adjust this line based on your specific use case
-                        g.list_x_y = [[150 + x * 10 - y * 10, 100 + x * 5 + y * 5] for x in range(N) for y in range(M)]
+                        g.stat=(g.stat-1)%6
                         # for co in grille:
                         #     co.supprimer()
                         # grille=g.list_x_y
@@ -1496,6 +1608,17 @@ while running:
                                     # Decrease value of the selected line
                         g.costum_case=(g.costum_case-1)%6
                         g.change=True
+
+            if int(g.selected_index) ==7:
+                    if event.button == 4:  # Mouse wheel scroll up
+                                    # Increase value of the selected line
+                        g.filter=(g.filter+1)%5
+
+
+                    elif event.button == 5:  # Mouse wheel scroll down
+                                    # Decrease value of the selected line
+                        g.filter=(g.filter-1)%5
+
                 
 
     if g.game_running:
@@ -1508,28 +1631,32 @@ while running:
         if  not g.is_paused:
             cProfile.run('g.draw(frame_count)')
             frame_count += 1
+            
+            
             if frame_count % g.tick_by_day == 0:
-                if g.sombre == 200:
-                    g.day_night=1
+                # if g.sombre == 200:
+                #     g.day_night=1
 
-                if g.sombre == 50:
-                    g.day_night=0
+                # if g.sombre == 50:
+                #     g.day_night=0
 
-                if not g.day_night:
-                    g.sombre += 1
-                else:
-                    g.sombre -= 1
+                # if not g.day_night:
+                #     g.sombre += 1
+                # else:
+                #     g.sombre -= 1
 
-                if (frame_count%100==0):
-                    renouvellerNourriture()
-                for b in allBobs:
-                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction() and not b.manger()):
-                        b.bobDeplacement()
-                    
-                    
+                
+                
+                print("allBobs")
+                
+                maintestCelestine.main_function(frame_count%100)
+
+
+                
 
                 g.all_gameobject.empty()
-
+                #or g.ajouter%(100//g.tick_by_day)==0
+                
                 
 
                 for bob in allBobs:
@@ -1549,7 +1676,6 @@ while running:
     else:
         if g.start_anime:
             frame_count_start += 1
-
         g.draw_start(frame_count_start)
         
         
