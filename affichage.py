@@ -74,6 +74,8 @@ def afficheGrilleSimpleCouleur(tick, day):
     print("\033[0;35mviolet\033[0;30m < ",trunc((parametreAffichageMin + 1/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;34mbleu\033[0;30m < ", trunc((parametreAffichageMin + 1/2*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;32mvert\033[0;30m < ",trunc((parametreAffichageMin + 3/4*(parametreAffichageMax-parametreAffichageMin))*1000)/1000, "\033[0;33mjaune\033[0;30m < ",trunc(parametreAffichageMax*1000)/1000)
     if(deseaseON):
         print("Bob \033[0;37mblanc\033[0;30m : malade")
+    else:
+        print("Bob \033[0;37mblanc\033[0;30m : vient de naître")
     
 
     for a in range(M // 2 * 3):
@@ -109,6 +111,8 @@ def afficheGrilleSimpleCouleur(tick, day):
                     
                     
                     if (deseaseON and grille[(i,j)].bobs[0].sick):
+                        print("\033[0;37m", c ,"\033[0;30m", end="") # blanc
+                    elif(not deseaseON and grille[(i,j)].bobs[0].skipingTurn):
                         print("\033[0;37m", c ,"\033[0;30m", end="") # blanc
                     elif (caracteritique < ((parametreAffichageMin) + 1/4*(parametreAffichageMax-parametreAffichageMin))):
                         print("\033[0;35m", c ,"\033[0;30m", end="") #rose 35

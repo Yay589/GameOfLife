@@ -54,14 +54,17 @@ if __name__ == '__main__':
             for i in range(20):
                 tick += 1
                 for b in allBobs:
-                    b.avantUnTour()
-                    if(not b.dejaJoue() and not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
-                        b.partageEnergie()
-                        if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
-                            b.bobDeplacement()
+                    if(not b.dejaJoue()):
+                        b.avantUnTour()
+                        if(not b.seProteger() and not b.reproductionSexuee() and not b.reproduction()):
+                            b.partageEnergie()
+                            if(not b.manger() and not b.attaque() and (not educationON or not b.eduquer())):
+                                b.bobDeplacement()
                 print("\033[H\033[J",end="")
                 afficheGrilleSimpleCouleur(tick, day)
-                time.sleep(0.1)
+                allBobsSpeakM()
+                time.sleep(2)
+                
                 #allBobsPreviousNotRandomMove()
 
             

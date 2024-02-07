@@ -84,7 +84,7 @@ class Bob():
             if(memoryON and mutMemoryON):
                 memoireBebe = max((self.memory + randint(-1,1)),0)
             if(massON and mutMassON):
-                massBebe = max((self.mass + random()), 0)
+                massBebe = max((self.mass + random()%0.2 - 0.1), 0)
             if(tribesON):
                 tribueBebe = self.tribe
                  
@@ -121,7 +121,7 @@ class Bob():
         if(memoryON and mutMemoryON):
             memoireBebe = max(((self.memory + bob.memory)/2 + randint(-1,1)),0)
         if(massON and mutMassON):
-            massBebe = max(((self.mass + bob.mass)/2 + random()), 0)
+            massBebe = max(((self.mass + bob.mass)/2 + random()%0.2 - 0.1), 0)
         if(tribesON):
             tribueBebe = self.tribe
         

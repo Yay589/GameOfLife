@@ -1,18 +1,18 @@
 from collections import defaultdict
 
 #Gentillesse
-kindnessON = True
+kindnessON = False
 birthKindness = 100 #Point de gentillesse à la naissance (pas génétique)
 kidnessAdded = 5 #Point de gentillesse gagnés quand on recoit de la nourriture
 #Maladie
-deseaseON = True
+deseaseON = False
 chancesOfFoodPoisoning = 1 #1000, 1 chance sur 1000 de tomber malade
 nbSickTics = 20 #nombre de jour où le bob reste malade
 #Tribues
 tribesON = False
 tribesRandom = True
 #Education
-educationON = True
+educationON = False
 chancesOfBeingBornEducated = 5 #10, 1 chance out of 10
 energyLossEducation = 20 #energy it costs to become educated
 energyMinToBeEducated = 100 #minimum energy you need to receive education from an other bob 
@@ -24,7 +24,7 @@ MASSE = 3
 PERCEPTION = 4
 MEMOIRE = 5
 #modifiable :
-chosenCarateristic = MASSE # Indique quelle caractéristique doit être representée par la couleur des bobs
+chosenCarateristic = VITESSE # Indique quelle caractéristique doit être representée par la couleur des bobs
 #ENERGIE - VITESSE - MASSE - PERCEPTION - MEMOIRE
 
 
@@ -46,9 +46,9 @@ Relancer = True
 ###########################################################
 #Variables qui peuvent être modifiées EN DÉBUT DE PARTIE :
 #Paramètres simulation :
-N = 3
-M = 3
-numberBob = 2
+N = 2
+M = 2
+numberBob = 1
 
 ###########################################################
 #Variable qui peuvent être modifiées EN COURS DE PARTIE :
@@ -56,12 +56,12 @@ numberBob = 2
 graphicalInterfaceON = True
 #True : ON 
 #False : OFF
-soloReproductionON = False
-duoReproductionON = False
-speedON = False
-massON = False
+soloReproductionON = True
+duoReproductionON = True
+speedON = True
+massON = True
 perceptionON = True
-memoryON = False
+memoryON = True
 
 mutSpeedON = True
 mutMassON = True
@@ -69,7 +69,7 @@ mutPerceptionON = True
 mutMemoryON = True
 
     #Valeurs des variables :
-numberFood = 0 #200 Number of food points par day
+numberFood = 2 #200 Number of food points par day
 foodE = 100 #100 Quantity of energy per food point
 
 T = 50 #100 Number of ticks in a day

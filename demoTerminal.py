@@ -30,10 +30,12 @@ def allBobsPreviousNotRandomMove():
 
 if __name__ == '__main__':
     allBobs = []
-    allBobs.append(Bob(bobPerception=0,bobMemory=2, bobEnergy=199,bobSpeed=2,bobMass=2, coord=(1,3)))
-    allBobs.append(Bob(bobPerception=1,bobMemory=2,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(2,3)))
+    allBobs.append(Bob(bobTribe=1,bobPerception=0,bobMemory=1, bobEnergy=199,bobSpeed=1,bobMass=1, coord=(1,0)))
+    allBobs.append(Bob(bobTribe=1,bobPerception=0,bobMemory=1,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(2,2)))
+    allBobs.append(Bob(bobTribe=2,bobPerception=0,bobMemory=1,bobEnergy=199 , bobSpeed=1,bobMass=1, coord=(0,0)))
+
     
-    ajouterNourritureCaseSpecifique((1,1))
+    #ajouterNourritureCaseSpecifique((1,1))
 
     print("\033[H\033[J",end="")
     print("On met deux bobs à distance égale d'une nourriture avec un perception très grande \n pour qu'ils aillent chercher la nourriture")

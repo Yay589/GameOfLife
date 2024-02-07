@@ -57,9 +57,9 @@ if __name__ == '__main__':
             print("\033[H\033[J",end="")
             afficheGrilleSimpleCouleurEducation(tick, day)
             print("Etat actuel des bobs : ")
-            for b in allBobs:
-                b.speakEducationKindness()
-            sleep(0.50)
+            #for b in allBobs:
+            #    b.speakEducationKindness()
+            sleep(0.60)
      
     """        
     day = 0
